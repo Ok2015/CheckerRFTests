@@ -1,0 +1,191 @@
+*** Variables ***
+#Rev date: 07.04.2022 (v.003)
+${host}           imap.gmail.com
+${user}           robotmailbox01@gmail.com
+${password}       ceuqxttxiywrnpio
+${SHOPPER_URL}    /c_login.php
+${LOCAL_LIB}      ${CURDIR}/CheckerLibUI.txt
+${ManagerUsername}    ROBOT [MANAGER]    # main Robot manager for all tests
+${ManagerPassword}    ROBOT [MANAGER]
+${RobotTestShopper 01}    Robot test shopper [01]    # User will be used for deactivation
+${RobotTestShopper 02}    Robot 02 [Short Name]    # User will be used for orders
+${RobotTestShopper 04}    Robot test shopper [04]    # User will be used for profile update
+${RobotTestShopper 06}    Robot test shopper [06]    # User will be used for name update
+${RobotTestShopper 05}    Robot test shopper [05]    # User will be used for self removement
+${UpdatedShopperName}    Robot 02 [Full Name]
+${Checker Table ID}    id=checkers_table
+${RobotQ-ry.Internet}    RF Questionnaire [Internet]
+${Shopper Property 01}    Autotest
+${RobotTestQ-ry 02}    Auto Questionnaire 02
+${Auto Questionnaire}    Auto Questionnaire 02
+${RobotTestClient}    AUTO 01 [RF CLIENT]
+${Short auto branch name 01}    RF Branch 01 [Short name]
+${Short auto branch name 02}    RF Branch 02 (short name)
+${Full auto branch name 01}    RF Branch 01 [Full name]
+${Full auto branch name 02}    RF Branch 02 (full name)
+${UILangauageID}    4
+${test order description 01}    order 01 that will be accepted by shopper (for Robot test)
+${test order description 02}    order 02 that will be rejected by a shopper (for Robot test)
+${test order description 03}    order 03 that can not be submitted by a shopper due to date/time range (for Robot test)
+${test order description 04}    Order 04 - will be cancelled by manager (Robot tests)
+${test order description 05}    <h4 style="color: blue; text-align: center;"><span style="font-size:28px;"><em><u>Robot order </u></em></span><span style="color:#ff8c00;">test</span> 05</h4>
+${rich test order description 05}    <h1 style="text-align: right;">    <u> <strong>The </strong>HTML <u><em>Unarticulated</em></u> Annotat<span style="font-size:72px;"><span style="font-family:comic sans ms,cursive;"><span style="color:#b22222;">i</span><span style="background-color:#ffa500;">o</span><span style="background-color:yellow;">n</span></span></span> <em>Element </em></u></h1>
+${test order description 05.2}    Robot test 06
+${test order description 06}    Order 06 - will be published by manager (Robot tests)
+${id=login_password}    name=password
+${id=login_email}    name=username
+${id=shopper_email}    name=username
+${id=shopper_password}    name=password
+${id=submit_button}    id=do_login
+${EN(US)}         12
+${RU(1)}          41
+${Count1}         ${EMPTY}
+@{Count}
+${SheetName}      l10n
+${CurrentLanguageID}    12
+${SavedLanguageID}    ${EMPTY}
+${TranslationFile}    c:\\RobotTests2021\\Extra files\\translations.xls
+${Default}        0
+${Arabic (Egypt)}    1
+${Arabic (Saudi Arabia)}    2
+${Arabic (UAE)}    3
+${Bosnian}        4
+${Bulgarian}      5
+${Croatian}       6
+${Czech}          7
+${German}         8
+${Dutch}          9
+${English Australia}    10
+${English UK}     11
+${English US}     12
+${English v2}     13
+${English (Retail surveys)}    14
+${English (Surveys)}    15
+${Spanish (Catalan)}    16
+${Spanish- Spain}    17
+${Spanish- South America}    18
+${Estonian}       19
+${Dutch Flemish}    20
+${French}         21
+${French (Belgium)}    22
+${Hungarian}      23
+${Japanese}       24
+${Hebrew}         25
+${Hebrew (reviews)}    26
+${Hebrew (surveys)}    27
+${Italian}        28
+${Lithuanian}     29
+${Macedonian}     30
+${Polish}         31
+${Portuguese (Brazil)}    32
+${Portuguese (Portugal)}    33
+${Romanian}       34
+${Serbian}        35
+${Slovak}         36
+${Slovene}        37
+${Thai}           38
+${Turkish}        39
+${Russian}        40
+${Russian v2}     41
+${Ukrainian}      42
+${Chinese}        43
+${Chinese- Mandarin}    44
+${Georgian}       45
+${Norwegian}      46
+${ru_Romir_Toyota}    47
+${XLS Column: il_HE}    B
+${XLS Column: il_HEBAK}    C
+${XLS Column: il_HES}    D
+${XLS Column: en_US}    E
+${XLS Column: en_AU}    F
+${XLS Column: en_UK}    G
+${XLS Column: en_invision}    H
+${XLS Column: de_DE}    I
+${XLS Column: es_SP}    J
+${XLS Column: es_SA}    K
+${XLS Column: pt_BR}    L
+${XLS Column: ua_RU}    M
+${XLS Column: fr_FR}    N
+${XLS Column: fr_BE}    O
+${XLS Column: en_v2}    P
+${XLS Column: lt_LTU}    Q
+${XLS Column: ro_RO}    R
+${XLS Column: tu_TUR}    S
+${XLS Column: zh_SC}    T
+${XLS Column: et_ET}    U
+${XLS Column: hu_HU}    V
+${XLS Column: bg_BG}    W
+${XLS Column: ru_v2}    X
+${XLS Column: ua_UA}    Y
+${XLS Column: pl_PL}    Z
+${XLS Column: hr_CR}    AA
+${XLS Column: sk_SK}    AB
+${XLS Column: jp_JP}    AC
+${XLS Column: ar_EG}    AD
+${XLS Column: mk_MK}    AE
+${XLS Column: cs_CZ}    AF
+${XLS Column: bs_BA}    AG
+${XLS Column: ar_AE}    AH
+${XLS Column: sr_SR}    AI
+${XLS Column: nl_NL}    AJ
+${XLS Column: sl_SI}    AK
+${XLS Column: zh_CM}    AL
+${XLS Column: th_TH}    AM
+${XLS Column: es_CA}    AN
+${XLS Column: ar_SA}    AO
+${XLS Column: nl_BE}    AP
+${XLS Column: it_IT}    AQ
+${XLS Column: pt_PT}    AR
+${XLS Column: en_SRV}    AS
+${XLS Column: en_SRT}    AT
+${XLS Column: ka_GE}    AU
+${XLS Column: nn_NO}    AV
+${XLS Column: ru_Romir_Toyota}    AW
+${Robot country 01}    Robot country 01
+${Robot region 01}    Robot region 01
+${Robot city 01}    Robot city 01
+@{elements}
+${element}        ${EMPTY}
+${Order Table}    //*[@id="orders_list"]
+${RobotTestUser 01}    Robot Manager 01
+${RobotAnalystUser 01}    RF user 01 [Analyst]
+${RobotSPUser 01}    RF user 02 [SP USER]
+${role name}      Robot role 01
+${RF property 01}    Robot Manager
+${list}           ${EMPTY}
+${Chart series color}    \    #0dd890
+${Status ID}      ${EMPTY}
+${Select ID}      ${EMPTY}
+${Questionnaire name ID}    ${EMPTY}
+${Begin scorecard ID}    ${EMPTY}
+${Description ID}    ${EMPTY}
+${OrderID ID}     ${EMPTY}
+${Briefing ID}    ${EMPTY}
+${Order start time ID}    ${EMPTY}
+${Full name ID}    ${EMPTY}
+${Client description ID}    ${EMPTY}
+${Survey payment ID}    ${EMPTY}
+${Order count ID}    ${EMPTY}
+${Due date of the visit ID}    ${EMPTY}
+${Client name ID}    ${EMPTY}
+${order start_time}    06:02
+${order end_time}    23:59
+${GENERAL INFO: company phone}    +972 4 622 81 49
+${GENERAL INFO: company address}    1 Arba Agudot street Hadera, Israel
+${GENERAL INFO: company name}    Checker Software Systems LTD
+${RobotQ-ry SHOPPERS}    RF Questionnaire [Shoppers]
+${Assessor comment 1}    "I am robot!" (Assessor comment 01)
+${Max brows win?}    YES    # YES or NO
+${FAIL ON EXTRA NOTICE?}    YES    # YES or NO
+${Property name}    Autotest property [RF]
+${RF Briefing}    RF Universal Brief [Briefing]
+&{Dictionary}
+${Shopper birthdate}    01-02-2018
+${RF Project}     RF ACTIVE project 2022 [PROJECT]
+${RF Type of client}    RF.AutoTests [Type of client]
+${Q-re type charac-s}    RF.AutoTests 5 min [Q-re type charac-s]
+&{Dictionary2}
+@{List of all CF}    RFCF01.Number [Branches]    RFCF02.Text line [Branches]    RFCF03.Text block [Branches]    RFCF04.Date [Branches]    RFCF05.Time [Branches]    RFCF06.Phone [Branches]    RFCF07.Checkbox [Branches]    RFCF08.Fileupload [Branches]    RFCF01.Number [Users]    RFCF02.Text line [Users]    RFCF03.Text block [Users]    RFCF04.Date [Users]    RFCF05.Time [Users]    RFCF06.Phone [Users]    RFCF07.Checkbox [Users]    RFCF08.Fileupload [Users]    RFCF01.Number [Clients]
+...               RFCF02.Text line [Clients]    RFCF03.Text block [Clients]    RFCF04.Date [Clients]    RFCF05.Time [Clients]    RFCF06.Phone [Clients]    RFCF07.Checkbox [Clients]    RFCF08.Fileupload [Clients]    RFCF01.Number [Shoppers]    RFCF02.Text line [Shoppers]    RFCF03.Text block [Shoppers]    RFCF04.Date [Shoppers]    RFCF05.Time [Shoppers]    RFCF06.Phone [Shoppers]    RFCF07.Checkbox [Shoppers]    RFCF08.Fileupload [Shoppers]
+${RF visit template}    RF template 01
+${shopper email app password}    yqlkegdczklxmski
