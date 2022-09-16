@@ -1,8 +1,8 @@
 *** Variables ***
 #Rev date: 07.04.2022 (v.003)
 ${host}           imap.gmail.com
-${user}           robotmailbox01@gmail.com
-${password}       ceuqxttxiywrnpio
+${ROBOT MANGAER email address}    robotmailbox01@gmail.com
+${ROBOT MANAGER email password}    ceuqxttxiywrnpio
 ${SHOPPER_URL}    /c_login.php
 ${LOCAL_LIB}      ${CURDIR}/CheckerLibUI.txt
 ${ManagerUsername}    ROBOT [MANAGER]    # main Robot manager for all tests
@@ -150,7 +150,7 @@ ${Order Table}    //*[@id="orders_list"]
 ${RobotTestUser 01}    Robot Manager 01
 ${RobotAnalystUser 01}    RF user 01 [Analyst]
 ${RobotSPUser 01}    RF user 02 [SP USER]
-${role name}      Robot role 01
+${RF role name}    RF ROLE 01
 ${RF property 01}    Robot Manager
 ${list}           ${EMPTY}
 ${Chart series color}    \    #0dd890
@@ -184,8 +184,9 @@ ${Shopper birthdate}    01-02-2018
 ${RF Project}     RF ACTIVE project 2022 [PROJECT]
 ${RF Type of client}    RF.AutoTests [Type of client]
 ${Q-re type charac-s}    RF.AutoTests 5 min [Q-re type charac-s]
-&{Dictionary2}
 @{List of all CF}    RFCF01.Number [Branches]    RFCF02.Text line [Branches]    RFCF03.Text block [Branches]    RFCF04.Date [Branches]    RFCF05.Time [Branches]    RFCF06.Phone [Branches]    RFCF07.Checkbox [Branches]    RFCF08.Fileupload [Branches]    RFCF01.Number [Users]    RFCF02.Text line [Users]    RFCF03.Text block [Users]    RFCF04.Date [Users]    RFCF05.Time [Users]    RFCF06.Phone [Users]    RFCF07.Checkbox [Users]    RFCF08.Fileupload [Users]    RFCF01.Number [Clients]
 ...               RFCF02.Text line [Clients]    RFCF03.Text block [Clients]    RFCF04.Date [Clients]    RFCF05.Time [Clients]    RFCF06.Phone [Clients]    RFCF07.Checkbox [Clients]    RFCF08.Fileupload [Clients]    RFCF01.Number [Shoppers]    RFCF02.Text line [Shoppers]    RFCF03.Text block [Shoppers]    RFCF04.Date [Shoppers]    RFCF05.Time [Shoppers]    RFCF06.Phone [Shoppers]    RFCF07.Checkbox [Shoppers]    RFCF08.Fileupload [Shoppers]
 ${RF visit template}    RF template 01
 ${shopper email app password}    yqlkegdczklxmski
+${SP user email address}    robotspuser@gmail.com
+${SP user email pass}    vuzwonwfmswmungp

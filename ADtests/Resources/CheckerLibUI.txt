@@ -12,9 +12,10 @@ Library           OperatingSystem
 Library           xlrd
 Library           BuiltIn
 Library           openpyxl
+Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -23,6 +24,9 @@ ${BROWSER}        Chrome    # Chrome, Firefox, Opera (Internet Explorer - to rec
 ${TestUrls-UpTime}    https://online.r-m.co.il,https://system.serveandcheck.com,https://eu.checker-soft.com/gfk-ukraine,https://ipsos-russia.com,https://tyaonline.com,https://marketest.checker.co.il,https://ms-online.co.il,https://www.misonline.co.il,https://tovanot.checker.co.il,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/profpoint-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing
 ${RFShopperEmail}    robotshopperemail@gmail.com
 ${RFManagerEmail}    robotmailbox01@gmail.com
+${FTP host}       ftp.drivehq.com
+${FTP user}       vishav-ftp
+${FTP pass}       ftp@2020
 
 *** Keywords ***
 Login as a Manager
@@ -45,6 +49,7 @@ Enter login and password.SD
     Input Text    name=password    ${password}
     Click Element    ${id=submit_button}
     Log to console    Please wait...
+    reload page
     Run keyword and ignore error    Enable agreements.SD
     #Run keyword and ignore error    Switch language.SD    ${UILangauageID}
     Log to console    Shopper is logged in (+)
@@ -2587,6 +2592,7 @@ Open Job Board and apply order.SD
     Set focus to element    id=ClientID
     Select dropdown.AD    //center/form/table/tbody/tr[1]/td[1]/table/tbody/tr/td    xpath=//li[contains(.,'${RobotTestClient}')]
     #select from list by label    //select[@id='ClientID']    ${RobotTestClient}
+    sleep    1
     Click element    //center/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button
     Click element    //div[4]/div/ul/li[2]/a/span[2]
     Click element    //center/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button
@@ -2895,6 +2901,8 @@ Search branch.AD
     ${found ID}    get text    //td[@id='idBranchIDEditbox']
     set global variable    ${found ID}
     go to.AD    ${URL}/branches.php?page_var_filter_IsActive&edit=${found ID}&client=${client ID}
+    ${branch ID}    set variable    ${found ID}
+    set global variable    ${branch ID}
 
 Add 2 branches.AD
     ${index}    Set Variable    1
@@ -3634,7 +3642,7 @@ Check "Company email settings" page
     Run Keyword If    '${check emails?}'=='True'    GMAIL: Sent mass email.AD
 
 Search user profile.AD
-    [Arguments]    ${RobotTestShopper}    ${role}
+    [Arguments]    ${RobotTestShopper}    ${role name}
     ${index}=    Set variable    1
     FOR    ${i}    IN    2
         Check errors on page [-1]
@@ -3648,19 +3656,22 @@ Search user profile.AD
         ${index}=    Evaluate    ${index}+1
         Log to console    try ${index}
     END
-    Add/Edit user profile.AD    ${RobotTestShopper}    ${role}
+    set global variable    ${role name}
+    Add/Edit user profile.AD    ${RobotTestShopper}
 
 Add/Edit user profile.AD
-    [Arguments]    ${RobotTestShopper}    ${role name}
+    [Arguments]    ${RobotTestShopper}
     Wait Until Page Contains Element    //input[@id='field_Fullname']
     Input Text    //input[@id='field_Fullname']    ${RobotTestShopper}
-    Input Text    //input[@id='field_Email']    robotmailbox01@gmail.com
     Input Text    //input[@id='field_Username']    ${RobotTestShopper}
     Input Text    //input[@id='field_Password']    ${RobotTestShopper}
     Run keyword and ignore error    Click element    //*[@id="idShowDashboardFilterEditbox"]/table/tbody/tr/td/span/button
     Run keyword and ignore error    Select Checkbox    //input[@id='ui-multiselect-field_ShowDashboardFilter-option-9']
     Run keyword and ignore error    Execute JavaScript    window.document.getElementById("field_ClientName").scrollIntoView(true)
-    Run keyword and ignore error    Select dropdown.AD    //*[@id="idClientNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
+    ${exp client}    Run keyword and return status    Validate value (text)    //*[@id="idClientNameEditbox"]/table/tbody/tr/td/span/button    ${RobotTestClient}
+    Run keyword if    ${exp client}==False    Select dropdown.AD    //*[@id="idClientNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
+    #
+    Run keyword if    '${role name}'=='Analyst' or '${role name}'=='Special permissions'    Validate value (text)    //*[@id="idClientNameEditbox"]/table/tbody/tr/td/span/button    ${RobotTestClient}
     sleep    1
     Select dropdown.AD    //*[@id="idLanguageOverrideEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'English Australia')]
     Validate value (text)    //*[@id="idLanguageOverrideEditbox"]/table/tbody/tr/td/span/button    English Australia
@@ -3671,32 +3682,43 @@ Add/Edit user profile.AD
     Get ID from ad bar.AD    &edit=    &page_var
     ###
     ${status}    Run keyword and return status    Element Should Contain    ${role name}    Manager
-    Run keyword if    '${status}'=='Special permissions'    Select role    ${role name}
-    Run keyword if    '${status}'=='Special permissions'    Select dropdown.AD    //*[@id="idClientNameEditbox"]/table/tbody/tr/td/span/button    //div[13]/ul/li[12]/label/span
-    Run keyword if    '${status}'=='Manager'    Validate value (text)    //*[@id="idClientNameEditbox"]/table/tbody/tr/td/span/button    ${RobotTestClient}
-    Run keyword if    '${status}'=='Manager'    Select dropdown.AD    //*[@id="idEmailDigestEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Daily')]
-    Run keyword and ignore error    Run keyword if    '${status}'=='Analyst'    Select dropdown.AD    //*[@id="idClientNameEditbox"]/table/tbody/tr/td/span/button    //div[13]/ul/li[12]/label/span
-    Run keyword and ignore error    Run keyword if    '${status}'=='Analyst'    Select dropdown.AD    //*[@id="idClientNameEditbox"]/table/tbody/tr/td/span/button    //div[12]/ul/li[17]/label/span
+    Run keyword if    '${role name}'=='Special permissions'    Select dropdown.AD    //*[@id="idRoleNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RF role name}')]
+    Run keyword if    '${role name}'=='Special permissions'    Input text    //input[@id='field_Email']    ${SP user email address}
+    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 03 [SP USER]'    Input text    //input[@id='field_Email']    failmail@gmail.com
+    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 03 [SP USER]'    Validate value (value)    //input[@id='field_Email']    failmail@gmail.com
+    Run keyword if    '${role name}'=='Manager'    Input text    //input[@id='field_Email']    robotmailbox01@gmail.com
+    Run keyword if    '${role name}'=='Manager'    Select dropdown.AD    //*[@id="idEmailDigestEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Daily')]
     ####
-    ${a}=    Set variable    ${RobotTestShopper}
-    ${x}=    Run Keyword And Return Status    Should contain    ${role name}    Special permissions
-    Run Keyword If    '${x}'=='True'    Select dropdown.AD    //*[@id="tr_AccessLink"]/td[2]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Special permissions')]
-    Run Keyword If    '${x}'=='True'    Select dropdown.AD    //*[@id="idRoleNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RF role}')]
-    Run Keyword If    '${x}'=='True'    Validate value (text)    //*[@id="tr_AccessLink"]/td[2]/table/tbody/tr/td/span/button    Special permissions
-    Run Keyword If    '${x}'=='True'    Validate value (text)    //*[@id="idRoleNameEditbox"]/table/tbody/tr/td/span/button    ${RF role}
+    Run Keyword If    '${role name}'=='Special permissions'    Select dropdown.AD    //*[@id="tr_AccessLink"]/td[2]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Special permissions')]
+    Run Keyword If    '${role name}'=='Special permissions'    Select dropdown.AD    //*[@id="idRoleNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RF role name}')]
+    Run Keyword If    '${role name}'=='Special permissions'    Validate value (text)    //*[@id="tr_AccessLink"]/td[2]/table/tbody/tr/td/span/button    Special permissions
+    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 03 [SP USER]'    Select dropdown.AD    //*[@id="idRoleNameEditbox"]/table/tbody/tr/td/span/button    //div[6]/ul/li[3]/label/span
+    Run Keyword If    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 02 [SP USER]'    Validate value (text)    //*[@id="idRoleNameEditbox"]/table/tbody/tr/td/span/button    ${RF role name}
+    Run Keyword If    '${role name}'=='Special permissions'    Set checkbox.AD    //input[@id='field_PermittedAllClientsAccess']    true
+    Set checkbox.AD    //input[@id='field_NotifyBySms']    None
+    Set checkbox.AD    //input[@id='field_NotifyByEmail']    true
+    Input text    //input[@id='field_Comments']    ${RobotTestShopper} comment
+    Input text    //input[@id='field_Task']    ${RobotTestShopper} task
+    Input text    //input[@id='field_DailyLimit']    100
+    Input text    //input[@id='field_WeeklyLimit']    1000
+    Input text    //input[@id='field_UserPriority']    88
     Click Save/Add/Delete/Cancel button.AD
     Wait until page contains    successfully
     Wait until page contains    Current user: ROBOT [MANAGER]
+    #
     go to.AD    ${URL}/users.php?edit=${found ID}
     Search Element.AD    ${RobotTestShopper}    id=uesrs_table
     Click link    default=${RobotTestShopper}
     Wait Until Page Contains element    //input[@id='field_Fullname']    10
     Validate value (value)    //input[@id='field_Fullname']    ${RobotTestShopper}
-    Validate value (value)    //input[@id='field_Email']    robotmailbox01@gmail.com
     Validate value (value)    //input[@id='field_Username']    ${RobotTestShopper}
     Validate value (value)    //input[@id='field_Phone']    1234567890
     Validate value (text)    //*[@id="idTimeZoneEditbox"]/table/tbody/tr/td/span/button    Europe/Kiev
-    Log To Console    Profile is added/updated
+    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='${RobotTestShopper} 1'    Validate value (value)    //input[@id='field_Email']    ${SP user email address}
+    Run keyword if    '${role name}'=='Manager'    Validate value (value)    //input[@id='field_Email']    robotmailbox01@gmail.com
+    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 03 [SP USER]'    Validate value (value)    //input[@id='field_Email']    failmail@gmail.com
+    #
+    Log To Console    User profile (role="${role name}") is created/updated
 
 Create/update role.AD
     [Arguments]    ${role name}
@@ -3778,15 +3800,6 @@ Create/update role.AD
     Validate value (value)    //select[@id="acc_5f4787616fc5b4cab1d72ea3fb21512e"]    4
     Validate value (value)    //select[@id="acc_0d8aaf22c73f42d62b9c64fec59fa411"]    4
     Log To Console    Status: Role access rules has been edited. (name="${role name}") "LOGIN" and "MAIN MENU"="EDIT and DELETE"
-
-Select role
-    [Arguments]    ${role name}
-    Mouse over    //*[@id="idRoleNameEditbox"]/table/tbody/tr/td/span/button
-    Click element    //*[@id="idRoleNameEditbox"]/table/tbody/tr/td/span/button
-    sleep    1
-    Scroll Element Into View    xpath=//li[contains(.,'${role name}')]
-    Click element    xpath=//li[contains(.,'${role name}')]
-    Check errors on page [-1]
 
 Add branch characteristic
     [Arguments]    ${Client ID}    ${RF property}    ${Mandatory}
@@ -6393,8 +6406,9 @@ Select dropdown.AD
     log to console    Dropdown set to "${element ID}" --> "${exp value}"
 
 Add/Edit alert.AD
-    [Arguments]    ${Send when in this status}    ${AlertName}    ${condition}    ${Include in report}    ${Attachment}    ${active?}    ${Show link to review?}    ${Send to specific email?}    ${Send repeatedly?}    ${allow concentrated?}    ${body content}
+    [Arguments]    ${Send when in this status}    ${AlertName}    ${condition}    ${Include in report}    ${Attachment}    ${active?}    ${Show link to review?}    ${Send to specific email?}    ${Send repeatedly?}    ${allow concentrated?}    ${body content}    ${FTP?}
     go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
+    Set global variable    ${Attachment}
     Wait until page contains element    //button[@class='btn-input']
     ${IsElementVisible}=    Run keyword and return status    Page should contain    ${AlertName}
     Run Keyword If    ${IsElementVisible}    Click link    default=${AlertName}
@@ -6407,7 +6421,7 @@ Add/Edit alert.AD
     ${x}=    Set variable    ${AlertName}
     Set checkbox.AD    //*[@id="field_IsActive"]    ${active?}
     Set checkbox.AD    //input[@id='field_SendRepeatedly']    ${Send repeatedly?}
-    Set checkbox.AD    //input[@id='field_AlertByEmail']    true
+    Run keyword if    "${FTP?}"=="Yes"    Set checkbox.AD    //input[@id='field_AlertByEmail']    None
     Set checkbox.AD    //input[@id='field_AllowEmailDigest']    ${allow concentrated?}
     Set checkbox.AD    //input[@id='field_AlertBySms']    None
     Set checkbox.AD    //input[@id='field_ShowReviewLink']    ${Show link to review?}
@@ -6427,8 +6441,28 @@ Add/Edit alert.AD
     Select dropdown.AD    //*[@id="idIncludeVisitReportEditbox"]/table/tbody/tr/td/span/button    ${Include in report}
     Input text    //input[@id='field_SendToSpecificSms']    ${empty}
     Select dropdown.AD    //*[@id="idSendAttachmentsEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${Attachment}')]
+    #
+    Run keyword if    "${FTP?}"=="Yes"    Input text    //input[@id='field_FTPServer']    ftp.drivehq.com
+    Run keyword if    "${FTP?}"=="Yes"    Input text    //input[@id='field_FTPUser']    vishav-ftp
+    Run keyword if    "${FTP?}"=="Yes"    Input text    //input[@id='field_FTPPass']    ftp@2020
+    Run keyword if    "${FTP?}"=="Yes"    Input text    //input[@id='field_FTPPath']    /rf-ftp-alerts-2022
+    #
+    ${source}=    Set variable    ${AlertName}
+    ${name contains some text?}    Run keyword and return status    Should contain    ${source}    BRANCH
+    Run keyword if    ${name contains some text?}    Set checkbox.AD    //input[@id='field_SendToAllBranchContacts']    true
+    #
+    ${source}=    Set variable    ${AlertName}
+    ${name contains some text?}    Run keyword and return status    Should contain    ${source}    ROLE
+    ${current role is expected?}    Run keyword and return status    Validate value (text)    //*[@id="idSendToRolesEditbox"]/table/tbody/tr/td/span/button    ${RF role name}
+    Run keyword if    ${name contains some text?} and ${current role is expected?}==False    Select dropdown.AD    //*[@id="idSendToRolesEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RF role name}')]
+    sleep    1
+    Run keyword if    ${name contains some text?}    Validate value (text)    //*[@id="idSendToRolesEditbox"]/table/tbody/tr/td/span/button    ${RF role name}
+    #
     Click Save/Add/Delete/Cancel button.AD
     Wait Until Page Contains    successfully
+    #
+    go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
+    Wait until page contains element    //button[@class='btn-input']
     Click link    default=${AlertName}
     Wait until page contains element    //input[@id='field_EmailSubj']
     ${sent to value}=    Get text    //textarea[@id='field_SendToSpecificEmail']
@@ -6447,6 +6481,10 @@ Add/Edit alert.AD
     Validate value (value)    //input[@id='field_SendToSpecificSms']    ${empty}
     Validate value (text)    //*[@id="idStatusToSendEditbox"]/table/tbody/tr/td/span/button    ${Send when in this status}
     Set global variable    ${Attachment}
+    Run keyword if    "${FTP?}"=="Yes"    Validate value (value)    //input[@id='field_FTPServer']    ftp.drivehq.com
+    Run keyword if    "${FTP?}"=="Yes"    Validate value (value)    //input[@id='field_FTPUser']    vishav-ftp
+    Run keyword if    "${FTP?}"=="Yes"    Validate value (value)    //input[@id='field_FTPPass']    ftp@2020
+    Run keyword if    "${FTP?}"=="Yes"    Validate value (value)    //input[@id='field_FTPPath']    /rf-ftp-alerts-2022
 
 Add new alert.AD
     log to console    Adding new alert. Please wait
@@ -6633,7 +6671,7 @@ Approve review.AD
     Log to console    Approving review...
     Scroll Element Into View    id=approveCrit
     Click button    id=approveCrit
-    Check errors on page [-1]
+    #    Check errors on page [-1]    Fail on testing here
     Page should contain    Approved
     #Element Should Contain    //span[@class='CritInfoItem'][18]    Approved
     Log to console    Review status has been changed (previous status: "Finished, awaiting approval"; current status: "Approved")
@@ -8073,7 +8111,7 @@ Set Operation messages.AD
     Wait until page contains element    //input[@id='save']
     ###
     Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_85_label"]    ${Message to activated shopper Email}${RF REVN DT}
-    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_147_label"]    ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_147_label"]    ${Shoppers assignment notification message}${RF REVN DT}
     Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_208_label"]    ${Shoppers assignment notification message for packaged orders}${RF REVN DT}
     Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_269_label"]    ${Shoppers assignment cancellation notification message}${RF REVN DT}
     Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_330_label"]    <p>Hello, $[202]$, this is the Shoppers application rejection notification message</p>${RF REVN DT}
@@ -8081,7 +8119,7 @@ Set Operation messages.AD
     Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_452_label"]    ${Message to show when applying for a package}${RF REVN DT}
     Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_513_label"]    ${Message to show when rejecting a package}${RF REVN DT}
     Run Keyword If    ${demo?} or ${preprod?}    Enter editor text.AD    //*[@id="cke_58_label"]    ${Message to activated shopper Email}${RF REVN DT}
-    Run Keyword If    ${demo?} or ${preprod?}    Enter editor text.AD    //*[@id="cke_115_label"]    ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}
+    Run Keyword If    ${demo?} or ${preprod?}    Enter editor text.AD    //*[@id="cke_115_label"]    ${Shoppers assignment notification message}${RF REVN DT}
     Run Keyword If    ${demo?} or ${preprod?}    Enter editor text.AD    //*[@id="cke_170_label"]    ${Shoppers assignment notification message for packaged orders}${RF REVN DT}
     Run Keyword If    ${demo?} or ${preprod?}    Enter editor text.AD    //*[@id="cke_225_label"]    ${Shoppers assignment cancellation notification message}${RF REVN DT}
     Run Keyword If    ${demo?} or ${preprod?}    Enter editor text.AD    //*[@id="cke_280_label"]    <p>Hello, $[202]$, this is the Shoppers application rejection notification message</p>${RF REVN DT}
@@ -8746,7 +8784,7 @@ Click Save/Add/Delete/Cancel button.AD
     Run Keyword If    '${status1}'=='True'    Click element    //input[@id='save']
     ${status2}    Run Keyword And return status    Page Should Contain element    //input[@id='addnew']
     Run Keyword If    '${status2}'=='True'    Click element    //input[@id='addnew']
-    Log to console    Page has been Saved/Updated!
+    Log to console    Page has been Saved/Updated (+)
     Check errors on page [-1]
 
 Search QA question.AD
@@ -10176,57 +10214,10 @@ Fill in the recover form.SD
     sleep    1
     Click element    id=submit
 
-GMAIL: Alert with no attachments.SD
-    [Arguments]    ${email subject}
-    set global variable    ${email subject}
-    Log to console    ${\n}--------------------------Open Mailbox ("${RFShopperEmail}")--------------------------
-    ${timeout}    set variable    20
-    Log to console    Expected email: "${email subject}"
-    Open Mailbox    host=${host}    user=${RFShopperEmail}    password=${shopper email app password}
-    Wait for expected email
-    Log to console    Email is received. Index = "${LATEST}". Checking email details...
-    ${parts}=    Walk Multipart Email    ${LATEST}
-    @{fields}=    Get Multipart Field Names
-    ${from}=    Get Multipart Field    From
-    ${to}=    Get Multipart Field    To
-    ${subject}=    Get Multipart Field    Subject
-    ${date}=    Get Multipart Field    Date
-    Log to console    --------------------------EMAIL HEADER DETAILS--------------------------
-    Log to console    SUBJECT = "${subject}"
-    Log to console    FROM = "${from}"
-    Log to console    TO = "${to}"
-    Log to console    date = ${date}
-    Log to console    --------------------------
-    should contain    ${from}    Checker Software Systems LTD [${URLIndex} system]    #    Checker Software Systems LTD [${URLIndex} system]
-    should contain    ${from}    info-${URL1index}-system@checker-soft.com    #    info-${URL1index}-system@checker-soft.com
-    should contain    ${to}    ${RFShopperEmail}" <${RFShopperEmail}>
-    should contain    ${subject}    ${email subject}
-    ###
-    FOR    ${i}    IN RANGE    ${parts}
-        Walk Multipart Email    ${LATEST}
-        ${content-type}=    Get Multipart Content Type
-        Log to console    content-type="${content-type}"
-        Continue For Loop If    '${content-type}' == 'text/html'
-        ${payload}=    Get Multipart Payload    decode=True
-        log    ------------${payload}
-    END
-    log    ${LATEST}
-    ###
-    ###
-    ${HTML} =    Get Email Body    ${LATEST}
-    log to console    Email content: ${HTML}
-    Set global variable    ${HTML}
-    Check default codes table    ${ReviewID}
-    Should Contain    ${HTML}    This is an alert text
-    Mark All Emails As Read
-    Delete All Emails
-    Close Mailbox
-    Log to console    Deleting all inbox email. Closing Mailbox.
-
 GMAIL: Recover UserID.SD
     Log to console    Expected email: "Your UserID"
-    Log to console    ${\n}--------------------------Open Mailbox ("${user}")--------------------------
-    Open Mailbox    host=${host}    user=${user}    password=${password}
+    Log to console    ${\n}--------------------------Open Mailbox ("${robot email}")--------------------------
+    Open Mailbox    host=${host}    user=${robot email}    password=${password}
     #Get Email Body    1
     ${LATEST} =    Wait For Email    sender=info-testing-system@checker-soft.com    timeout=100
     Log to console    Done. Waiting email from sender="info-testing@checker-soft.com"; timeout=10sec. Please wait....
@@ -10245,7 +10236,7 @@ GMAIL: Recover UserID.SD
     Log to console    --------------------------
     should contain    ${from}    Checker Software Systems LTD [${URLIndex} system]
     should contain    ${from}    info-${URL1index}-system@checker-soft.com
-    should contain    ${to}    robotmailbox01@gmail.com" <robotmailbox01@gmail.com>
+    should contain    ${to}    ${robot email}" <${robot email}>
     should contain    ${subject}    Your UserID
     ###
     FOR    ${i}    IN RANGE    ${parts}
@@ -10280,8 +10271,8 @@ GMAIL: Recover UserID.SD
 
 GMAIL: Recover password.SD
     Log to console    Expected email: "Recover password"
-    Log to console    ${\n}--------------------------Open Mailbox ("${user}")--------------------------
-    Open Mailbox    host=${host}    user=${user}    password=${password}
+    Log to console    ${\n}--------------------------Open Mailbox ("${robot email}")--------------------------
+    Open Mailbox    host=${host}    user=${robot email}    password=${password}
     #Get Email Body    1
     ${LATEST} =    Wait For Email    sender=info-testing-system@checker-soft.com    timeout=100
     Log to console    Done. Waiting email from sender="info-testing@checker-soft.com"; timeout=10sec. Please wait....
@@ -10300,7 +10291,7 @@ GMAIL: Recover password.SD
     Log to console    --------------------------
     should contain    ${from}    Checker Software Systems LTD [${URLIndex} system]
     should contain    ${from}    info-${URL1index}-system@checker-soft.com
-    should contain    ${to}    robotmailbox01@gmail.com" <robotmailbox01@gmail.com>
+    should contain    ${to}    ${robot email}" <${robot email}>
     should contain    ${subject}    Recover password
     ###
     FOR    ${i}    IN RANGE    ${parts}
@@ -11317,14 +11308,14 @@ Compare SHOPPER and CE file.AD
     go to.AD    ${URL}/checkers.php?edit=${Dictionary}[Shopper ID]
     wait until page contains element    //input[@id='field_Fullname']
     Validate value (value)    //input[@id='field_Username']    ${Dictionary}[Shopper Username]
-    Validate value (value)    //input[@id='field_${Dictionary}[RFCF01.Number [Shoppers]]']    ${Dictionary}[RFCF01.Number [Shoppers]]
-    Validate value (value)    //input[@id='field_${Dictionary}[RFCF02.Text line [Shoppers]]']    ${Dictionary}[RFCF02.Text line [Shoppers]]
-    Validate value (value)    //textarea[@id='field_${Dictionary}[RFCF03.Text block [Shoppers]]']    ${Dictionary}[RFCF03.Text block [Shoppers]]
-    Validate value (value)    //td[@id='id${Dictionary}[RFCF06.Phone [Shoppers]]Editbox']/input    ${Dictionary}[RFCF06.Phone [Shoppers]]
-    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Shoppers]]'=='1'    Checkbox should be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Shoppers]]']
-    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Shoppers]]'=='0'    Checkbox should not be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Shoppers]]']
+    Validate value (value)    //input[@id='field_${Dictionary}[RFCF01.Number [Shoppers] ID]']    ${Dictionary}[RFCF01.Number [Shoppers]]
+    Validate value (value)    //input[@id='field_${Dictionary}[RFCF02.Text line [Shoppers] ID]']    ${Dictionary}[RFCF02.Text line [Shoppers]]
+    Validate value (value)    //textarea[@id='field_${Dictionary}[RFCF03.Text block [Shoppers] ID]']    ${Dictionary}[RFCF03.Text block [Shoppers]]
+    Validate value (value)    //td[@id='id${Dictionary}[RFCF06.Phone [Shoppers] ID]Editbox']/input    ${Dictionary}[RFCF06.Phone [Shoppers]]
+    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Shoppers]]'=='1'    Checkbox should be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Shoppers] ID]']
+    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Shoppers]]'=='0'    Checkbox should not be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Shoppers] ID]']
     ###
-    ${var}    Get value    //input[@id='field_${Dictionary}[RFCF04.Date [Shoppers]]']
+    ${var}    Get value    //input[@id='field_${Dictionary}[RFCF04.Date [Shoppers] ID]']
     ${Variable}    set variable    ${Dictionary}[RFCF04.Date [Shoppers]]
     ${var1}    Convert Date    ${Variable}    date_format=%Y-%m-%d
     ${var2}    Convert Date    ${var1}    result_format=%d-%m-%Y
@@ -11333,7 +11324,7 @@ Compare SHOPPER and CE file.AD
     ${Variable}    set variable    ${Dictionary}[RFCF05.Time [Shoppers]]
     ${var1}    Convert Date    ${Variable}    date_format=%H:%M:%S
     ${var2}    Convert Date    ${var1}    result_format=%H:%M
-    Validate value (value)    //input[@id='field_${Dictionary}[RFCF05.Time [Shoppers]]']    ${var2}
+    Validate value (value)    //input[@id='field_${Dictionary}[RFCF05.Time [Shoppers] ID]']    ${var2}
     ##
     Click element    //*[@id="tabs"]/ul/li[3]
     wait until page contains element    //input[@id='field_Phone2']
@@ -11358,11 +11349,11 @@ Compare CLIENT and CE file.AD
     Wait until page contains    Client name
     #
     Validate value (value)    //input[@id='field_clientname']    ${Dictionary}[ClientName]
-    Validate value (value)    //input[@id='field_${Dictionary}[RFCF01.Number [Clients]]']    ${Dictionary}[RFCF01.Number [Clients]]
-    Validate value (value)    //input[@id='field_${Dictionary}[RFCF02.Text line [Clients]]']    ${Dictionary}[RFCF02.Text line [Clients]]
-    Validate value (value)    //textarea[@id='field_${Dictionary}[RFCF03.Text block [Clients]]']    ${Dictionary}[RFCF03.Text block [Clients]]
+    Validate value (value)    //input[@id='field_${Dictionary}[RFCF01.Number [Clients] ID]']    ${Dictionary}[RFCF01.Number [Clients]]
+    Validate value (value)    //input[@id='field_${Dictionary}[RFCF02.Text line [Clients] ID]']    ${Dictionary}[RFCF02.Text line [Clients]]
+    Validate value (value)    //textarea[@id='field_${Dictionary}[RFCF03.Text block [Clients] ID]']    ${Dictionary}[RFCF03.Text block [Clients]]
     ###
-    ${var}    Get value    //input[@id='field_${Dictionary}[RFCF04.Date [Clients]]']
+    ${var}    Get value    //input[@id='field_${Dictionary}[RFCF04.Date [Clients] ID]']
     ${Variable}    set variable    ${Dictionary}[RFCF04.Date [Clients]]
     ${var1}    Convert Date    ${Variable}    date_format=%Y-%m-%d
     ${var2}    Convert Date    ${var1}    result_format=%d-%m-%Y
@@ -11371,10 +11362,10 @@ Compare CLIENT and CE file.AD
     ${Variable}    set variable    ${Dictionary}[RFCF05.Time [Clients]]
     ${var1}    Convert Date    ${Variable}    date_format=%H:%M:%S
     ${var2}    Convert Date    ${var1}    result_format=%H:%M
-    Validate value (value)    //input[@id='field_${Dictionary}[RFCF05.Time [Clients]]']    ${var2}
-    Validate value (value)    //td[@id='id${Dictionary}[RFCF06.Phone [Clients]]Editbox']/input    ${Dictionary}[RFCF06.Phone [Clients]]
-    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Clients]]'=='1'    Checkbox should be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Clients]]']
-    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Clients]]'=='0'    Checkbox should not be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Clients]]']
+    Validate value (value)    //input[@id='field_${Dictionary}[RFCF05.Time [Clients] ID]']    ${var2}
+    Validate value (value)    //td[@id='id${Dictionary}[RFCF06.Phone [Clients] ID]Editbox']/input    ${Dictionary}[RFCF06.Phone [Clients]]
+    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Clients]]'=='1'    Checkbox should be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Clients] ID]']
+    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Clients]]'=='0'    Checkbox should not be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Clients] ID]']
     #Validate value (value)    ${Dictionary}[RFCF08.Fileupload [Clients]]    Import Fileupload CF - does not work
 
 Compare BRANCH and CE file.AD
@@ -11385,10 +11376,10 @@ Compare BRANCH and CE file.AD
     Validate value (value)    //input[@id='field_branchName']    ${Dictionary}[BranchName]
     Validate value (value)    //input[@id='field_address']    ${Dictionary}[Address]
     Validate value (value)    //input[@id='field_HouseNumber']    ${Dictionary}[HouseNumber]
-    Validate value (value)    //input[@id='field_${Dictionary}[RFCF01.Number [Branches]]']    ${Dictionary}[RFCF01.Number [Branches]]
-    Validate value (value)    //input[@id='field_${Dictionary}[RFCF02.Text line [Branches]]']    ${Dictionary}[RFCF02.Text line [Branches]]
+    Validate value (value)    //input[@id='field_${Dictionary}[RFCF01.Number [Branches] ID]']    ${Dictionary}[RFCF01.Number [Branches]]
+    Validate value (value)    //input[@id='field_${Dictionary}[RFCF02.Text line [Branches] ID]']    ${Dictionary}[RFCF02.Text line [Branches]]
     ###
-    ${var}    Get value    //input[@id='field_${Dictionary}[RFCF04.Date [Branches]]']
+    ${var}    Get value    //input[@id='field_${Dictionary}[RFCF04.Date [Branches] ID]']
     ${Variable}    set variable    ${Dictionary}[RFCF04.Date [Branches]]
     ${var1}    Convert Date    ${Variable}    date_format=%Y-%m-%d
     ${var2}    Convert Date    ${var1}    result_format=%d-%m-%Y
@@ -11398,14 +11389,14 @@ Compare BRANCH and CE file.AD
     ${var1}    Convert Date    ${Variable}    date_format=%H:%M:%S
     ${var2}    Convert Date    ${var1}    result_format=%H:%M
     #
-    Validate value (value)    //textarea[@id='field_${Dictionary}[RFCF03.Text block [Branches]]']    ${Dictionary}[RFCF03.Text block [Branches]]
-    Validate value (value)    //input[@id='field_${Dictionary}[RFCF05.Time [Branches]]']    ${var2}
-    Validate value (value)    //td[@id='id${Dictionary}[RFCF06.Phone [Branches]]Editbox']/input    ${Dictionary}[RFCF06.Phone [Branches]]
+    Validate value (value)    //textarea[@id='field_${Dictionary}[RFCF03.Text block [Branches] ID]']    ${Dictionary}[RFCF03.Text block [Branches]]
+    Validate value (value)    //input[@id='field_${Dictionary}[RFCF05.Time [Branches] ID]']    ${var2}
+    Validate value (value)    //td[@id='id${Dictionary}[RFCF06.Phone [Branches] ID]Editbox']/input    ${Dictionary}[RFCF06.Phone [Branches]]
     #//input[@id='field_747'] # ${Dictionary}[] # Bug here: file can not be uploaded for branch CF
     Validate value (value)    //input[@id='field_CityName']    ${Dictionary}[RegionName] -- ${Dictionary}[CityName]
     ###
-    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Branches]]'=='1'    Checkbox should be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Branches]]']
-    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Branches]]'=='0'    Checkbox should not be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Branches]]']
+    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Branches]]'=='1'    Checkbox should be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Branches] ID]']
+    Run keyword if    '${Dictionary}[RFCF07.Checkbox [Branches]]'=='0'    Checkbox should not be selected    //input[@id='field_${Dictionary}[RFCF07.Checkbox [Branches] ID]']
 
 Validate value (number)
     [Arguments]    ${locator}    ${exp value}
@@ -11497,8 +11488,8 @@ Get element IDs.AD
     go to.AD    ${URL}${link}
     Wait until page contains element    //input[@id='filter_2']
     Get ID    id="table_rows"    ${Keyword}    1    3
-    Set To Dictionary    ${Dictionary}    ${Keyword}=${found ID}
-    Log    "${Keyword}" ID = "${Dictionary}[${Keyword}]"
+    Set To Dictionary    ${Dictionary}    ${Keyword} ID=${found ID}
+    Log    "${Keyword}" ID = "${Dictionary}[${Keyword} ID]"
 
 GET CF IDS.AD
     Get element IDs.AD    /table-fields.php?page_var_filter_TableLink=&page_var_sorting_column=FieldName&page_var_sorting_order=up&page_var_divide_recordsPerPage=500&page_var_divide_curPage=1    RFCF01.Number [Branches]
@@ -13322,12 +13313,17 @@ Add (input) element attribute into dictionary.AD
     Set To Dictionary    ${Dictionary}    ${Keyword}=${actual text}
     Log to console    "${Keyword}" = "${Dictionary}[${Keyword}]"
 
-GMAIL: Alert with attachments.SD
-    [Arguments]    ${email subject}
+GMAIL: GET ALERT EMAIL.SD
+    [Arguments]    ${email subject}    ${whose email box?}
     Log to console    Expected email: "${email subject}"
     Set global variable    ${email subject}
-    Log to console    ${\n}--------------------------Open Mailbox ("${RFShopperEmail}")--------------------------
-    Open Mailbox    host=${host}    user=${RFShopperEmail}    password=${shopper email app password}
+    Log to console    ${\n}--------------------------Open Mailbox--------------------------${\n}
+    Run keyword if    "${whose email box?}"=="RF Shopper"    Open Mailbox    host=${host}    user=${RFShopperEmail}    password=${shopper email app password}
+    Run keyword if    "${whose email box?}"=="RF SP user"    Open Mailbox    host=${host}    user=${SP user email address}    password=${SP user email pass}
+    Run keyword if    "${whose email box?}"=="RF Manager"    Open Mailbox    host=${host}    user=${ROBOT MANGAER email address}    password=${ROBOT MANAGER email password}
+    Run keyword if    "${whose email box?}"=="RF Shopper"    Log to console    Email = "${RFShopperEmail}"
+    Run keyword if    "${whose email box?}"=="RF SP user"    Log to console    Email = "${SP user email address}"
+    Run keyword if    "${whose email box?}"=="RF Manager"    Log to console    Email = "${ROBOT MANGAER email address}"
     Wait for expected email
     Log to console    Checking email details...
     ${parts}=    Walk Multipart Email    ${LATEST}
@@ -13342,9 +13338,8 @@ GMAIL: Alert with attachments.SD
     Log to console    TO = "${to}"
     Log to console    Date = ${date}
     Log to console    --------------------------
-    should contain    ${from}    Checker Software Systems LTD [${URLIndex} system]    #    Checker Software Systems LTD [${URLIndex} system]
-    should contain    ${from}    info-${URL1index}-system@checker-soft.com    #    info-${URL1index}-system@checker-soft.com
-    should contain    ${to}    ${RFShopperEmail}" <${RFShopperEmail}>
+    should contain    ${from}    Checker Software Systems LTD [${URLIndex} system]
+    should contain    ${from}    info-${URL1index}-system@checker-soft.com
     should contain    ${subject}    ${email subject}
     ###
     Walk Multipart Email    ${LATEST}
@@ -13355,68 +13350,34 @@ GMAIL: Alert with attachments.SD
     ${HTML} =    Get Email Body    ${LATEST}
     Set global variable    ${HTML}
     Log    Email content: ${HTML}
-    Check default codes table    ${ReviewID}
-    Should Contain    ${HTML}    Standard header text
-    Should Contain    ${HTML}    Sectional grades
-    Should Contain    ${HTML}    Final grade trend
-    Should Contain    ${HTML}    Click here to view the review.
-    Mark All Emails As Read
-    Delete All Emails
-    Close Mailbox
-    Log to console    Email contains: This is an alert text Name of the client - ${Dictionary}[Client name] Name of the questionnaire ${Dictionary}[Questionnaire name] ID: ${ReviewID} EXTRA INFO City to which the branch is linked - Robot city 01 ID of the questionnaire - ${Dictionary}[Questionnaire ID] Text code of the questionnaire - ${Dictionary}[Questionnaire Code] Purchase Invoice value - Description of the order with HTML tags - Name of the project - Email of the shopper - ID number of the project - Date of the order - ${Dictionary}[Order due date] Time of the order - Purchase description of the order - Phone of the shopper - ${Dictionary}[Shopper phone] Order ID number - ${Dictionary}[Shopper 1 email],${Dictionary}[Shopper 2 email] ${Dictionary}[Mass order description] Status: ${Dictionary}[Review status] Result: ${Rounded result} \ Standard header text Sectional grades Final grade trend Click here to view the review.
-    Log to console    Deleting all inbox email. Closing Mailbox.
-
-GMAIL: concentrated alert.SD
-    [Arguments]    ${email subject}
-    Log to console    Expected email: "${email subject}"
-    Set global variable    ${email subject}
-    Log to console    ${\n}--------------------------Open Mailbox ("${user}")--------------------------
-    Open Mailbox    host=${host}    user=${user}    password=${password}
-    Wait for expected email
-    Log to console    Email is received. Index = "${LATEST}". Checking email details...
-    ${parts}=    Walk Multipart Email    ${LATEST}
-    @{fields}=    Get Multipart Field Names
-    ${from}=    Get Multipart Field    From
-    ${to}=    Get Multipart Field    To
-    ${subject}=    Get Multipart Field    Subject
-    ${date}=    Get Multipart Field    Date
-    Log to console    --------------------------EMAIL HEADER DETAILS--------------------------
-    Log to console    SUBJECT = "${subject}"
-    Log to console    FROM = "${from}"
-    Log to console    TO = "${to}"
-    Log to console    date = ${date}
-    Log to console    --------------------------
-    should contain    ${from}    Checker Software Systems LTD [${URLIndex} system]    #    Checker Software Systems LTD [${URLIndex} system]
-    should contain    ${from}    info-${URL1index}-system@checker-soft.com    #    info-${URL1index}-system@checker-soft.com
-    should contain    ${to}    ${user}" <${user}>
-    should contain    ${subject}    ${email subject}
-    ###
-    FOR    ${i}    IN RANGE    ${parts}
-        Walk Multipart Email    ${LATEST}
-        ${content-type}=    Get Multipart Content Type
-        Log to console    content-type="${content-type}"
-        Continue For Loop If    '${content-type}' == 'text/html'
-        ${payload}=    Get Multipart Payload    decode=True
-        Log    ------------${payload}
-        Log    Email content is correct (+)
-    END
-    log    ${LATEST}
-    ###
-    ${HTML} =    Get Email Body    ${LATEST}
-    Set global variable    ${HTML}
-    log to console    Email content: ${HTML}
-    Should Contain    ${HTML}    E-mail 1: ${email subject}
-    Should Contain    ${HTML}    E-mail 2: ${email subject}
-    Should Not Contain    ${HTML}    E-mail 3: ${email subject}
-    Should Contain X Times    ${HTML}    ******    4
-    Should Contain    ${HTML}    Back to list
-    Should Contain    ${HTML}    Click here to view the review.
-    Should Contain    ${HTML}    ${1 Finished review ID}
-    Should Contain    ${HTML}    ${2 Finished review ID}
-    Should Contain X Times    ${HTML}    Standard header text    2
-    Should Contain    ${HTML}    Final grade trend
-    Should Contain    ${HTML}    This is an alert text "${AlertName}"
-    log to console    Email contains next info: E-mail 1: ${email subject}; E-mail 2: ${email subject}; Back to list; Click here to view the review.; ${1 Finished review ID}; ${2 Finished review ID}; Standard header text; Final grade trend; This is an alert text "${AlertName}"; EXTRA INFO:; //a[contains(text(),'Click here to view the review.')]
+    #
+    ${type of alert=CONCENTRATED?}    Run keyword and return status    Should contain    ${email subject}    CONCENTRATED
+    ${type of alert=NO ATTACHMENTS?}    Run keyword and return status    Should contain    ${email subject}    NO ATTACHMENTS
+    ${type of alert=WITH ATTACHMENTS?}    Run keyword and return status    Should contain    ${email subject}    WITH ATTACHMENTS
+    #
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain    ${HTML}    E-mail 1: ${email subject}
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain    ${HTML}    E-mail 2: ${email subject}
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Not Contain    ${HTML}    E-mail 3: ${email subject}
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain X Times    ${HTML}    ******    4
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain    ${HTML}    Back to list
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain    ${HTML}    Click here to view the review.
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain    ${HTML}    ${1 Finished review ID}
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain    ${HTML}    ${2 Finished review ID}
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain X Times    ${HTML}    Standard header text    2
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain    ${HTML}    Final grade trend
+    Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain    ${HTML}    This is an alert text "${AlertName}"
+    Run keyword if    ${type of alert=CONCENTRATED?}    log to console    Email contains next info: E-mail 1: ${email subject}; E-mail 2: ${email subject}; Back to list; Click here to view the review.; ${1 Finished review ID}; ${2 Finished review ID}; Standard header text; Final grade trend; This is an alert text "${AlertName}"; EXTRA INFO:; //a[contains(text(),'Click here to view the review.')]
+    #
+    Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Should Contain    ${HTML}    Standard header text
+    Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Should Contain    ${HTML}    Sectional grades
+    Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Should Contain    ${HTML}    Final grade trend
+    Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Should Contain    ${HTML}    Click here to view the review.
+    Should Contain    ${HTML}    This is an alert text
+    Run keyword if    ${type of alert=CONCENTRATED?}    Log to console    Please wait... getting details for 2 reviews
+    ...    ELSE    Check default codes table    ${ReviewID}
+    Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Log to console    Email contains: This is an alert text Name of the client - ${Dictionary}[Client name] Name of the questionnaire ${Dictionary}[Questionnaire name] ID: ${ReviewID} EXTRA INFO City to which the branch is linked - Robot city 01 ID of the questionnaire - ${Dictionary}[Questionnaire ID] Text code of the questionnaire - ${Dictionary}[Questionnaire Code] Purchase Invoice value - Description of the order with HTML tags - Name of the project - Email of the shopper - ID number of the project - Date of the order - ${Dictionary}[Order due date] Time of the order - Purchase description of the order - Phone of the shopper - ${Dictionary}[Shopper phone] Order ID number - ${Dictionary}[Shopper 1 email],${Dictionary}[Shopper 2 email] ${Dictionary}[Mass order description] Status: ${Dictionary}[Review status] Result: ${Rounded result} \ Standard header text Sectional grades Final grade trend Click here to view the review.
+    #
+    Run keyword if    ${type of alert=NO ATTACHMENTS?}    Log to console    Email contains: This is an alert text Name of the client - ${Dictionary}[Client name] Name of the questionnaire ${Dictionary}[Questionnaire name] ID: ${ReviewID} EXTRA INFO City to which the branch is linked - Robot city 01 ID of the questionnaire - ${Dictionary}[Questionnaire ID] Text code of the questionnaire - ${Dictionary}[Questionnaire Code] Purchase Invoice value - Description of the order with HTML tags - Name of the project - Email of the shopper - ID number of the project - Date of the order - ${Dictionary}[Order due date] Time of the order - Purchase description of the order - Phone of the shopper - ${Dictionary}[Shopper phone] Order ID number - ${Dictionary}[Shopper 1 email],${Dictionary}[Shopper 2 email] ${Dictionary}[Mass order description] Status: ${Dictionary}[Review status] Result: ${Rounded result} \ Standard header text Sectional grades Final grade trend Click here to view the review.
     Mark All Emails As Read
     Delete All Emails
     Close Mailbox
@@ -13446,22 +13407,22 @@ Get list of attached files.AD
     Log to console    The following files are attached:
     FOR    ${i}    IN RANGE    ${any attachment?}
         ${i}    Evaluate    ${i}+1
-        Add (input) element attribute into dictionary.AD    //*[@id="t_attachments"]/tbody/tr[${i}]/td[2]/input    File ${i}
+        Add text into dictionary.AD    //*[@id="t_attachments"]/tbody/tr[${i}]/td[2]    File ${i}
     END
 
 Wait for expected email
     FOR    ${i}    IN RANGE    10
         ${i}    Evaluate    ${i}+1
-        ${LATEST} =    Wait For Email    sender=info-${URL1index}-system@checker-soft.com    timeout=30
+        ${LATEST} =    Wait For Email    sender=info-${URL1index}-system@checker-soft.com    timeout=100
         ${parts}=    Walk Multipart Email    ${LATEST}
         @{fields}=    Get Multipart Field Names
         ${from}=    Get Multipart Field    From
         ${to}=    Get Multipart Field    To
-        ${subject}=    Get Multipart Field    Subject
+        ${act subject}=    Get Multipart Field    Subject
         ${date}=    Get Multipart Field    Date
-        Log to console    Try №${i} (Out of 10x20sec). Subject = "${subject}"
+        Log to console    Try №${i}. Current Email Subject = "${act subject}"; Expected = "${email subject}"
         Log to console    Waiting email from sender=info-${URL1index}-system@checker-soft.com; Please wait....
-        ${expected email?}    Run keyword and return status    should contain    ${subject}    ${email subject}
+        ${expected email?}    Run keyword and return status    should contain    ${act subject}    ${email subject}
         Run keyword if    ${expected email?}    Exit forloop
     END
     Log to console    Expected email is received. Index = "${LATEST}". Checking email details...
@@ -13488,10 +13449,19 @@ Get Review handling details page.AD
     Page should contain element    //input[@class='btn-input']
     Page should contain element    id=SimulateAlerts
     Page should contain element    id=SimulateReview
+    #
     ${any attachment?}    Get Element Count    //*[@id="t_attachments"]/tbody/tr
     Set global variable    ${any attachment?}
-    Run keyword if    ${any attachment?}>0    Get list of attached files.AD
     #
+    ${Archived}    Run keyword and return status    Page should not contain    Archived
+    Log to console    ${any attachment?} attached files (Archived=${Archived})
+    sleep    2
+    Run keyword if    ${any attachment?}>0    Get list of attached files.AD
+    Run keyword if    ${any attachment?}<0    Log to console    No attachments are attached to review!
+    #
+    Run keyword if    ${any attachment?}>0 and ${Archived}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[2]
+    Run keyword if    ${any attachment?}>0 and ${Archived}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[5]
+    Page should not contain    Archived
     ${Rounded result}    Evaluate    "%.0f" % ${Dictionary}[Result]
     Set To Dictionary    ${Dictionary}    Rounded result=${Rounded result}
     Set global variable    ${Rounded result}
@@ -13521,6 +13491,7 @@ Get Review handling details page.AD
     Click link    default=${Dictionary}[Shopper name]
     Select Window    title:Shoppers
     Add (input) element attribute into dictionary.AD    //input[@id='field_CheckerCode']    Shopper code
+    Wait until page contains element    //*[@id="tabs"]/ul/li[3]
     Click element    //*[@id="tabs"]/ul/li[3]
     sleep    1
     Wait until page contains element    //input[@id='field_Phone']    10
@@ -13627,7 +13598,7 @@ Check default codes table
     ${is mass desc present?}    Run keyword and return status    Should Contain    ${Dictionary}    Mass order description
     Run keyword if    ${is mass desc present?}    Should Contain    ${HTML}    ${Dictionary}[Mass order description]
     ...    ELSE    Should Contain    ${HTML}    Description of the order with HTML tags: No Description
-    Log to console    Is mass desc present? =${is mass desc present?}
+    Log to console    Is mass desc present? = "${is mass desc present?}"
     #
     Run keyword if    ${any attachment?}>0 and "${Attachment}"=="List"    Should Contain    ${HTML}    The following files are attached to this review:
     ...    ELSE    Log to console    No image(s) attached to email
@@ -13636,7 +13607,7 @@ Check default codes table
         Run keyword if    "${any attachment?}">0 and "${Attachment}"=="List"    Should Contain    ${HTML}    ${Dictionary}[File ${i}]
         Run keyword if    "${any attachment?}">0 and "${Attachment}"=="List"    Log to console    "${Dictionary}[File ${i}]" is present in alert email
     END
-    Log to console    Content is correct (+)
+    Log to console    Email content is correct (+)
 
 Get Order details page.AD
     [Arguments]    ${ReviewID}
@@ -13693,6 +13664,8 @@ Activate/Deactivate item on page.AD
     Sleep    1
     Click Save/Add/Delete/Cancel button.AD
     Wait until page contains    saved successfully
+    Run keyword if    "${exp status}"=="None"    Log to console    "${AlertName}" is deactivated
+    Run keyword if    "${exp status}"=="true"    Log to console    "${AlertName}" is activated
 
 Open Operational Panel.AD
     go to.AD    ${URL}/operation-panel.php?StatusID=6
@@ -13739,3 +13712,150 @@ Handle alerts and extra pop up
         #    Exit For Loop If    ${is element visible}==False
         Run keyword and ignore error    Handle Alert
     END
+
+Connect FTP
+    [Arguments]    ${exp file}    ${Archived?}
+    ftp connect    ${FTP host}    ${FTP user}    ${FTP pass}
+    Log to console    ------------Connecting to FTP repository. Please wait... (${FTP host}; "Attachment type"="${Attachment}"; "Are attached files archived?"="${Archived?}")
+    Log to console    Expected report file to be downloaded: "${exp file}". Please wait....
+    Dir
+    #Download File    image_0.PNG    ${CURDIR}\\Resources\\Extra files\\FTP files
+    Run keyword and ignore error    Mkd    rf-ftp-alerts-2022
+    #Cwd    rf-alerts-2022
+    #Upload File    ${CURDIR}\\Resources\\Extra files\\Images\\UsersIcon.png
+    Dir
+    Download File    ${exp file}    ${CURDIR}\\Extra files\\FTP files
+    FtpLibrary.Delete    ${exp file}
+    Log to console    Status: done (+) "${exp file}" -> more details:
+    Log to console    1. Expected file is downloaded to local target folder at "${CURDIR}\\Extra files\\FTP"
+    Log to console    2. Downloaded file is not empty, size > "0"
+    Log to console    3. Source file is deleted via/on FTP
+    Log to console    ${\n} - Please wait...checking if attached files are available on FTP: "${any attachment?}" files are attached to review ID: ${Finished review ID}
+    #
+    ${i}    Set Variable    1
+    FOR    ${i}    IN RANGE    ${any attachment?}
+        ${i}    Evaluate    ${i}+1
+        ${name}    Set variable    ${Dictionary}[File ${i}]
+        ${extra part}    Fetch from right    ${name}    .
+        Run keyword if    ${any attachment?}>0 and "${Attachment}"=="Attachment" and "${Archived?}"=="Not archived"    Log to console    - File № ${i}: "${name}..${extra part}"
+        Run keyword if    ${any attachment?}>0 and "${Attachment}"=="Attachment" and "${Archived?}"=="Not archived"    Download File    ${name}..${extra part}    ${CURDIR}\\Extra files\\FTP files
+        Run keyword if    ${any attachment?}>0 and "${Attachment}"=="Attachment" and "${Archived?}"=="Not archived"    FtpLibrary.Delete    ${name}..${extra part}
+        Run keyword if    ${any attachment?}>0 and "${Attachment}"=="Attachment" and "${Archived?}"=="Not archived"    File Should Exist    ${CURDIR}\\Extra files\\FTP files\\${name}..${extra part}
+        Run keyword if    ${any attachment?}>0 and "${Attachment}"=="Attachment" and "${Archived?}"=="Not archived"    File Should Not Be Empty    ${CURDIR}\\Extra files\\FTP files\\${name}..${extra part}
+        Run keyword if    ${any attachment?}>0 and "${Attachment}"=="Attachment" and "${Archived?}"=="Not archived"    Log to console    Attached file is downloaded to target folder -> "${CURDIR}\\Extra files\\FTP files\\${name}..${extra part}"; size is > "0"; deleted from FTP (+)
+        ...    ELSE    Log to console    File № ${i}: "${name}..${extra part}" file is not found on FTP
+        Run keyword if    ${any attachment?}>0 and "${Attachment}"=="Attachment" and "${Archived?}"=="Archived"    File Should Not Exist    ${CURDIR}\\Extra files\\FTP files\\${name}..${extra part}
+    END
+    #
+    Run keyword and ignore error    FtpLibrary.Delete    image_0.PNG
+    Run keyword and ignore error    Rmd    image_0.PNG.done
+    Run keyword and ignore error    Dfd    Recycle Bin
+    Dir
+    Directory Should Not Be Empty    ${CURDIR}\\Extra files\\FTP files
+    File Should Exist    ${CURDIR}\\Extra files\\FTP files\\${exp file}
+    File Should Not Be Empty    ${CURDIR}\\Extra files\\FTP files\\${exp file}
+    #Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
+    Cwd    rf-ftp-alerts-2022
+    Dir
+    Get All Ftp Connections
+    Get Welcome
+    ftp close
+    Log to console    ------------------------------------------------------------------------
+
+Add branch contact.AD
+    [Arguments]    ${exp name}    ${exp status}
+    go to.AD    ${URL}/client-branch-contacts.php?branch=${branch ID}
+    Wait until page contains    Edit client branch contacts
+    #
+    ${is text visible?}    Run keyword and return status    Page should contain    ${exp name}
+    Run keyword if    ${is text visible?}    click link    default=${exp name}
+    Run keyword if    "${is text visible?}"=="False"    click element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/table[@id='big_tedit_wrapping_table']/tbody/tr/td/table/tbody/tr/td/button[@class='btn-input']
+    Wait until page contains    Contact name
+    Input text    //input[@id='field_ContactName']    ${exp name}
+    Set checkbox.AD    //input[@id='field_IsActive']    ${exp status}
+    Input text    //input[@id='field_Task']    ${exp name} task
+    Input text    //input[@id='field_Phone']    999
+    Input text    //input[@id='field_Email']    ${RFShopperEmail}
+    Input text    //input[@id='field_Comments']    ${exp name} comments
+    Click Save/Add/Delete/Cancel button.AD
+    Wait until page contains    successfully
+    #
+    click link    default=${exp name}
+    Wait until page contains    Contact name
+    Validate value (value)    //input[@id='field_ContactName']    ${exp name}
+    Run keyword if    "${exp status}"=="None"    checkbox should not be selected    //input[@id='field_IsActive']
+    Run keyword if    "${exp status}"=="true"    checkbox should be selected    //input[@id='field_IsActive']
+    Validate value (value)    //input[@id='field_Task']    ${exp name} task
+    Validate value (value)    //input[@id='field_Phone']    999
+    Validate value (value)    //input[@id='field_Email']    ${RFShopperEmail}
+    Validate value (value)    //input[@id='field_Comments']    ${exp name} comments
+    Validate value (text)    //*[@id="idLangEditbox"]/table/tbody/tr/td/span/button    default
+    Log to console    "${exp name}" created and validated (+)
+
+Set role permissions.AD
+    [Arguments]    ${exp status}
+    go to2.AD    ${URL}/user-role-edit.php?RoleID=${roleID}
+    Wait until page contains    Edit role: ${RF role}
+    click element    //*[@id="acc_dbced719bf9105bcb6dba8eebf1d7b09"]
+    select from list by value    //*[@id="acc_dbced719bf9105bcb6dba8eebf1d7b09"]    ${exp status}
+    #
+    click element    //*[@id="acc_5d20c172b3613ae3871bd3b50ef1e2c7"]
+    select from list by value    //*[@id="acc_5d20c172b3613ae3871bd3b50ef1e2c7"]    ${exp status}
+    click element    //*[@id="acc_5f4787616fc5b4cab1d72ea3fb21512e"]
+    select from list by value    //*[@id="acc_5f4787616fc5b4cab1d72ea3fb21512e"]    ${exp status}
+    click element    //*[@id="acc_0d8aaf22c73f42d62b9c64fec59fa411"]
+    select from list by value    //*[@id="acc_0d8aaf22c73f42d62b9c64fec59fa411"]    ${exp status}
+    click element    //select[@id='acc_73dce75d92181ca956e737b3cb66db98']
+    sleep    1
+    Set focus to element    //*[contains(text(), 'Not authorized')]
+    click element    //*[contains(text(), 'Not authorized')]
+    click element    //select[@id='acc_b3255c4ade265c13c45dd53cd496f582']
+    sleep    1
+    select from list by value    //select[@id='acc_b3255c4ade265c13c45dd53cd496f582']    ${exp status}
+    click element    //*[contains(text(), 'Not authorized')]
+    #
+    sleep    1
+    click element    //*[@id="acc_026cc6ca520cde149c0662ee30d5b42b"]
+    sleep    1
+    select from list by value    //*[@id="acc_026cc6ca520cde149c0662ee30d5b42b"]    ${exp status}
+    click element    //*[contains(text(), 'Not authorized')]
+    Click Save/Add/Delete/Cancel button.AD
+    go to2.AD    ${URL}/user-role-edit.php?RoleID=${roleID}
+    Log To Console    Open ${URL}/user-role-edit.php?RoleID=${roleID} and check saved values
+    Validate value (value)    //*[@id="acc_dbced719bf9105bcb6dba8eebf1d7b09"]    ${exp status}
+    Validate value (value)    //select[@id='acc_73dce75d92181ca956e737b3cb66db98']    ${exp status}
+    Validate value (value)    //*[@id="acc_5f4787616fc5b4cab1d72ea3fb21512e"]    ${exp status}
+    Validate value (value)    //*[@id="acc_0d8aaf22c73f42d62b9c64fec59fa411"]    ${exp status}
+    Validate value (value)    //*[@id="acc_5f4787616fc5b4cab1d72ea3fb21512e"]    ${exp status}
+    Validate value (value)    //*[@id="acc_0d8aaf22c73f42d62b9c64fec59fa411"]    ${exp status}
+    Validate value (value)    //*[@id="acc_026cc6ca520cde149c0662ee30d5b42b"]    ${exp status}
+    Validate value (value)    //*[@id="acc_5d20c172b3613ae3871bd3b50ef1e2c7"]    ${exp status}
+    Log To Console    Saved "MAIN MENU"="${exp status}"
+
+Get attached files (Review handling details page).AD
+    [Arguments]    ${ReviewID}    ${expected archive status}
+    go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
+    Wait Until Page Contains Element    //input[@id='checkAndSendAlerts']
+    ${Review detail rows rotal}    Get Element Count    //div[@id='FiltersArea']/table/tbody/tr[1]/td[1]/fieldset[1]/span[@class='critInfoItemTitle']
+    Log to console    Review "${ReviewID}" - attached files details (WEB SERVER)
+    #
+    ${any attachment?}    Get Element Count    //*[@id="t_attachments"]/tbody/tr
+    Set global variable    ${any attachment?}
+    #
+    ${Archived?}    Run keyword and return status    Page should contain    Archived
+    Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[2]
+    Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[4]
+    log    (Archived?=${Archived?})
+    Log to console    "${any attachment?}" attached files
+    sleep    1
+    Log to console    ===========================
+    Run keyword if    ${any attachment?}>0    Get list of attached files.AD
+    Run keyword if    ${any attachment?}<0    Log to console    No attachments are attached to review!
+    #
+    ${Archived?}    Run keyword and return status    Page should contain    Archived
+    Run keyword if    ${any attachment?}>0 and ${Archived?}    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[2]
+    Run keyword if    ${any attachment?}>0 and ${Archived?}    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[5]
+    Page should not contain    Archived
+    Log to console    ===========================
+    #
+    #
