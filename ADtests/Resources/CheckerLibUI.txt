@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -2933,6 +2933,7 @@ Search client using search bar.AD
     ${Client ID}    Set variable    ${found ID}
     Set global variable    ${Client ID}
     Set To Dictionary    ${Dictionary}    ${RobotTestClient}=${found ID}
+    Log to console    -------
 
 Search Client.AD
     go to.AD    ${URL}/main-menu.php
@@ -9646,14 +9647,15 @@ Open OP and filter reviews.AD
         ${rowindex}=    Evaluate    ${rowindex}+1
         Set global variable    ${rowindex}
         ${actual review ID}=    Get Text    //*[@id="table_rows"]/tbody/tr[${rowindex}]/td[2]
-        Run Keyword If    "${actual review ID}" == "${ReviewID}"    click element    //*[@id="table_rows"]/tbody/tr[${rowindex}]/td[1]
-        Run Keyword If    "${actual review ID}" == "${ReviewID}"    log to console    found row ${rowindex}
+        Sleep    1
         Run Keyword If    "${actual review ID}" == "${ReviewID}"    Scroll Element Into View    //*[@id="table_rows"]/tbody/tr[${rowindex}]/td[1]
+        Run Keyword If    "${actual review ID}" == "${ReviewID}"    log to console    Found. Row № "${rowindex}"
+        Run Keyword If    "${actual review ID}" == "${ReviewID}"    Click element    //*[@id="table_rows"]/tbody/tr[${rowindex}]/td[1]
         Run Keyword If    "${actual review ID}" == "${ReviewID}"    exit for loop
         Log to console    № ${rowindex}. Found order "${actual review ID}" == "${ReviewID}"
     END
     Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-    Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
+    Sleep    1
     click element    ReturnCrits
     Wait until page contains    The following reviews were sent back to the shoppers: ${ReviewID}    10
     Log to console    The following reviews were sent back to the shoppers: ${ReviewID}
@@ -13411,7 +13413,7 @@ Get list of attached files.AD
     END
 
 Wait for expected email
-    FOR    ${i}    IN RANGE    10
+    FOR    ${i}    IN RANGE    3
         ${i}    Evaluate    ${i}+1
         ${LATEST} =    Wait For Email    sender=info-${URL1index}-system@checker-soft.com    timeout=100
         ${parts}=    Walk Multipart Email    ${LATEST}
@@ -13420,7 +13422,8 @@ Wait for expected email
         ${to}=    Get Multipart Field    To
         ${act subject}=    Get Multipart Field    Subject
         ${date}=    Get Multipart Field    Date
-        Log to console    Try №${i}. Current Email Subject = "${act subject}"; Expected = "${email subject}"
+        Log to console    Try №${i}. Current Email Subject = "${act subject}"; Expected = "${email subject}" (-)
+        sleep    2
         Log to console    Waiting email from sender=info-${URL1index}-system@checker-soft.com; Please wait....
         ${expected email?}    Run keyword and return status    should contain    ${act subject}    ${email subject}
         Run keyword if    ${expected email?}    Exit forloop
@@ -13859,3 +13862,16 @@ Get attached files (Review handling details page).AD
     Log to console    ===========================
     #
     #
+
+Set client autocritapprove.AD
+    [Arguments]    ${exp status?}
+    go to.AD    ${URL}/clients.php?_&edit=${Client ID}
+    Wait until page contains element    //input[@id='field_AutomaticCritApproval']
+    Set checkbox.AD    //input[@id='field_AutomaticCritApproval']    ${exp status?}
+    Click Save/Add/Delete/Cancel button.AD
+    Wait until page contains    saved successfully
+    go to.AD    ${URL}/clients.php?_&edit=${Client ID}
+    Wait until page contains element    //input[@id='field_AutomaticCritApproval']
+    Run keyword if    '${exp status?}' == 'true'    Checkbox should be selected    //input[@id='field_AutomaticCritApproval']
+    Run keyword if    '${exp status?}' == 'None'    Checkbox should not be selected    //input[@id='field_AutomaticCritApproval']
+    Log to console    Client AutomaticCritApproval feature is set to = "${exp status?}" (+)

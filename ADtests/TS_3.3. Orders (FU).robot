@@ -719,7 +719,7 @@ JOB: Manager returns review to shopper (from 2 pages: OP and handling details)
     Close Browser
     [Teardown]    Close Browser.AD
 
-JOB: Alert. Send repeatedly+Alert condition
+JOB: Alert. Send repeatedly(Off)+Alert condition
     [Tags]    Order    Critical    Alert
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -734,12 +734,14 @@ JOB: Alert. Send repeatedly+Alert condition
         ${Internal message}    Set variable
         Set global variable    ${Internal message}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        #    Set Records per page    100
+        Set Records per page    100
         Search client using search bar.AD
+        Set client autocritapprove.AD    None
         ${AlertName}=    Set variable    RF_ALERT - SEND REPEATEDLY
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
+        Log to console    SCENARIO: 1. Setting alert to "Send repeatedly"=OFF 2. Shopper finish review 3. Alert is sent 4. Review is sent back to a shopper 5. Review is submitted by shopper 6. Alert is not sent
         Add/Edit alert.AD    Finished, awaiting approval    ${AlertName}    $[207]$=46 || $[221]$>=45 & $[218]$='RF Questionnaire [Shoppers]' || $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${RFShopperEmail}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No
     #
         Create test order (MASS) - BASIC    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}

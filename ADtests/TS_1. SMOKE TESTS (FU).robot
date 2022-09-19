@@ -34,6 +34,8 @@ MysteryShopping_01: Shopper submits a review (check only review statuses and sav
         Click Save/Add/Delete/Cancel button.AD
         Wait until page contains    Display settings saved successfully
         Make visible Job columns.AD    true    on
+        Search client using search bar.AD
+        Set client autocritapprove.AD    None
         Search the Q-ry (via search bar).AD    ${RobotQ-ry SHOPPERS}
         Edit questionnaire.AD    RFQRY-SHO-03    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
         Get question ID
@@ -186,7 +188,7 @@ PhoneSurvey_03: Shopper submits a Phone survey (check saved answers)
         Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
         Wait until page contains    New row
         ${mobile}=    Generate Random String    10    [NUMBERS]
-        ${ID}    Generate Random String    4    [NUMBERS]
+        ${ID}    Generate Random String    10    [NUMBERS]
         Run keyword and ignore error    Input text    //input[@id='field_CellNumber']    +9${mobile}
         Run keyword and ignore error    Input text    //input[@id='field_Cellular']    +9${mobile}
         Run keyword and ignore error    Input text    //input[@id='field_SmpRowID']    ${ID}
