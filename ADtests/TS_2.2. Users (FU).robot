@@ -29,7 +29,7 @@ TC_0001. Check creation of Manager user (edit profile)
         Add quick link.AD    AUTO 01 [RF CLIENT]    ${URL}/clients.php?_&edit=${client ID}    Edit clients    Header    2
         Add quick link.AD    MY CLIENT    ${URL}/clients.php?_&edit=${client ID}    Edit clients    Main menu    3
         Add quick link.AD    RF INTERNET SURVEY(s)    ${URL}/internet-surveys.php?page_var_divide_recordsPerPage=100&page_var_divide_curPage=1&page_var_sorting_column=SurveyName&page_var_sorting_order=up&page_var_filter_IsActive=1&page_var_filter_ClientLink=${client ID}    Internet surveys    Header    4
-        Add quick link.AD    HANDLE R    ${URL}/crit-handling-details.php?CritID=111111    Handle finished reviews    Header    5
+        Add quick link.AD    HANDLE REVIEW PAGE    ${URL}/crit-handling-details.php?CritID=111111    Handle finished reviews    Header    5
         Add quick link.AD    RF ALERTS    ${URL}/alerts.php?ClientID=${client ID}    Alerts    Main menu    6
         Add quick link.AD    Edit    ${URL}/user-quick-links.php?UserID=${found ID}    Special permissions    Header    6
     END

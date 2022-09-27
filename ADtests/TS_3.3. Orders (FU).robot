@@ -94,7 +94,7 @@ Order: Order assignment is cancelled by manager (order page)
     [Teardown]    Close Browser.AD
 
 Order: Manager dis/approves a review (via OP page)
-    [Tags]    Order    Critical
+    [Tags]    Order
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -150,10 +150,10 @@ Order: Single order assignment notification is recieved by shoppper
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search Client.AD
-        #    Get section ID. AD    Section 01 [RF]
-        #    Get BR property ID. AD    Manager
-        #    Set Operation messages.AD
-        #    Create test order (MASS) - ADVANCED    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}    3
+        Get section ID. AD    Section 01 [RF]
+        Get BR property ID. AD    Manager
+        Set Operation messages.AD
+        Create test order (MASS) - BASIC    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         #    Assign order (via orders-management.php).AD    ${test order description}
         #    Create test order (Single)    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         #    click link    default=Edit assignments
@@ -161,7 +161,7 @@ Order: Single order assignment notification is recieved by shoppper
         Search order via OP.AD
         Click element    //*[@id="table_rows"]/tbody/tr[${rowindex}]/td[11]
         Wait until page contains element    //table/tbody/tr/td[1]/span[@class='CritInfoItem'][9]
-        Element text should be    //table/tbody/tr/td[1]/span[@class='CritInfoItem'][8]    Ordered, awaiting assignation
+        Element text should be    //table/tbody/tr/td[1]/span[@class='CritInfoItem'][9]    Ordered, awaiting assignation
         Select dropdown.AD    //select[@id='PropID']    xpath=//option[contains(.,'${Property name}')]
         Select dropdown.AD    //*[@id="ValueID"]    xpath=//option[contains(.,'Autotest-YES')]
         Select dropdown.AD    //*[@id="pleaseFilter"]    //*[@id="pleaseFilter"]/option[2]
@@ -240,15 +240,16 @@ Order: Manager creates a valid MASS order with N Reviews per branch+assign to ma
         #    Assign property.AD    ${RobotTestShopper 02}
         Create test order (MASS) - ADVANCED    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}    3    1    1    1    1    YES    Enforce WEO-NO    Date Policy-NO
         Search order via OP.AD
-        Click element    //*[@id="table_rows"]/tbody/tr[${rowindex}]/td[11]
-        Get ID from ad bar.AD    OrderID=    ${space}
-        Go to2.AD    ${URL}/edit-multiple-orders.php?OrderIDs=${found ID}
+        sleep    2
+        Run keyword and ignore error    Click element    //*[@id="table_rows"]/tbody/tr[${rowindex}]/td[11]
+        #    Get ID from ad bar.AD    OrderID=    ${space}
+        Go to2.AD    ${URL}/edit-multiple-orders.php?OrderIDs=${found order ID}
         Input text    //*[@id="table_rows"]/tbody/tr/td[10]/input    ${agemin}
         Input text    //*[@id="table_rows"]/tbody/tr/td[11]/input    ${agemax}
         Click element    //*[@id="table_rows"]/tbody/tr/td[1]/input
         Click element    //input[@id='save']
         Wait until page contains    Orders saved
-        Go to2.AD    ${URL}/crit-order-assignments.php?OrderID=${found ID}
+        Go to2.AD    ${URL}/crit-order-assignments.php?OrderID=${found order ID}
         Wait until page contains element    //form/input[@id='show']
     #
         Element should contain    //*[@id="side_menu"]/tbody/tr/td[3]/p/table/tbody/tr/td[4]    Age range:${agemin}-${agemax}
@@ -334,7 +335,7 @@ Order: Manager creates a valid MASS order with N Reviews per branch+assign to ma
         Element text should be    //table/tbody/tr/td[1]/span[@class='CritInfoItem'][10]/a    Robot 02 [Full Name]
         Log to console    Order `${found order ID}` (description="${test order description}") is assigned!
         Manage orders page > Cancel order.AD    ${RobotTestClient}    2
-        go to.AD    ${URL}//crit-order-assignments.php?OrderID=${found order ID}
+        go to.AD    ${URL}/crit-order-assignments.php?OrderID=${found order ID}
         Element text should be    //table/tbody/tr/td[1]/span[@class='CritInfoItem'][9]    Canceled
         Log to console    Order canceled. Order Status (="Canceled") - ok (+)
     END
@@ -524,7 +525,7 @@ Order: Manager creates a valid MASS order with: - (dis)enabled Enforce with exis
     [Teardown]    Close Browser.AD
 
 JOB: Shopper submits a review with attached files (+check reports)
-    [Tags]    Order    Critical    Job
+    [Tags]    Order    Job
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -598,7 +599,7 @@ JOB: Shopper submits a review with attached files (+check reports)
     [Teardown]    Close Browser.AD
 
 JOB: Manager can not return review older 30 days (from 2 pages: OP and handling details)
-    [Tags]    Order    Critical    Job
+    [Tags]    Order    Job
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -633,7 +634,7 @@ JOB: Manager can not return review older 30 days (from 2 pages: OP and handling 
     [Teardown]    Close Browser.AD
 
 JOB: Manager returns review to shopper (from 2 pages: OP and handling details)
-    [Tags]    Order    Critical    Job
+    [Tags]    Order    Job
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -720,7 +721,7 @@ JOB: Manager returns review to shopper (from 2 pages: OP and handling details)
     [Teardown]    Close Browser.AD
 
 JOB: Alert. Send repeatedly(Off)+Alert condition
-    [Tags]    Order    Critical    Alert
+    [Tags]    Alert
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -1061,7 +1062,7 @@ JOB: Shopper rejects job due to not appr time (date policy enabled)
     [Teardown]    Close Browser.AD
 
 JOB: Autoapproved applications is submitted and autoapproved successfully
-    [Tags]    Order    Job
+    [Tags]    Order    Job    9
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -1102,7 +1103,7 @@ JOB: Autoapproved applications is submitted and autoapproved successfully
         Order page - check order status. AD    Ordered, awaiting assignation
         Login as a Shopper
         Open Job Board and apply order.SD    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
-        Page should not contain    ${test order description}
+        #Page should not contain    ${test order description}
         log to console    ---------------------------------
         JOB PAGE: get table titles and IDs
         Search job by order description.SD    ${test order description}
@@ -1122,9 +1123,10 @@ JOB: Autoapproved applications is submitted and autoapproved successfully
         Select dropdown.AD    //center/form/table/tbody/tr[1]/td[1]/table/tbody/tr/td    xpath=//li[contains(.,'${RobotTestClient}')]
         #select from list by label    //select[@id='ClientID']    ${RobotTestClient}
         sleep    1
-        Click element    //center/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button
-        Click element    //div[4]/div/ul/li[2]/a/span[2]
-        Click element    //center/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button
+        #    Click element    //center/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button
+        #    Click element    //div[4]/div/ul/li[2]/a/span[2]
+        #    Click element    //center/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button
+        Click element    //*[@id="BranchFilter"]
         Click element    id=Filter
         Wait until page contains    Job board    5
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)

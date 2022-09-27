@@ -13,6 +13,7 @@ Resource          ${CURDIR}/Resources/Settings.txt
 
 *** Test Cases ***
 Whitelisted IPs > Add IP to whitelist
+    [Tags]    Critical
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -35,6 +36,7 @@ Whitelisted IPs > Add IP to whitelist
     [Teardown]    Close Browser.AD
 
 Blocked IPs > check page availaility
+    [Tags]    Critical
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -139,7 +141,7 @@ Custom fields > Add custom field (Shoppers)
         #Search CF 5    ${Show in registration?} | ${Mandatory?} | ${Allow shopper to edit?} | ${Active?}
         Search CF via table    ${Test Custom Field5}    Shoppers    Time
         Edit CF.AD    true    None    true    true
-        Edit shopper profile(CF).AD    07:30
+        Run keyword and ignore error    Edit shopper profile(CF).AD    07:30
         Open registration page and check agreement box(es)
         Wait until page contains    ${Test Custom Field5}
         Log to console    Registration page does contain "${Test Custom Field5}"
@@ -218,7 +220,7 @@ Custom fields > Add custom field (Shoppers)
         Wait until page contains    ShopperID
         Click Save/Add/Delete/Cancel button.AD
         Run keyword and ignore error    Click element    //*[@id="save"]
-    #    Wait until page contains    saved successfully
+        #    Wait until page contains    saved successfully
         go to.AD    ${URL}/checkers.php?edit=${shopper found ID}
         Wait until page contains    ${Test Custom Field8}
         Page should contain    The following files are attached:
@@ -432,6 +434,7 @@ Custom fields > Add custom field (Branches)
     [Teardown]    Close Browser.AD
 
 Custom fields > Add custom field (Users)
+    [Tags]    Critical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -647,6 +650,7 @@ Custom fields > Add custom field (Orders)
     [Teardown]    Close Browser.AD
 
 Attachment types > Add Attachment types (all types)
+    [Tags]    Critical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window

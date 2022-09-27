@@ -383,7 +383,7 @@ Client. Add alert(s)
     Close Browser
     [Teardown]    Close Browser.AD
 
-Alert. Create repeated alert and delete it
+Alert. Create alert and delete it
     [Tags]    Editor    Alert
     [Setup]
     [Timeout]
@@ -393,7 +393,7 @@ Alert. Create repeated alert and delete it
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
         SET UP
-        ${AlertName}=    Set variable    RF_ALERT - SEND REPEATEDLY
+        ${AlertName}=    Set variable    RF_ALERT - TO BE DELETED
         Set global variable    ${AlertName}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD

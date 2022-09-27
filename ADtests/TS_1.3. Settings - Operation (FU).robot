@@ -27,7 +27,7 @@ Operational settings > Set Operation settings
     [Teardown]    Close Browser.AD
 
 Operation settings > Edit text messages. FU
-    [Tags]    Editor    BUG
+    [Tags]    Editor    Critical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window

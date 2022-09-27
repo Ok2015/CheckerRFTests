@@ -50,6 +50,7 @@ Enter login and password.SD
     Click Element    ${id=submit_button}
     Log to console    Please wait...
     reload page
+    go to.AD    ${URL}/c_ordered-crits.php
     Run keyword and ignore error    Enable agreements.SD
     #Run keyword and ignore error    Switch language.SD    ${UILangauageID}
     Log to console    Shopper is logged in (+)
@@ -2593,9 +2594,11 @@ Open Job Board and apply order.SD
     Select dropdown.AD    //center/form/table/tbody/tr[1]/td[1]/table/tbody/tr/td    xpath=//li[contains(.,'${RobotTestClient}')]
     #select from list by label    //select[@id='ClientID']    ${RobotTestClient}
     sleep    1
-    Click element    //center/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button
-    Click element    //div[4]/div/ul/li[2]/a/span[2]
-    Click element    //center/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button
+    #    Run keyword and ignore error    Click element    //center/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button
+    #    Run keyword and ignore error    Click element    //div[4]/div/ul/li[2]/a/span[2]
+    #    Run keyword and ignore error    Click element    //center/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button
+    Click element    //*[@id="BranchFilter"]
+    sleep    1
     Click element    id=Filter
     ${index}    Set Variable    1
     #Page should contain    ${test order description}
@@ -2652,6 +2655,7 @@ Check errors on page [-1]
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    myErrorHandler
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    reportErrorOrWarning
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    Deprecated:
+    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    warning:
     ${ActualPageUrl} =    Execute Javascript    return window.location.href
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Log    [Sub task] Status: OK (+) -> no fatal/database errors, warnings or (deprecated) notices.
     [Teardown]
@@ -3343,7 +3347,7 @@ Search job by order description.SD
     END
     Log to console    Found! Row №"${index}", ID="${found order ID}"
     Set global variable    ${index}
-    Scroll Element Into View    //*[@id="orders_list"]/tbody/tr[${index}]/td[${OrderID ID}]
+    Run keyword and ignore error    Scroll Element Into View    //*[@id="orders_list"]/tbody/tr[${index}]/td[${OrderID ID}]
 
 Begin scorecard.SD
     [Arguments]    ${Add info1}    ${Add info2}    ${Free text}    ${Inter message}    ${Attach files?}    ${get ID?}    ${finish action}
@@ -7187,13 +7191,13 @@ GMAIL: FOOTER (users)
     Log to console    Footer (email) text is correct
 
 GMAIL: FOOTER (shoppers)
-    #    Should Contain    ${payload}    ${DD.MM.YY}    # email footer text
-    Should Contain    ${payload}    Your friendly Mystery Shopping    # email footer text
-    Should Contain    ${payload}    <a href="https://www.checker-soft.com/">https://www.checker-soft.com</a></p>
-    Should Contain    ${payload}    This is a test "Email footer for shoppers" message. Please ignore it.
-    Should Contain    ${payload}    RF REVN DT
-    Should Contain    ${payload}    ENV/SYS
-    Should Contain    ${payload}    <a href="${URL}">${URLIndex}</a>
+    #    Should Contain    ${HTML}    ${DD.MM.YY}    # email footer text
+    Should Contain    ${HTML}    Your friendly Mystery Shopping    # email footer text
+    Should Contain    ${HTML}    https://www.checker-soft.com
+    Should Contain    ${HTML}    This is a test "Email footer for shoppers" message. Please ignore it.
+    Should Contain    ${HTML}    RF REVN DT
+    Should Contain    ${HTML}    ENV/SYS
+    Should Contain    ${HTML}    ${URLIndex}    #    <a href="${URL}">${URLIndex}</a>
     Log to console    Footer (email) text is correct (+)
 
 GMAIL: BRIEFING
@@ -7249,7 +7253,7 @@ GMAIL: Assignment notification.AD
     ###
     ${HTML} =    Get Email Body    ${LATEST}
     Set global variable    ${HTML}
-    Check default codes table    ${ReviewID}
+    #Check default codes table    ${ReviewID}
     log    ${HTML}
     GMAIL: BRIEFING    # check email brief text
     GMAIL: FOOTER (shoppers)    # check email footer text
@@ -8261,9 +8265,13 @@ Edit branch access
     Select dropdown.AD    //*[@id="ClientID"]    //*[@id="ClientID"]/option[11]
     Click element    //input[@id='add_all_branches']
     Page should contain    All branches added successfully.
+    Wait until page contains element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[1]
     Click element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[1]
+    Wait until page contains element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[2]
     Click element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[2]
+    Wait until page contains element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[3]
     Click element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[3]
+    Wait until page contains element    //input[@id='do_delete']
     Click element    //input[@id='do_delete']
     Page should contain    3 branches removed
 
@@ -10185,18 +10193,28 @@ Add client worker.AD
 
 Go to.AD
     [Arguments]    ${exp url}
+    ${start} =    Get Current Date
     Go to    ${exp url}
+    Wait For Condition    return document.readyState=="complete"    25
+    Wait For Condition    return document.visibilityState=="visible"    25
+    ${stop} =    Get Current Date
+    ${diff} =    Subtract Date From Date    ${stop}    ${start}
+    Log to console    Page load time = "${diff}" ("sec.ms") (+)
+    Should be True    ${diff} < 25    msg=Fail! The total page load time was more than 25 seconds!!! (-)
+    #
     ${Pageurl} =    Execute Javascript    return window.location.href
     ${a}    Run Keyword and return status    Should Be Equal    ${Pageurl}    ${exp url}
     Run Keyword If    "${a}"=="False"    Go to    ${exp url}
     Log to console    ${\n}--- Go to: "${exp url}"
     Check errors on page [-1]
+    #
     ${login again visible?}    Run keyword and return status    Page should contain    Login again?
     Run Keyword If    ${login again visible?}    Click link    default=Login again?
     Run Keyword If    ${login again visible?}    Wait Until Page Contains Element    ${id=login_email}
     Run Keyword If    ${login again visible?}    Input Text    ${id=login_email}    ${ManagerUsername}
     Run Keyword If    ${login again visible?}    Input Text    ${id=login_password}    ${ManagerPassword}
     Run Keyword If    ${login again visible?}    Click Element    ${id=submit_button}
+    #    Wait Until Keyword Succeeds
 
 Fill in the recover form.SD
     [Arguments]    ${Email*}    ${Birthday*}    ${Phone*}
@@ -11055,8 +11073,8 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/client-actions.php    YES    YES
     Check footer info.AD    ${URL}/report-client-actions.php    YES    YES
     Check footer info.AD    ${URL}/survey-blacklists.php    YES    YES
-    #    Check footer info.AD    ${URL}/p_register-new-panelist.php?addnew=1    NO    NO
-    #    Check footer info.AD    ${URL}/p_register-new-panelist.php?Agree90=1&FullLegalName_fullname=dd&emailOnLegal=dd&iAgree=Please+wait&addnew=1    NO    NO
+    Check footer info.AD    ${URL}/p_register-new-panelist.php?addnew=1    NO    NO
+    Check footer info.AD    ${URL}/p_register-new-panelist.php?Agree90=1&FullLegalName_fullname=dd&emailOnLegal=dd&iAgree=Please+wait&addnew=1    NO    NO
     Check footer info.AD    ${URL}/phone-survey-management.php    YES    YES
     Check footer info.AD    ${URL}/samples.php    YES    YES
     Check footer info.AD    ${URL}/phone-survey-management-summary.php    YES    YES
@@ -11103,7 +11121,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/check-condition.php    YES    YES
     Check footer info.AD    ${URL}/mass-sms.php    YES    YES
     Check footer info.AD    ${URL}/checkers-assignments-list.php    YES    YES
-    #Check footer info.AD    ${URL}/shopper_availablity_report.php    YES    YES    #page long upload
+    #Check footer info.AD    ${URL}/shopper_availablity_report.php    YES    YES    # too slow page speed load
     Check footer info.AD    ${URL}/mass-orders-status-control.php    YES    YES
     Check footer info.AD    ${URL}/checkers-orders-by-shift.php    YES    YES
     Check footer info.AD    ${URL}/mass-orders-status.php    YES    YES
@@ -11122,13 +11140,13 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/import-cities.php    YES    YES
     Check footer info.AD    ${URL}/import-users.php    YES    YES
     Check footer info.AD    ${URL}/import-branch-contacts.php    YES    YES
-    #Check footer info.AD    ${URL}/import-orders-mass.php    YES    YES
+    #Check footer info.AD    ${URL}/import-orders-mass.php    YES    YES    # fails due to \ Fatal error: on testing
     Check footer info.AD    ${URL}/import-orders-multiple.php    YES    YES
     Check footer info.AD    ${URL}/import-profiles.php    YES    YES
-    #Check footer info.AD    ${URL}/import-filelist.php    YES    YES    # error on testing
+    Check footer info.AD    ${URL}/import-filelist.php    YES    YES    # error on testing
     Check footer info.AD    ${URL}/auto-import-filelist.php    YES    YES
     Check footer info.AD    ${URL}/import-upload.php    YES    YES
-    #Check footer info.AD    ${URL}/import-branch-codes.php    YES    YES    #error on preprod
+    Check footer info.AD    ${URL}/import-branch-codes.php    YES    YES    #error on preprod
     Check footer info.AD    ${URL}/import-action.php    YES    YES
     Check footer info.AD    ${URL}/auto-import-profile.php    YES    YES
     Check footer info.AD    ${URL}/import-template.php?type=branches    YES    YES
@@ -11145,7 +11163,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/privacy-management.php    YES    YES
     Check footer info.AD    ${URL}/company-images.php    YES    YES
     Check footer info.AD    ${URL}/company_default_footers.php    YES    YES
-    #Check footer info.AD    ${URL}/company-css-editor-popup.php    YES    YES    # empty white page all systems
+    #Check footer info.AD    ${URL}/company-css-editor-popup.php    YES    YES    # empty white page - all systems
     Check footer info.AD    ${URL}/required-agreements.php    YES    YES
     Check footer info.AD    ${URL}/menu-settings.php    YES    YES
     Check footer info.AD    ${URL}/countries.php    YES    YES
@@ -11153,7 +11171,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/regions.php    YES    YES
     Check footer info.AD    ${URL}/country-regions.php    YES    YES
     Check footer info.AD    ${URL}/cities.php    YES    YES
-    #Check footer info.AD    ${URL}/settings-whatsappaccounts.php    YES    YES    # error on page all systems
+    Check footer info.AD    ${URL}/settings-whatsappaccounts.php    YES    YES    # error on page - all systems
     Check footer info.AD    ${URL}/company-operation.php    YES    YES
     Check footer info.AD    ${URL}/settings-jobboard.php    YES    YES
     Check footer info.AD    ${URL}/company-user-automatic-notifications.php    YES    YES
@@ -11163,7 +11181,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/company_shopper_reg.php    YES    YES
     Check footer info.AD    ${URL}/company-checker-disp.php    YES    YES
     Check footer info.AD    ${URL}/company-panel-settings.php    YES    YES
-    #Check footer info.AD    ${URL}/index.php?Controller=CallCenterShifts&Action=ListShifts&Args[dt][pageLength]=25&Args[dt][displayStart]=0&Args[dt][order][0][0]=1&Args[dt][order][0][1]=desc    YES    YES
+    Check footer info.AD    ${URL}/index.php?Controller=CallCenterShifts&Action=ListShifts&Args[dt][pageLength]=25&Args[dt][displayStart]=0&Args[dt][order][0][0]=1&Args[dt][order][0][1]=desc    YES    YES
     Check footer info.AD    ${URL}/company-assignments.php    YES    YES
     Check footer info.AD    ${URL}/company-checker-automatic-notifications.php    YES    YES
     Check footer info.AD    ${URL}/checker-props.php    YES    YES
@@ -11188,7 +11206,7 @@ Check footer on all pages.AD
     # Reports > Client reports
     Check footer info.AD    ${URL}/report-property.php    YES    YES
     Check footer info.AD    ${URL}/report-question-comparison.php    YES    YES
-    #Check footer info.AD    ${URL}/report-performance-concentr.php    YES    YES    #-1 on demo
+    Check footer info.AD    ${URL}/report-performance-concentr.php    YES    YES    #-1 on demo
     Check footer info.AD    ${URL}/report-browser.php    YES    YES
     Check footer info.AD    ${URL}/report-deviancy.php    YES    YES
     Check footer info.AD    ${URL}/report-perf-level.php    YES    YES
@@ -11198,7 +11216,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/report-subchapter-comparison.php    YES    YES
     Check footer info.AD    ${URL}/report-results-breakdown.php    YES    YES
     Check footer info.AD    ${URL}/report-grade-by-question.php    YES    YES
-    Check footer info.AD    ${URL}/report-kpi.php    YES    YES
+    #    Check footer info.AD    ${URL}/report-kpi.php    YES    YES
     Check footer info.AD    ${URL}/report-perf-level-2.php    YES    YES
     Check footer info.AD    ${URL}/report-perf-levels-by-datecycle.php    YES    YES
     Check footer info.AD    ${URL}/report-answer-percentage.php    YES    YES
@@ -11211,7 +11229,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/report-question-groups.php    YES    YES
     Check footer info.AD    ${URL}/report-survey-stats.php    YES    YES
     # Reports > Product reports
-    #Check footer info.AD    ${URL}/report-pos-analysis.php    YES    YES    -1 demo
+    Check footer info.AD    ${URL}/report-pos-analysis.php    YES    YES    # -1 demo
     Check footer info.AD    ${URL}/report-product-question.php    YES    YES
     # Reports > Shoppers reports
     Check footer info.AD    ${URL}/report-operation-performence.php    YES    YES
@@ -11226,7 +11244,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/bank-payroll.php    YES    YES
     # Reports > Operation reports
     Check footer info.AD    ${URL}/report-branches.php    YES    YES
-    #    ${URL}/report-email.php    YES    YES    # demo - empty page
+    Check footer info.AD    ${URL}/report-email.php    YES    YES    # demo - empty page
     Check footer info.AD    ${URL}/report-checker-pics.php    YES    YES
     Check footer info.AD    ${URL}/report-logins.php    YES    YES
     Check footer info.AD    ${URL}/report-client-activity-concentration.php    YES    YES    # footer is missing
@@ -11240,9 +11258,9 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/report-client-profitability.php    YES    YES    # footer is missing
     # Reports > Surveys
     Check footer info.AD    ${URL}/report-survey-breakdown.php    YES    YES
-    #Check footer info.AD    ${URL}/export-crits-3.php    YES    YES    -1
+    Check footer info.AD    ${URL}/export-crits-3.php    YES    YES    # -1
     Check footer info.AD    ${URL}/report-surveyors-status.php    YES    YES
-    #Check footer info.AD    ${URL}/export-crits2.php    YES    YES    -1
+    Check footer info.AD    ${URL}/export-crits2.php    YES    YES    # -1
     # Reports > General
     Check footer info.AD    ${URL}/reports-tabs.php    YES    YES
     Check footer info.AD    ${URL}/report-client-actions-summary.php    YES    YES
@@ -13674,9 +13692,9 @@ Open Operational Panel.AD
     go to.AD    ${URL}/operation-panel.php?StatusID=6
     Log to console    Searching a RF review (q-re="RF Questionnaire [Shoppers]")
     Wait until page contains element    //input[@id='end_date']
-    #    Input text    //input[@id='end_date']    ${date minus 30 days}    #    ${DD-MM-YY}
-    ${date minus 1 days}    Subtract Time From Date    ${Ttime}    5 days    result_format=%d-%m-%Y
-    Input text    //input[@id='start_date']    ${date minus 1 days}
+    Input text    //input[@id='end_date']    ${DD-MM-YY}    #    ${DD-MM-YY}
+    ${date minus 10 days}    Subtract Time From Date    ${Ttime}    10 days    result_format=%d-%m-%Y
+    Input text    //input[@id='start_date']    ${date minus 10 days}
     Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
     Validate value (text)    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    AUTO 01 [RF CLIENT]
     Click element    //input[@id='show']
