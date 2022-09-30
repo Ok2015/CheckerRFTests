@@ -9,6 +9,7 @@ Resource          ${CURDIR}/Resources/Settings.txt
 
 *** Test Cases ***
 Successful login (check text message).SD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -25,6 +26,7 @@ Successful login (check text message).SD
     [Teardown]    Close Browser.AD
 
 Manager can disable/enable main menu elements for shopper.SD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -90,6 +92,7 @@ Manager can disable/enable main menu elements for shopper.SD
     [Teardown]    Close Browser.AD
 
 Not successful login (wrong credentials).SD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -113,6 +116,7 @@ Not successful login (wrong credentials).SD
     [Teardown]    Close Browser.AD
 
 Deactivated shopper can not login.SD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -153,7 +157,7 @@ Deactivated shopper can not login.SD
     [Teardown]    Close Browser.AD
 
 Shopper can not be deactivated due to assigned job(s).SD
-    [Tags]    Critical
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -175,6 +179,7 @@ Shopper can not be deactivated due to assigned job(s).SD
     [Teardown]    Close Browser.AD
 
 SD user can remove own profile.SD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -209,6 +214,7 @@ SD user can remove own profile.SD
     [Teardown]    Close Browser.AD
 
 SD user can not remove own profile.SD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -237,6 +243,7 @@ SD user can not remove own profile.SD
     [Teardown]    Close Browser.AD
 
 Not registered shopper email tries to reset the password.SD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -265,6 +272,7 @@ Not registered shopper email tries to reset the password.SD
     [Teardown]    Close Browser.AD
 
 Registered shopper email resets the password.SD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -297,7 +305,7 @@ Registered shopper email resets the password.SD
     [Teardown]    Close Browser.AD
 
 Shopper can recover UserID.SD
-    [Tags]    Critical
+    [Tags]    CritSelfregis+Authical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -329,7 +337,7 @@ Shopper can recover UserID.SD
         Fill in the recover form.SD    ${RFShopperEmail}    ${Shopper birthdate}    +380670118780
         Wait until page contains    User detail sent to email: ${RFShopperEmail}
         Log to console    Response: "User detail sent to email: ${RFShopperEmail}" (+)
-        Run Keyword If    '${check emails?}'=='True'    GMAIL: Recover UserID.SD
+        GMAIL: Recover UserID.SD
     END
     Close Browser
     [Teardown]    Close Browser.AD

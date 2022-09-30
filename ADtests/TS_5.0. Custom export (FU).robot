@@ -17,7 +17,7 @@ Library           OpenPyxlLibrary
 
 *** Test Cases ***
 Custom export: check header with hidden columns (EXCEL2007)
-    [Tags]    Export
+    [Tags]    Export    Critical
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -52,7 +52,7 @@ Custom export: check header with hidden columns (EXCEL2007)
     [Teardown]    Enable required columns.AD
 
 Custom export: Base of export=Reviews (EXCEL2007) check file only
-    [Tags]    Export
+    [Tags]    Export    Critical
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}

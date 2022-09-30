@@ -91,6 +91,8 @@ DEMO TEST
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    https://www.checker-soft.com/    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    Run keyword if    1==2    Log to console    the secret message
+    ...    ELSE    Log to console    not secret message
     ${loop length}=    Get length    ${urls}
     log    ${\n}Total test URL(s) number = "${loop length}"
     FOR    ${URL}    IN    @{urls}

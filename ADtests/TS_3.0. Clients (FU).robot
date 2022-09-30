@@ -679,7 +679,7 @@ FTP Alert - PDF
     [Teardown]    Close Browser.AD
 
 Alert. Send alert email with attachments + HTML
-    [Tags]    Editor    Alert
+    [Tags]    Editor    Alert    runme
     [Setup]
     [Timeout]
     @{urls}=    String.Split String    ${TestURLs}    ,
@@ -861,6 +861,47 @@ FTP Alert - file HTML
         Click element    //input[@id='checkAndSendAlerts']
         Wait until page contains    Alerts sent
         Connect FTP    ${Finished review ID}.htm    Archived
+        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
+Alert. Send alert email to client users
+    [Tags]    Editor
+    [Setup]
+    [Timeout]
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        ${AlertName}=    Set variable    RF_ALERT TO CLIENT USER - REVIEW - $[203]$
+        Set global variable    ${AlertName}
+    #
+        Log to console    Case 1: send alert to "2" client users
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Search client using search bar.AD
+    #
+        Get section ID. AD    Section 01 [RF]
+        Get BR property ID. AD    Manager
+        Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
+    #
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No
+        Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 02 [SP USER] (RF user 02 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
+        Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 03 [SP USER] (RF user 03 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
+        Open Operational Panel.AD
+        Get Review handling details page.AD    ${ReviewID}
+    #
+        Similate alert.AD
+    #
+        Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
+    #
+        ${results}=    Run keyword and return status    GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper
+        Should Be Equal As Strings    ${results}    False
+        Log to console    ---------Actual Status--------- NO ALERT EMAIL IS RECEIVED (+)
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user
+    #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END
     Close Browser

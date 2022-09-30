@@ -14,6 +14,7 @@ Resource          ${CURDIR}/Resources/Settings.txt
 
 *** Test Cases ***
 TC_004. Successful login/logout.AD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -51,6 +52,7 @@ TC_004. Successful login/logout.AD
     [Teardown]    Close Browser.AD
 
 Not successful login (wrong credentials).AD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -69,6 +71,7 @@ Not successful login (wrong credentials).AD
     [Teardown]    Close Browser.AD
 
 Not registered manager email tries to reset the password.AD
+    [Tags]    Selfregis+Auth
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window

@@ -17,6 +17,7 @@ Library           RequestsLibrary
 
 *** Test Cases ***
 Client task type is created successfully
+    [Tags]    Questionnaire
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -78,7 +79,7 @@ Client task type is created successfully
     [Teardown]    Close Browser.AD
 
 Questionnaire type characteristics is created successfully
-    [Tags]    Critical
+    [Tags]    Questionnaire
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -94,6 +95,7 @@ Questionnaire type characteristics is created successfully
     [Teardown]    Close Browser.AD
 
 Custom scales > Custom scales is created successfully
+    [Tags]    Questionnaire
     [Timeout]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -132,7 +134,6 @@ Custom scales > Custom scales is created successfully
     [Teardown]    Close Browser.AD
 
 Questions bank > Section + qn(s) are created successfully
-    [Tags]    (FIX)?
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -146,6 +147,8 @@ Questions bank > Section + qn(s) are created successfully
         set global variable    ${RF sub section 1}
         ${RF sub section 2}=    set variable    Sub Section 02 [RF]
         set global variable    ${RF sub section 2}
+        GET alt lang ID.AD    Robot language [RTL]
+        GET alt lang ID.AD    Robot language [LTR]
     ###
         Add QD section.AD    ${RF section 1}
         Add QB subsection.AD    ${RF sub section 1}    6aae0e    1    Custom
@@ -193,7 +196,7 @@ Questions bank > Section + qn(s) are deleted successfully
     [Teardown]    Close Browser.AD
 
 New questionnaire is created successfully + grant access (Shopper)
-    [Tags]    Critical    Editor    Questionnaire
+    [Tags]    Editor    Questionnaire
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -218,7 +221,7 @@ New questionnaire is created successfully + grant access (Shopper)
     [Teardown]    Close Browser.AD
 
 New questionnaire is created successfully (Internet)
-    [Tags]    Editor    Questionnaire
+    [Tags]    Editor    Questionnaires
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -424,7 +427,7 @@ New questionnaire is created successfully (Certificate)
     [Teardown]    Close Browser.AD
 
 New questionnaire is created successfully (GLOBAL)
-    [Tags]    Editor    Questionnaire
+    [Tags]    Editor
     [Setup]
     [Template]
     [Timeout]

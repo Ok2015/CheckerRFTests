@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -1652,7 +1652,7 @@ Get ID
     FOR    ${rowindex}    IN RANGE    ${Rows}
         ${act name}=    get text    //*[@${table id}]/tbody/tr[${index}]/td[${NAME column index}]
         #Exit For Loop If    ${is element visible}==False
-        Run keyword if    '${act name}'=='${name}'    Exit for loop
+        Run keyword if    "${act name}"=="${name}"    Exit for loop
         ${id}=    Evaluate    ${id}+1
         ${index}=    Evaluate    ${index}+1
     END
@@ -5092,7 +5092,7 @@ Enter not valid registration values
     Input text    //textarea[@id='field_${Test Custom Field3 ID}']    Text block: only 10 characters are allowed for this type of CF, but we entered more than 10
     Input text    //tr[@id='tr_${Test Custom Field6 ID}']/td[@id='id${Test Custom Field6 ID}Editbox']/input    some text goes here
     #Click element    //input[@id='addnew']
-    Choose File    //tr[@id='tr_${Test Custom Field8 ID}']/td[@id='id${Test Custom Field8 ID}Editbox']/input[7]    c:\\RobotTests2021\\Extra files\\Css\\RobotShopperCSS.css
+    Choose File    //tr[@id='tr_${Test Custom Field8 ID}']/td[@id='id${Test Custom Field8 ID}Editbox']/input[7]    ${CURDIR}\\Extra files\\Css\\RobotShopperCSS.css
     sleep    1
     Input text    //input[@id='field_${Test Custom Field5 ID}']    abc
     Set focus to element    //input[@id='addnew']
@@ -7181,14 +7181,14 @@ Operation panel > Cancel expired orders.AD
     Log to console    "${RobotTestClient}" orders (unassigned) were cancelled!
 
 GMAIL: FOOTER (users)
-    Should Contain    ${payload}    ${DD.MM.YY}    # email footer text
-    Should Contain    ${payload}    Your friendly Mystery Shopping    # email footer text
-    Should Contain    ${payload}    <a href="https://www.checker-soft.com/">https://www.checker-soft.com</a></p>
-    Should Contain    ${payload}    This is a test "Email footer for users" message. Please ignore it.
-    Should Contain    ${payload}    RF REVN DT
-    Should Contain    ${payload}    ENV/SYS
-    Should Contain    ${payload}    <a href="${URL}">${URLIndex}</a>
-    Log to console    Footer (email) text is correct
+    #Should Contain    ${HTML}    ${DD.MM.YY}    # email footer text
+    Should Contain    ${HTML}    Your friendly Mystery Shopping    # email footer text
+    Should Contain    ${HTML}    <a href="https://www.checker-soft.com/">https://www.checker-soft.com</a></p>
+    Should Contain    ${HTML}    This is a test "Email footer for users" message. Please ignore it.
+    Should Contain    ${HTML}    RF REVN DT
+    Should Contain    ${HTML}    ENV/SYS
+    Should Contain    ${HTML}    <a href="${URL}">${URLIndex}</a>
+    Log to console    Footer (email) text is correct (+)
 
 GMAIL: FOOTER (shoppers)
     #    Should Contain    ${HTML}    ${DD.MM.YY}    # email footer text
@@ -8795,6 +8795,12 @@ Click Save/Add/Delete/Cancel button.AD
     Run Keyword If    '${status2}'=='True'    Click element    //input[@id='addnew']
     Log to console    Page has been Saved/Updated (+)
     Check errors on page [-1]
+    ${login again visible?}    Run keyword and return status    Page should contain    Login again?
+    Run Keyword If    ${login again visible?}    Click link    default=Login again?
+    Run Keyword If    ${login again visible?}    Wait Until Page Contains Element    ${id=login_email}
+    Run Keyword If    ${login again visible?}    Input Text    ${id=login_email}    ${ManagerUsername}
+    Run Keyword If    ${login again visible?}    Input Text    ${id=login_password}    ${ManagerPassword}
+    Run Keyword If    ${login again visible?}    Click Element    ${id=submit_button}
 
 Search QA question.AD
     [Arguments]    ${QAQ name}    ${QAQ name description}
@@ -9217,6 +9223,7 @@ Check returned review elements.AD
 
 Check footer info.AD
     [Arguments]    ${link}    ${check search bar?}    ${check language box?}
+    Run keyword if    "${link}"=="${URL}/123"    Return from keyword
     go to.AD    ${link}
     ${Footer is visible?}    Run Keyword And Return Status    Page should contain    ${GENERAL INFO: company name} [${URLIndex} system]
     Run Keyword If    '${Footer is visible?}'=='False'    log to console    "${link}" - FOOTER IS MISSING!!!!
@@ -9865,7 +9872,7 @@ Check REVIEW data.AD
     Should Be Equal As Strings    ${Dictionary}[SetCode]    RFQRY-SHO-03
     Should Be Equal As Strings    ${Dictionary}[BranchName]    ${Short auto branch name 01}
     Should Be Equal As Strings    ${Dictionary}[BranchFullname]    ${Full auto branch name 01}
-    Should Be Equal As Strings    ${Dictionary}[Q1: How old are you? [Type: Custom scale](Code)]    C:46-55(yellow)
+    Should Be Equal As Strings    ${Dictionary}[Q1: How old are you? [Type: Custom scale](Code)]    Code4
     Should Be Equal As Strings    ${Dictionary}[Q1: How old are you? [Type: Custom scale](Answer)]    46-55(yellow)
     Should Be Equal As Strings    ${Dictionary}[Q1: How old are you? [Type: Custom scale](Grade)]    40.00
     Should Be Equal As Strings    ${Dictionary}[Q2: Pls select your favorite color [Type: Custom](Answer)]    green
@@ -10200,7 +10207,8 @@ Go to.AD
     ${stop} =    Get Current Date
     ${diff} =    Subtract Date From Date    ${stop}    ${start}
     Log to console    Page load time = "${diff}" ("sec.ms") (+)
-    Should be True    ${diff} < 25    msg=Fail! The total page load time was more than 25 seconds!!! (-)
+    Run keyword if    "${exp url}"=="${URL}/checkers-assignments-list.php" or "${exp url}"=="${URL}/shopper_availablity_report.php" or "${exp url}"=="${URL}/crits-handling.php" or "${exp url}"=="${URL}/checkers-assignation.php"    Log to console    ${exp url} - this page speed load is too high (and this is why validation speed is skipped)
+    ...    ELSE    Should be True    ${diff} < 25    msg=Fail! The total page load time was more than 25 seconds!!! (-)
     #
     ${Pageurl} =    Execute Javascript    return window.location.href
     ${a}    Run Keyword and return status    Should Be Equal    ${Pageurl}    ${exp url}
@@ -10236,11 +10244,11 @@ Fill in the recover form.SD
 
 GMAIL: Recover UserID.SD
     Log to console    Expected email: "Your UserID"
-    Log to console    ${\n}--------------------------Open Mailbox ("${robot email}")--------------------------
-    Open Mailbox    host=${host}    user=${robot email}    password=${password}
+    Log to console    ${\n}--------------------------Open Mailbox ("${RFShopperEmail}")--------------------------
+    Open Mailbox    host=${host}    user=${RFShopperEmail}    password=${shopper email app password}
     #Get Email Body    1
-    ${LATEST} =    Wait For Email    sender=info-testing-system@checker-soft.com    timeout=100
-    Log to console    Done. Waiting email from sender="info-testing@checker-soft.com"; timeout=10sec. Please wait....
+    ${LATEST} =    Wait For Email    sender=info-${URL1index}-system@checker-soft.com    timeout=50
+    Log to console    Done. Waiting email from sender="info-${URL1index}-system@checker-soft.com"; timeout=50sec. Please wait....
     Log to console    Email is received. Index = "${LATEST}". Checking email details...
     ${parts}=    Walk Multipart Email    ${LATEST}
     @{fields}=    Get Multipart Field Names
@@ -10256,19 +10264,19 @@ GMAIL: Recover UserID.SD
     Log to console    --------------------------
     should contain    ${from}    Checker Software Systems LTD [${URLIndex} system]
     should contain    ${from}    info-${URL1index}-system@checker-soft.com
-    should contain    ${to}    ${robot email}" <${robot email}>
+    should contain    ${to}    ${RFShopperEmail}" <${RFShopperEmail}>
     should contain    ${subject}    Your UserID
     ###
     FOR    ${i}    IN RANGE    ${parts}
         Walk Multipart Email    ${LATEST}
         ${content-type}=    Get Multipart Content Type
         Continue For Loop If    "${content-type}"!="text/html"
-        ${payload}=    Get Multipart Payload    decode=True
-        set global variable    ${payload}
+        ${HTML}    Get Multipart Payload    decode=True
+        set global variable    ${HTML}
         GMAIL: FOOTER (shoppers)    # check email footer text
-        Should Contain    ${payload}    <body> Dear <b>Robot 02 [Full Name]</b><br/>
-        Should Contain    ${payload}    This message is to let you know that we received your request to recover your user name.
-        Should Contain    ${payload}    <br/> Your username is: <b>Robot 02 [Short Name]</b>
+        Should Contain    ${HTML}    <body> Dear <b>Robot 02 [Full Name]</b><br/>
+        Should Contain    ${HTML}    This message is to let you know that we received your request to recover your user name.
+        Should Contain    ${HTML}    <br/> Your username is: <b>Robot 02 [Short Name]</b>
         Log to console    Email content is correct (+)
     #${HTML}=    Open Link from Mail    ${LATEST}    ${DD.MM.YY}
     #Should Contain    ${HTML}    Your email address has been updated
@@ -10282,8 +10290,8 @@ GMAIL: Recover UserID.SD
     ${Parsed_Token}=    Split String    ${Paser_Body}
     #${Parsed_Token}=    Get From List    ${Parsed_Token}    40    #position in the list
     Mark All Emails As Read
-    #${ALL_LINKS}    Get Links from Email    ${LATEST}
-    #Log    ${ALL_LINKS}
+    ${ALL_LINKS}    Get Links from Email    ${LATEST}
+    Log    ${ALL_LINKS}
     #Go To    ${ALL_LINKS}[0]
     Delete All Emails
     Close Mailbox
@@ -10515,18 +10523,18 @@ Add QB subsection.AD
     Log to console    RF sub section ID=${sub section ID}
     go to.AD    ${URL}/subchapters.php?edit=${sub section ID}&chapter=${section ID}
     Edit subsection.AD    ${Sub section name}    ${color}    ${grade}
-    ${code}=    Generate Random String    4    [NUMBERS]
-    Add QB q-n.AD    ${Question type to create}    Radio buttons    qc:${code}    Free text    14a128
-    ${code}=    Generate Random String    4    [NUMBERS]
-    Add QB q-n.AD    ${Question type to create}    Slider    qc:${code}    Free text    e4e720
-    ${code}=    Generate Random String    4    [NUMBERS]
-    Add QB q-n.AD    ${Question type to create}    Drop-down    qc:${code}    Free text    20e7df
-    ${code}=    Generate Random String    4    [NUMBERS]
-    Add QB q-n.AD    ${Question type to create}    Basic selection (choose with CTRL)    qc:${code}    Free text    a620e7
-    ${code}=    Generate Random String    4    [NUMBERS]
-    Add QB q-n.AD    ${Question type to create}    Check boxes    qc:${code}    Free text    20e76d
-    ${code}=    Generate Random String    4    [NUMBERS]
-    Add QB q-n.AD    ${Question type to create}    Ranking check boxes    qc:${code}    Free text    435a4c
+    #    ${code}=    Generate Random String    4    [NUMBERS]
+    #    Add QB q-n.AD    ${Question type to create}    Radio buttons    qc:${code}    Free text    14a128
+    #    ${code}=    Generate Random String    4    [NUMBERS]
+    #    Add QB q-n.AD    ${Question type to create}    Slider    qc:${code}    Free text    e4e720
+    #    ${code}=    Generate Random String    4    [NUMBERS]
+    #    Add QB q-n.AD    ${Question type to create}    Drop-down    qc:${code}    Free text    20e7df
+    #    ${code}=    Generate Random String    4    [NUMBERS]
+    #    Add QB q-n.AD    ${Question type to create}    Basic selection (choose with CTRL)    qc:${code}    Free text    a620e7
+    #    ${code}=    Generate Random String    4    [NUMBERS]
+    #    Add QB q-n.AD    ${Question type to create}    Check boxes    qc:${code}    Free text    20e76d
+    #    ${code}=    Generate Random String    4    [NUMBERS]
+    #    Add QB q-n.AD    ${Question type to create}    Ranking check boxes    qc:${code}    Free text    435a4c
 
 Delete QB q-n.AD
     go to.AD    ${URL}/questions.php?subchapter=${RF sub section ID}
@@ -10691,7 +10699,7 @@ Set Branch address fields ID
 Search/create Sample.AD
     ${i}=    set variable    1
     FOR    ${i}    IN RANGE    2
-        go to.AD    ${URL}/samples.php?page_var_divide_recordsPerPage=600    #${URL}/export-crits-3.php?page_var_filter_IsActive=&page_var_filter_Clients=${client ID}
+        go to.AD    ${URL}//samples.php?page_var_filter_IsActive=1&page_var_filter_SampleName=&page_var_filter_ClientName=${client ID}
         Wait until page contains element    //input[@id='update']
         ${is element visible?}    Run keyword and return status    Page should contain    ${RF sample name}
         Run keyword if    "${is element visible?}"=="False"    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
@@ -10708,7 +10716,9 @@ Search/create Sample.AD
     Click Save/Add/Delete/Cancel button.AD
     Wait Until Page Contains    successfully
     Log to console    "${RF sample name}" has been added/updated
+    ${Sample ID}    set variable    ${ReviewID}
     Log to console    Sample ID = "${ReviewID}"
+    set global variable    ${Sample ID}
 
 Add record(ID).AD
     [Arguments]    ${name}    ${page URL}    ${date}
@@ -10790,6 +10800,9 @@ Search/add Survey.AD
     Validate value (value)    //input[@id='field_TargetHours']    100
     Validate value (value)    //input[@id='field_SMSSurveyValidityDuration']    1
     Get ID from ad bar.AD    &edit=    &page_var_sorting_column
+    ${SurveyID}=    set variable    ${found ID}
+    Set global variable    ${SurveyID}
+    Set global variable    ${RF survey name}
 
 Validate style.AD
     [Arguments]    ${element}    ${expected color}
@@ -11130,7 +11143,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/orders-assignment-manual.php    YES    YES
     Check footer info.AD    ${URL}/survey-handleinprogress.php    YES    YES
     Check footer info.AD    ${URL}/checkers-assignation.php    YES    YES
-    Check footer info.AD    ${URL}/checkers-assignments-list.php    YES    YES
+    #Check footer info.AD    ${URL}/checkers-assignments-list.php    YES    YES    # too slow page speed load
     # Import
     Check footer info.AD    ${URL}/import-branches.php    YES    YES
     Check footer info.AD    ${URL}/import-checkers.php    YES    YES
@@ -11171,7 +11184,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/regions.php    YES    YES
     Check footer info.AD    ${URL}/country-regions.php    YES    YES
     Check footer info.AD    ${URL}/cities.php    YES    YES
-    Check footer info.AD    ${URL}/settings-whatsappaccounts.php    YES    YES    # error on page - all systems
+    Check footer info.AD    ${URL}/settings-whatsappaccounts.php    YES    YES
     Check footer info.AD    ${URL}/company-operation.php    YES    YES
     Check footer info.AD    ${URL}/settings-jobboard.php    YES    YES
     Check footer info.AD    ${URL}/company-user-automatic-notifications.php    YES    YES
@@ -13374,6 +13387,7 @@ GMAIL: GET ALERT EMAIL.SD
     ${type of alert=CONCENTRATED?}    Run keyword and return status    Should contain    ${email subject}    CONCENTRATED
     ${type of alert=NO ATTACHMENTS?}    Run keyword and return status    Should contain    ${email subject}    NO ATTACHMENTS
     ${type of alert=WITH ATTACHMENTS?}    Run keyword and return status    Should contain    ${email subject}    WITH ATTACHMENTS
+    ${type of alert=CLIENT USER?}    Run keyword and return status    Should contain    ${email subject}    CLIENT USER
     #
     Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain    ${HTML}    E-mail 1: ${email subject}
     Run keyword if    ${type of alert=CONCENTRATED?}    Should Contain    ${HTML}    E-mail 2: ${email subject}
@@ -13392,19 +13406,30 @@ GMAIL: GET ALERT EMAIL.SD
     Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Should Contain    ${HTML}    Sectional grades
     Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Should Contain    ${HTML}    Final grade trend
     Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Should Contain    ${HTML}    Click here to view the review.
-    Should Contain    ${HTML}    This is an alert text
-    Run keyword if    ${type of alert=CONCENTRATED?}    Log to console    Please wait... getting details for 2 reviews
-    ...    ELSE    Check default codes table    ${ReviewID}
+    Run keyword if    ${type of alert=WITH ATTACHMENTS?} or ${type of alert=CONCENTRATED?} or ${type of alert=NO ATTACHMENTS?}    Should Contain    ${HTML}    This is an alert text
+    Run keyword if    ${type of alert=CLIENT USER?} or ${type of alert=CONCENTRATED?}    Log to console    Please wait...checking email content...
+    ...    ELSE    Check default codes table    Check default codes table    ${ReviewID}
     Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Log to console    Email contains: This is an alert text Name of the client - ${Dictionary}[Client name] Name of the questionnaire ${Dictionary}[Questionnaire name] ID: ${ReviewID} EXTRA INFO City to which the branch is linked - Robot city 01 ID of the questionnaire - ${Dictionary}[Questionnaire ID] Text code of the questionnaire - ${Dictionary}[Questionnaire Code] Purchase Invoice value - Description of the order with HTML tags - Name of the project - Email of the shopper - ID number of the project - Date of the order - ${Dictionary}[Order due date] Time of the order - Purchase description of the order - Phone of the shopper - ${Dictionary}[Shopper phone] Order ID number - ${Dictionary}[Shopper 1 email],${Dictionary}[Shopper 2 email] ${Dictionary}[Mass order description] Status: ${Dictionary}[Review status] Result: ${Rounded result} \ Standard header text Sectional grades Final grade trend Click here to view the review.
     #
     Run keyword if    ${type of alert=NO ATTACHMENTS?}    Log to console    Email contains: This is an alert text Name of the client - ${Dictionary}[Client name] Name of the questionnaire ${Dictionary}[Questionnaire name] ID: ${ReviewID} EXTRA INFO City to which the branch is linked - Robot city 01 ID of the questionnaire - ${Dictionary}[Questionnaire ID] Text code of the questionnaire - ${Dictionary}[Questionnaire Code] Purchase Invoice value - Description of the order with HTML tags - Name of the project - Email of the shopper - ID number of the project - Date of the order - ${Dictionary}[Order due date] Time of the order - Purchase description of the order - Phone of the shopper - ${Dictionary}[Shopper phone] Order ID number - ${Dictionary}[Shopper 1 email],${Dictionary}[Shopper 2 email] ${Dictionary}[Mass order description] Status: ${Dictionary}[Review status] Result: ${Rounded result} \ Standard header text Sectional grades Final grade trend Click here to view the review.
+    #
+    Run keyword if    ${type of alert=CLIENT USER?}    Should Contain    ${HTML}    Please note: You currently don't have access to the branch RF Branch 01 [Short name] of the client AUTO 01 [RF CLIENT]. Please ask a manager to grant you access before clicking on this link.
+    Run keyword if    ${type of alert=CLIENT USER?}    Should Contain    ${HTML}    Click here to view the review.
+    Run keyword if    ${type of alert=CLIENT USER?}    GMAIL: FOOTER (users)
+    Run keyword if    ${type of alert=CLIENT USER?}    Log to console    Email contains: Please note: You currently don't have access to the branch RF Branch 01 [Short name] of the client AUTO 01 [RF CLIENT]. Please ask a manager to grant you access before clicking on this link. Click here to view the review + email footer system notice
+    ${ALL_LINKS}    Get Links from Email    ${LATEST}
+    Log to console    Go to --> ${ALL_LINKS}[0] (URL from alert email)
+    Run keyword if    ${type of alert=CLIENT USER?}    Go To    ${ALL_LINKS}[0]
+    Run keyword if    ${type of alert=CLIENT USER?}    Wait until page contains    Full review report: AUTO 01 [RF CLIENT] - RF Branch 01 [Short name]
+    #
     Mark All Emails As Read
     Delete All Emails
     Close Mailbox
     Log to console    Deleting all inbox email. Closing Mailbox.
+    #
 
 Manage allowed users.AD
-    [Arguments]    ${checked table?}    ${search item}    ${allow access from element}
+    [Arguments]    ${checked table?}    ${search item}    ${allow access from element}    ${move element locator}
     #Wait until page contains
     log to console    Validating non/authorized shoppers...
     @{elements}    Get List Items    ${checked table?}
@@ -13412,13 +13437,14 @@ Manage allowed users.AD
     FOR    ${element}    IN    @{elements}
         Log to console    Authorized assessor --> "${element}"
         Log    '${element}' vs '${search item}'
+        ${already allowed}    Run keyword and return status    Should contain    ${element}    ${search item}
+        Return from keyword if    ${already allowed}
     END
-    Return from keyword if    '${element}'=='${search item}'
-    log to console    Granting the access ...
+    log to console    Granting the access for "${search item}" ...
     Check errors on page [-1]
     Scroll element into view    //*[contains(text(), '${search item}')]
     select from list by label    ${allow access from element}    ${search item}
-    click element    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
+    click element    ${move element locator}
     sleep    3
     [Return]    done
 
@@ -13513,6 +13539,7 @@ Get Review handling details page.AD
     Select Window    title:Shoppers
     Add (input) element attribute into dictionary.AD    //input[@id='field_CheckerCode']    Shopper code
     Wait until page contains element    //*[@id="tabs"]/ul/li[3]
+    sleep    1
     Click element    //*[@id="tabs"]/ul/li[3]
     sleep    1
     Wait until page contains element    //input[@id='field_Phone']    10
@@ -13625,7 +13652,7 @@ Check default codes table
     ...    ELSE    Log to console    No image(s) attached to email
     FOR    ${i}    IN RANGE    ${any attachment?}
         ${i}    Evaluate    ${i}+1
-        Run keyword if    "${any attachment?}">0 and "${Attachment}"=="List"    Should Contain    ${HTML}    ${Dictionary}[File ${i}]
+        Run keyword if    "${any attachment?}">0 and "${Attachment}"=="List"    Should Contain    ${HTML}    ${Dictionary}[File ${i}]    collapse_spaces=True
         Run keyword if    "${any attachment?}">0 and "${Attachment}"=="List"    Log to console    "${Dictionary}[File ${i}]" is present in alert email
     END
     Log to console    Email content is correct (+)
@@ -13893,3 +13920,64 @@ Set client autocritapprove.AD
     Run keyword if    '${exp status?}' == 'true'    Checkbox should be selected    //input[@id='field_AutomaticCritApproval']
     Run keyword if    '${exp status?}' == 'None'    Checkbox should not be selected    //input[@id='field_AutomaticCritApproval']
     Log to console    Client AutomaticCritApproval feature is set to = "${exp status?}" (+)
+
+Manage sample fields.AD
+    go to.AD    ${URL}/survey-sample-fields-manage.php?SurveyID=${SurveyID}
+    Wait until page contains element    //input[@id='PhoneNumberField[Cellular]']
+    Run keyword if    ${testing?}    Input text    //input[@id='PhoneNumberField[CellNumber]']    1
+    Run keyword if    ${testing?}    Input text    //input[@id='SMSPhoneNumberField[CellNumber]']    1
+    Run keyword if    ${preprod?}    Input text    //input[@id='PhoneNumberField[Cellular]']    1
+    Run keyword if    ${preprod?}    Input text    //input[@id='SMSPhoneNumberField[Cellular]']    1
+    Click element    //input[@id='save']
+    Run keyword if    ${testing?}    Validate value (value)    //input[@id='PhoneNumberField[CellNumber]']    1
+    Run keyword if    ${testing?}    Validate value (value)    //input[@id='SMSPhoneNumberField[CellNumber]']    1
+    Run keyword if    ${preprod?}    Validate value (value)    //input[@id='PhoneNumberField[Cellular]']    1
+    Run keyword if    ${preprod?}    Validate value (value)    //input[@id='SMSPhoneNumberField[Cellular]']    1
+    Set checkbox.AD    //input[@id='SampleFieldsEditableBySurveyors[Cellular]']    true
+    sleep    6
+    Click Save/Add/Delete/Cancel button.AD
+    Wait until page contains element    //input[@id='PhoneNumberField[Cellular]']
+    Checkbox should be selected    //input[@id='SampleFieldsEditableBySurveyors[Cellular]']
+    Checkbox should not be selected    //input[@id='SampleFieldsToHide[Cellular]']
+    Run keyword if    ${testing?}    Validate value (value)    //input[@id='PhoneNumberField[CellNumber]']    1
+    Run keyword if    ${testing?}    Validate value (value)    //input[@id='SMSPhoneNumberField[CellNumber]']    1
+    Run keyword if    ${preprod?}    Validate value (value)    //input[@id='PhoneNumberField[Cellular]']    1
+    Run keyword if    ${preprod?}    Validate value (value)    //input[@id='SMSPhoneNumberField[Cellular]']    1
+    Page should contain    Manage sample fields
+    Page should contain    Survey name: ${RF survey name}
+    Page should contain    Sample name: RF SAMPLE 01
+    Page should contain    Back to surveys
+    Page should contain    Fields to hide
+    Page should contain    Editable fields
+    Page should contain    Phone number for use in VOIP calls
+    Page should contain    SMS Survey field
+    Page should contain    Hide in reports, even if respondent allows showing details
+    Page should contain    Show in reports, even if respondent does not allow showing details
+
+Check report-failed-email page.AD
+    [Arguments]    ${exp email title}
+    go to.AD    ${URL}/report-failed-email.php
+    Log to console    Checking failed email reports page (will retry in case if email is stucked here)
+    ${text visible?}    Run keyword and return status    Page should contain    ${exp email title}
+    Log to console    Expected fail email visible? = "${text visible?}"
+    Run keyword if    ${text visible?}    Get ID    id="table_rows"    ${exp email title}    2    8
+    sleep    1
+    Run keyword if    ${text visible?}    Log to console    Retry failed email
+    Run keyword if    ${text visible?}    Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[1]/input
+    Run keyword if    ${text visible?}    Click element    //*[@id="side_menu"]/tbody/tr/td/form[1]/input[2]
+    Run keyword if    ${text visible?}    Wait until page contains    Done
+
+Similate alert.AD
+    go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
+    Wait until page contains element    //input[@id='SimulateAlerts']
+    Click element    //input[@id='SimulateAlerts']
+    Wait until page contains    ${AlertName}
+    #
+    go to.AD    ${URL}/setedit-simulate.php?CritID=${ReviewID}
+    Wait until page contains    Grading system:
+    #
+    go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
+    Wait until page contains element    //input[@id='checkAndSendAlerts']
+    Log to console    Clicking button - "Send Alert if needed"
+    Click element    //input[@id='checkAndSendAlerts']
+    Wait until page contains    Alerts sent

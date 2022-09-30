@@ -189,6 +189,7 @@ Agreements > add all types of agreement (optional)
     [Teardown]    Close Browser.AD
 
 Agreements > add agreement and delete it
+    [Tags]    Critical
     [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}

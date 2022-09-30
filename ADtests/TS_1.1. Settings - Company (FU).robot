@@ -296,22 +296,6 @@ Display > Show shoppers login link in users login screen
     Close Browser
     [Teardown]    Close Browser.AD
 
-General information > enter and save "General information"
-    [Tags]    Editor    Critical
-    [Setup]
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Set "General information".AD
-        Check footer on all pages.AD
-    END
-    Close Browser
-    [Teardown]    Close Browser.AD
-
 System design editor > Upload images (logo, header and background)
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -434,6 +418,22 @@ Company e-mail settings > send "Company email settings" (Amazon only) and send e
         SET UP
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Check "Company email settings" page
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
+General information > enter and save "General information"
+    [Tags]    Editor    Critical
+    [Setup]
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        Set "General information".AD
+        Check footer on all pages.AD
     END
     Close Browser
     [Teardown]    Close Browser.AD

@@ -315,7 +315,7 @@ Operation > Internet survey shows a reached quota message
     [Teardown]    Close Browser.AD
 
 Operation > Pass Internet survey
-    [Tags]    Internet    Critical    Jenkins
+    [Tags]    Internet    Jenkins
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window

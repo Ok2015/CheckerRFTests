@@ -12,7 +12,7 @@ Resource          ${CURDIR}/Resources/Settings.txt
 
 *** Test Cases ***
 Shopper is registered and autoapproved. FU
-    [Tags]    Critical
+    [Tags]    Selfregis+Auth
     [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -227,6 +227,7 @@ Shopper is registered and autoapproved. FU
     [Teardown]    Close All Browsers
 
 Reviewer with details that already exist in the system can not be registered. FU
+    [Tags]    Selfregis+Auth
     [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -379,6 +380,7 @@ Shopper is registered in case of mandatory fields added by manager. FU (FIX?)
     [Teardown]    Deactivate mandatory CFields
 
 Shopper is registered and autoapproved after passing Certification. FU
+    [Tags]    Selfregis+Auth
     [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -388,7 +390,7 @@ Shopper is registered and autoapproved after passing Certification. FU
         Set global variable    ${URL}
         SET UP
         ${Robot Certificate}=    set variable    RF 001-Shopper Registration [Certificate]
-        ${Robot Description Certificate}=    set variable    RF Certificate for shopper self registration ${RF REVN DT}
+        ${Robot Description Certificate}=    set variable    RF Certificate for shopper self registration
         ${Robot q-ry}    set variable    RF Questionnaire [Certificate]
         set global variable    ${Robot Certificate}
         set global variable    ${Robot Description Certificate}
@@ -417,7 +419,7 @@ Shopper is registered and autoapproved after passing Certification. FU
         Wait until page contains    successfully
     ##
         Search the Q-ry(via table).AD    ${Robot q-ry}    7
-        Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only
+        Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
         Set q-ry brief.AD
         Validate and Import questions.AD    RF QRY [TESTING].xlsx    RF QRY [PREPROD].xlsx    RF QRY [DEMO].xlsx
     ##
