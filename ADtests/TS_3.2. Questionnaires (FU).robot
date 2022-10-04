@@ -451,6 +451,7 @@ New questionnaire is created successfully (GLOBAL)
         set global variable    ${Robot q-ry}
         Search the Q-ry (via search bar).AD    ${Robot q-ry}
         #    Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[3]/label    do not allow
+        Check questionnaire access
         #    Set q-ry brief.AD
         #    Delete prev questions
         #    [Qry] Add qry object.AD    Text    RF Text 01    c:Text01    $[213]$='AUTO 01 [RF CLIENT]'    ${RF qry - text 01}

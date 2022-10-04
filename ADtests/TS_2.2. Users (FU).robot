@@ -47,7 +47,7 @@ TC_0002. Check creation of Analyst user (create new + edit profile)
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search Client.AD
         Search user profile.AD    ${RobotAnalystUser 01}    Analyst
-        Edit branch access
+        Edit branch access    Add all
         go to.AD    ${URL}/login.php
         Enter existing login and password.AD    ${RobotAnalystUser 01}    ${RobotAnalystUser 01}
         go to.AD    ${URL}/main-menu.php

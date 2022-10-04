@@ -654,7 +654,7 @@ JOB: Manager returns review to shopper (from 2 pages: OP and handling details)
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
-        Add/Edit alert.AD    Finished, awaiting approval    ${AlertName}    $[207]$=46.60 || $[221]$>=46 & $[218]$='RF Questionnaire [Shoppers]' || $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${RFShopperEmail}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No
+        Add/Edit alert.AD    Finished, awaiting approval    ${AlertName}    $[207]$=46.60 || $[221]$>=46 & $[218]$='RF Questionnaire [Shoppers]' || $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${RFShopperEmail}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
     #
         Create test order (MASS) - BASIC    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         Assign order (via orders-management.php).AD    ${test order description}
@@ -743,7 +743,7 @@ JOB: Alert. Send repeatedly(Off)+Alert condition
         Get BR property ID. AD    Manager
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
         Log to console    SCENARIO: 1. Setting alert to "Send repeatedly"=OFF 2. Shopper finish review 3. Alert is sent 4. Review is sent back to a shopper 5. Review is submitted by shopper 6. Alert is not sent
-        Add/Edit alert.AD    Finished, awaiting approval    ${AlertName}    $[207]$=46 || $[221]$>=45 & $[218]$='RF Questionnaire [Shoppers]' || $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${RFShopperEmail}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No
+        Add/Edit alert.AD    Finished, awaiting approval    ${AlertName}    $[207]$=46 || $[221]$>=45 & $[218]$='RF Questionnaire [Shoppers]' || $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${RFShopperEmail}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
     #
         Create test order (MASS) - BASIC    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         Assign order (via orders-management.php).AD    ${test order description}

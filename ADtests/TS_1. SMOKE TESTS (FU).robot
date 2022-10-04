@@ -259,7 +259,7 @@ PhoneSurvey_03: Shopper submits a Phone survey (check saved answers)
     Close Browser
     [Teardown]    Close Browser.AD
 
-Checkertificate_04: Shopperr submits a Checkertificate review (check only review statuses and saved answers)
+Checkertificate_04: Shopper submits a Checkertificate review (check only review statuses and saved answers)
     [Tags]    PhoneS    Smoke
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -281,10 +281,28 @@ Checkertificate_04: Shopperr submits a Checkertificate review (check only review
         set global variable    ${Robot q-ry}
     #
         Search the Q-ry(via table).AD    ${Robot q-ry}    7
-        Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
+    #    Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
         Get question ID
     #
         Login as a Shopper
+    #
+    #
+        go to.AD    ${URL}/c_certificate-list.php?CerID=${CertID}
+        Wait until page contains    CheckerTificate
+        Page should contain    ${Robot Certificate}
+        Page should contain    ${Robot Description Certificate}
+        Log to console    "${Robot Certificate}" is visible (${Robot Description Certificate})
+        Click element    //*[@id="table_rows"]/tbody/tr/td[2]/a
+    ##################
+        Run keyword if    ${testing?}    Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF    2000    I am a Free text RF message    I am an Internal RF message    No
+        Run keyword if    ${testing?}    Click element    //*[@id="saveAndExit"]
+        Run keyword if    ${testing?}    Wait until page contains    Data saved
+        Run keyword if    ${testing?}    go to.AD    ${URL}/c_unfinished-crits.php
+        Run keyword if    ${testing?}    Page should not contain    ${Robot Certificate}
+        Run keyword if    ${testing?}    Page should not contain    ${Robot Description Certificate}
+        Run keyword if    ${testing?}    Page should not contain    ${Robot q-ry}
+        Run keyword if    ${testing?}    Log to console    ${URL}/c_unfinished-crits.php does not contain saved certificate job (+)
+    #
         go to.AD    ${URL}/c_certificate-list.php?CerID=${CertID}
         Wait until page contains    CheckerTificate
         Page should contain    ${Robot Certificate}
@@ -294,9 +312,13 @@ Checkertificate_04: Shopperr submits a Checkertificate review (check only review
     ##################
         Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF    2000    I am a Free text RF message    I am an Internal RF message    No
         Check Review Subm Time    SubmissionTime (2022).xlsx    4    Thank you    # № of sheet
-        #    Element text should be    //center/table/tbody/tr[2]/td/a[1]    Back to main menu
-        #    Element text should be    //center/table/tbody/tr[2]/td/a[2]    Back to review selection
-        #    Element text should be    //center/table/tbody/tr[2]/td/a[3]    Log off
+        Page should contain    Thank you for filling this review
+        Page should contain    Certificate passed successfully
+    #    Page should contain    No need to add certificate for this checker
+    #    Page should contain    No need to give any set permissions
+    #    Page should contain    Adding certificate to Checker
+    #    Page should contain    Checker should be certified to this certificate
+        Page should contain    ${Robot Certificate}
         Check errors on page [-1]
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         go to.AD    ${URL}/crit-handling-details.php?CritID=${Review Number}

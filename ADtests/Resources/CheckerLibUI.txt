@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -1537,6 +1537,7 @@ Add/edit new branch.AD
     Check errors on page [-1]
     Log to console    Let`s add/update "${Short auto branch name}" branch
     Wait until page contains element    //input[@id='field_branchName']
+    Select country/region/city.AD
     Input text    //input[@id='field_branchName']    ${Short auto branch name}
     Input text    //input[@id='field_BranchFullname']    ${Full auto branch name}
     Input text    //input[@id='field_BranchCode']    RFBrCode-01
@@ -1552,7 +1553,8 @@ Add/edit new branch.AD
     Input text    //input[@id='field_TargetFinalGrade']    10
     Run keyword and ignore error    Select dropdown.AD    //*[@id="prop2501"]    //*[@id="prop2501"]/option[2]
     Run keyword and ignore error    Select dropdown.AD    //*[@id="prop3085"]    //*[@id="prop3085"]/option[2]
-    Select country/region/city.AD
+    Execute JavaScript    window.document.getElementById("field_HouseNumber").scrollIntoView(true)
+    sleep    1
     ####
     Click Save/Add/Delete/Cancel button.AD
     Wait until page contains    successfully
@@ -2329,7 +2331,23 @@ Validate and Import questions.AD
     Go to2.AD    ${URL}/setedit-frameset.php?SetID=${found ID}
     select frame    objects
     Page should contain element    //*[@id="select-all"]
-    Page should not contain element    //*[@id="object_list"]/tbody/tr[5]
+    #    Page should not contain element    //*[@id="object_list"]/tbody/tr[5]
+    Log to console    Checking other pages on extra errors and warnings...
+    go to.AD    ${URL}/setedit-simulate.php?SetID=${found ID}
+    go to.AD    ${URL}/setedit-preview.php?SetID=${found ID}
+    go to.AD    ${URL}/set-print.php?SetID=${found ID}
+    go to.AD    ${URL}/set-edit-association.php?SetID=${found ID}
+    go to.AD    ${URL}/set-edit-access.php?SetID=${found ID}
+    go to.AD    ${URL}/target-grades-edit.php?SetID=${found ID}
+    Go to2.AD    ${URL}/set-perflevel-questions.php?SetID=${found ID}
+    go to.AD    ${URL}/set-alt-lang-conditions.php?SetID=${found ID}
+    go to.AD    ${URL}/set-preview.php?SetID=${found ID}&company=1
+    go to.AD    ${URL}/setedit-dnd.php?SetID=${found ID}
+    go to.AD    ${URL}/setedit-object-popup.php?SetID=${found ID}&NewObjectType=20
+    go to.AD    ${URL}/setedit-openlink-editable-questions.php?SetID=${found ID}
+    go to.AD    ${URL}/setedit-manage-lists.php?SetID=${found ID}
+    go to.AD    ${URL}/setedit-order.php?SetID=${found ID}
+    go to.AD    ${URL}/setedit-order-logic.php?SetID=${found ID}
 
 Simulate job
     Element text should be    //*[@id="orders_list"]/tbody/tr[${index}]/td[6]/button[1]    Execute a simulation
@@ -3361,7 +3379,7 @@ Begin scorecard.SD
     Run keyword if    "${Attach files?}"=="YES"    Attach files.SD
     #######
     Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-    Page should contain element    //input[@id='Uploadfiles']
+    #    Page should contain element    //input[@id='Uploadfiles']
     Page should contain element    //select[@id='AltLangID']
     Page should contain element    //*[@id="crit_form"]/div[2]/center[1]/table/tbody/tr/td/table
     Page should contain element    //img[contains(@src, "images\\arrows\\bullet_green.png")]
@@ -3369,12 +3387,13 @@ Begin scorecard.SD
     ### checking of free text boxes - opt and mand
     Run keyword and ignore error    select frame    questionnaire
     Wait until page contains    ${Q1 TEXT}
-    ${Get text}    get text    //span[@id='obj${Q1 ID}-placeholder']/span[@class='tedit-desc']
-    ${Var 2}    Fetch From Left    ${Get text}    )
-    ${Review Number}    Fetch From Right    ${Var 2}    :
-    ${Review Number}    Strip String    ${Review Number}
-    log to console    Review Number: [${Review Number}]
-    Set global variable    ${Review Number}
+    ${is text visible?}    Run keyword and return status    Page should contain element    //span[@id='obj${Q1 ID}-placeholder']/span[@class='tedit-desc']
+    Run keyword and ignore error    ${Get text}    get text    //span[@id='obj${Q1 ID}-placeholder']/span[@class='tedit-desc']
+    Run keyword and ignore error    ${Var 2}    Fetch From Left    ${Get text}    )
+    Run keyword and ignore error    ${Review Number}    Fetch From Right    ${Var 2}    :
+    Run keyword and ignore error    ${Review Number}    Strip String    ${Review Number}
+    Run keyword if    ${is text visible?}    log to console    Review Number: [${Review Number}]
+    Run keyword if    ${is text visible?}    Set global variable    ${Review Number}
     #
     Element text should be    //*[@id="charNum_obj${Q1 ID}"]    15 characters left. Minimum 3 characters
     Element text should be    //*[@id="charNum_obj${Q2 ID}"]    50 characters left. Minimum 10 characters
@@ -3689,8 +3708,8 @@ Add/Edit user profile.AD
     ${status}    Run keyword and return status    Element Should Contain    ${role name}    Manager
     Run keyword if    '${role name}'=='Special permissions'    Select dropdown.AD    //*[@id="idRoleNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RF role name}')]
     Run keyword if    '${role name}'=='Special permissions'    Input text    //input[@id='field_Email']    ${SP user email address}
-    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 03 [SP USER]'    Input text    //input[@id='field_Email']    failmail@gmail.com
-    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 03 [SP USER]'    Validate value (value)    //input[@id='field_Email']    failmail@gmail.com
+    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 03 [SP USER]'    Input text    //input[@id='field_Email']    ${RFShopperEmail}
+    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 03 [SP USER]'    Validate value (value)    //input[@id='field_Email']    ${RFShopperEmail}
     Run keyword if    '${role name}'=='Manager'    Input text    //input[@id='field_Email']    robotmailbox01@gmail.com
     Run keyword if    '${role name}'=='Manager'    Select dropdown.AD    //*[@id="idEmailDigestEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Daily')]
     ####
@@ -3721,7 +3740,7 @@ Add/Edit user profile.AD
     Validate value (text)    //*[@id="idTimeZoneEditbox"]/table/tbody/tr/td/span/button    Europe/Kiev
     Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='${RobotTestShopper} 1'    Validate value (value)    //input[@id='field_Email']    ${SP user email address}
     Run keyword if    '${role name}'=='Manager'    Validate value (value)    //input[@id='field_Email']    robotmailbox01@gmail.com
-    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 03 [SP USER]'    Validate value (value)    //input[@id='field_Email']    failmail@gmail.com
+    Run keyword if    '${role name}'=='Special permissions' and '${RobotTestShopper}'=='RF user 03 [SP USER]'    Validate value (value)    //input[@id='field_Email']    ${RFShopperEmail}
     #
     Log To Console    User profile (role="${role name}") is created/updated
 
@@ -6411,9 +6430,10 @@ Select dropdown.AD
     log to console    Dropdown set to "${element ID}" --> "${exp value}"
 
 Add/Edit alert.AD
-    [Arguments]    ${Send when in this status}    ${AlertName}    ${condition}    ${Include in report}    ${Attachment}    ${active?}    ${Show link to review?}    ${Send to specific email?}    ${Send repeatedly?}    ${allow concentrated?}    ${body content}    ${FTP?}
+    [Arguments]    ${Send when in this status}    ${AlertName}    ${condition}    ${Include in report}    ${Attachment}    ${active?}    ${Show link to review?}    ${Send to specific email?}    ${Send repeatedly?}    ${allow concentrated?}    ${body content}    ${FTP?}    ${SendToAllClientContacts?}
     go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
     Set global variable    ${Attachment}
+    Set global variable    ${SendToAllClientContacts?}
     Wait until page contains element    //button[@class='btn-input']
     ${IsElementVisible}=    Run keyword and return status    Page should contain    ${AlertName}
     Run Keyword If    ${IsElementVisible}    Click link    default=${AlertName}
@@ -6424,6 +6444,7 @@ Add/Edit alert.AD
     Check errors on page [-1]
     Set global variable    ${AlertName}
     ${x}=    Set variable    ${AlertName}
+    Set checkbox.AD    //input[@id='field_SendToAllClientContacts']    ${SendToAllClientContacts?}
     Set checkbox.AD    //*[@id="field_IsActive"]    ${active?}
     Set checkbox.AD    //input[@id='field_SendRepeatedly']    ${Send repeatedly?}
     Run keyword if    "${FTP?}"=="Yes"    Set checkbox.AD    //input[@id='field_AlertByEmail']    None
@@ -8260,20 +8281,35 @@ Add sys image.AD
     Check errors on page [-1]
 
 Edit branch access
+    [Arguments]    ${exp result}
     go to.AD    ${URL}/user-branch-access.php?UserID=${found ID}
     Wait until page contains element    //select[@id='ClientID']
-    Select dropdown.AD    //*[@id="ClientID"]    //*[@id="ClientID"]/option[11]
-    Click element    //input[@id='add_all_branches']
-    Page should contain    All branches added successfully.
-    Wait until page contains element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[1]
-    Click element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[1]
-    Wait until page contains element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[2]
-    Click element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[2]
-    Wait until page contains element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[3]
-    Click element    //tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/form[2]/p[2]/select/option[3]
-    Wait until page contains element    //input[@id='do_delete']
-    Click element    //input[@id='do_delete']
-    Page should contain    3 branches removed
+    sleep    1
+    ${text is visible?}    Run keyword and return status    Page should contain    No branches linked
+    Return from keyword if    ${text is visible?}
+    #
+    ${text is visible?}    Run keyword and return status    Page should contain element    //input[@id='do_delete']
+    Return from keyword if    ${text is visible?}
+    @{elements}    Get List Items    //*[@id="side_menu"]/tbody/tr/td[3]/form[2]/p[2]/select
+    #iterate for each row
+    FOR    ${element}    IN    @{elements}
+        Log to console    Authorized branches --> "${element}"
+        Click element    //form[2]/p[2]/select/option[1]
+        Click element    //input[@id='do_delete']
+        Wait until page contains    1 branches removed
+    END
+    Wait until page contains    No branches linked
+    Log to console    All branches has been removed...No branches linked
+    #
+    Run keyword if    "${exp result}"=="Add all"    Select dropdown.AD    //*[@id="ClientID"]    //option[contains(.,'${RobotTestClient}')]
+    sleep    1
+    Validate value (value)    //*[@id="ClientID"]    ${Dictionary}[${RobotTestClient}]
+    sleep    1
+    Run keyword if    "${exp result}"=="Add all"    Log to console    Linking all branches of client: "${Dictionary}[${RobotTestClient}]"...
+    Run keyword if    "${exp result}"=="Add all"    Click element    //input[@id='add_all_branches']
+    Run keyword if    "${exp result}"=="Add all"    Page should contain    All branches added successfully.
+    Run keyword if    "${exp result}"=="Add all"    Click element    //input[@id='add_all_branches']
+    Run keyword if    "${exp result}"=="Add all"    Page should contain    All branches added successfully.
 
 Reports: Final scores analysis
     [Arguments]    ${report name}    ${report category}
@@ -9995,19 +10031,21 @@ Check file HEADER.AD
     List Should Not Contain Duplicates    ${Dictionary}
 
 Select country/region/city.AD
-    ${element present?}=    Run Keyword And Return Status    Page should contain element    //input[@id='field_CityName']
-    Run Keyword If    '${element present?}'=='True'    Execute JavaScript    window.document.getElementById("field_CityName").scrollIntoView(true)
-    Run Keyword If    '${element present?}'=='True'    Log to console    Selecting region and input city
-    Run Keyword If    '${element present?}'=='True'    Input text    //input[@id='field_CityName']    Robot region 01
-    Run Keyword If    '${element present?}'=='True'    Wait until page contains element    //body/ul/li
+    [Tags]    Critical
+    ${element present?}    Run Keyword And Return Status    Page should contain element    //input[@id='field_CityName']
+    Run Keyword If    ${element present?}    Execute JavaScript    window.document.getElementById("field_CityName").scrollIntoView(true)
+    Run Keyword If    ${element present?}    Log to console    Selecting region and input city
+    Run Keyword If    ${element present?}    Input text    //input[@id='field_CityName']    Robot region 01
+    Run Keyword If    ${element present?}    Wait until page contains element    //body/ul/li
     sleep    1
-    Run Keyword If    '${element present?}'=='True'    click element    //body/ul/li
+    Run Keyword If    ${element present?}    click element    //body/ul/li
     sleep    1
-    ${actual value}    Get value    //input[@id='field_CityName']
-    Run Keyword If    '${element present?}'=='True'    Should Contain    ${actual value}    Robot country 01
-    Run Keyword If    '${element present?}'=='True'    Should Contain    ${actual value}    Robot region 01
-    Run Keyword If    '${element present?}'=='True'    Should Contain    ${actual value}    Robot city 01
-    Run Keyword If    '${element present?}'=='True'    log to console    Selected city = Robot region 01 -- Robot city 01
+    #    ${actual value}    Get value    //input[@id='field_CityName']
+    #    Run Keyword If    ${element present?}    Should be equal    ${actual value}    Robot country 01 -- Robot region 01 -- Robot city 01
+    #    Run Keyword If    ${element present?}    Validate value (value)    ${actual value}    Robot country 01
+    #    Run Keyword If    ${element present?}    Should Contain    ${actual value}    Robot region 01
+    #    Run Keyword If    ${element present?}    Should Contain    ${actual value}    Robot city 01
+    Run Keyword If    ${element present?}    log to console    Selected city = Robot region 01 -- Robot city 01
     #########
     #########
     Run Keyword If    '${element present?}'=='False'    Wait until page contains element    id=field_CityName_Cou_DIV
@@ -10021,7 +10059,10 @@ Select country/region/city.AD
     Run Keyword If    '${element present?}'=='False'    log to console    Selected region = "${Robot region 01}"
     #
     Run Keyword If    '${element present?}'=='False'    Wait until page contains element    //*[@id="field_CityName_DIV"]/table/tbody/tr/td/div/table/tbody/tr/td/span
+    Run Keyword If    '${element present?}'=='False'    Execute JavaScript    window.document.getElementById("field_CityName_DIV").scrollIntoView(true)
+    SLEEP    1
     Run Keyword If    '${element present?}'=='False'    Select dropdown.AD    //*[@id="field_CityName_DIV"]/table/tbody/tr/td/div/table/tbody/tr/td/span    xpath=//li[contains(.,'${Robot city 01}')]
+    SLEEP    1
     Run Keyword If    '${element present?}'=='False'    Validate value (text)    id=field_CityName_DIV    ${Robot city 01}
     Run Keyword If    '${element present?}'=='False'    log to console    Selected city = "${Robot city 01}"
 
@@ -10298,12 +10339,13 @@ GMAIL: Recover UserID.SD
     Log to console    Deleting all inbox email. Closing Mailbox.
 
 GMAIL: Recover password.SD
+    [Arguments]    ${robot email}    ${password}
     Log to console    Expected email: "Recover password"
     Log to console    ${\n}--------------------------Open Mailbox ("${robot email}")--------------------------
     Open Mailbox    host=${host}    user=${robot email}    password=${password}
     #Get Email Body    1
-    ${LATEST} =    Wait For Email    sender=info-testing-system@checker-soft.com    timeout=100
-    Log to console    Done. Waiting email from sender="info-testing@checker-soft.com"; timeout=10sec. Please wait....
+    ${LATEST} =    Wait For Email    sender=info-${URL1index}-system@checker-soft.com    timeout=50
+    Log to console    Done. Waiting email from sender="info-${URL1index}-system@checker-soft.com"; timeout=50sec. Please wait....
     Log to console    Email is received. Index = "${LATEST}". Checking email details...
     ${parts}=    Walk Multipart Email    ${LATEST}
     @{fields}=    Get Multipart Field Names
@@ -12635,12 +12677,14 @@ Begin scorecard (OPlogic=no).SD
     Log To Console    Starting the scorecard...selecting the answers and additional info...
     Run keyword and ignore error    Execute Javascript    window.document.getElementById("accept").scrollIntoView(true);
     Run keyword and ignore error    Click element    //tr[${index}]/td[${Begin scorecard ID}]/form/input[1]
-    ${brif visible?}    Run keyword and return status    page should contain    (2 min read)
-    Run keyword if    "${brif visible?}"=="True"    Check brif.SD
-    #
     ${Iframe}    set variable    questionnaire
     Set global variable    ${Iframe}
     Run keyword and ignore error    select frame    ${Iframe}
+    Run keyword if    ${testing?} and "${Robot q-ry}"=="RF Questionnaire [Certificate]"    Handle Alert
+    #
+    ${brif visible?}    Run keyword and return status    page should contain    (2 min read)
+    Run keyword if    "${brif visible?}"=="True"    Check brif.SD
+    #
     #
     ${Get text}    get text    //form[@id='crit_form']/div[@id='question-area']/span[@class='tedit-desc'][1]
     ${Var 2}    Fetch From Left    ${Get text}    )
@@ -13408,19 +13452,21 @@ GMAIL: GET ALERT EMAIL.SD
     Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Should Contain    ${HTML}    Click here to view the review.
     Run keyword if    ${type of alert=WITH ATTACHMENTS?} or ${type of alert=CONCENTRATED?} or ${type of alert=NO ATTACHMENTS?}    Should Contain    ${HTML}    This is an alert text
     Run keyword if    ${type of alert=CLIENT USER?} or ${type of alert=CONCENTRATED?}    Log to console    Please wait...checking email content...
-    ...    ELSE    Check default codes table    Check default codes table    ${ReviewID}
+    ...    ELSE    Check default codes table    ${ReviewID}
     Run keyword if    ${type of alert=WITH ATTACHMENTS?}    Log to console    Email contains: This is an alert text Name of the client - ${Dictionary}[Client name] Name of the questionnaire ${Dictionary}[Questionnaire name] ID: ${ReviewID} EXTRA INFO City to which the branch is linked - Robot city 01 ID of the questionnaire - ${Dictionary}[Questionnaire ID] Text code of the questionnaire - ${Dictionary}[Questionnaire Code] Purchase Invoice value - Description of the order with HTML tags - Name of the project - Email of the shopper - ID number of the project - Date of the order - ${Dictionary}[Order due date] Time of the order - Purchase description of the order - Phone of the shopper - ${Dictionary}[Shopper phone] Order ID number - ${Dictionary}[Shopper 1 email],${Dictionary}[Shopper 2 email] ${Dictionary}[Mass order description] Status: ${Dictionary}[Review status] Result: ${Rounded result} \ Standard header text Sectional grades Final grade trend Click here to view the review.
     #
     Run keyword if    ${type of alert=NO ATTACHMENTS?}    Log to console    Email contains: This is an alert text Name of the client - ${Dictionary}[Client name] Name of the questionnaire ${Dictionary}[Questionnaire name] ID: ${ReviewID} EXTRA INFO City to which the branch is linked - Robot city 01 ID of the questionnaire - ${Dictionary}[Questionnaire ID] Text code of the questionnaire - ${Dictionary}[Questionnaire Code] Purchase Invoice value - Description of the order with HTML tags - Name of the project - Email of the shopper - ID number of the project - Date of the order - ${Dictionary}[Order due date] Time of the order - Purchase description of the order - Phone of the shopper - ${Dictionary}[Shopper phone] Order ID number - ${Dictionary}[Shopper 1 email],${Dictionary}[Shopper 2 email] ${Dictionary}[Mass order description] Status: ${Dictionary}[Review status] Result: ${Rounded result} \ Standard header text Sectional grades Final grade trend Click here to view the review.
     #
-    Run keyword if    ${type of alert=CLIENT USER?}    Should Contain    ${HTML}    Please note: You currently don't have access to the branch RF Branch 01 [Short name] of the client AUTO 01 [RF CLIENT]. Please ask a manager to grant you access before clicking on this link.
-    Run keyword if    ${type of alert=CLIENT USER?}    Should Contain    ${HTML}    Click here to view the review.
-    Run keyword if    ${type of alert=CLIENT USER?}    GMAIL: FOOTER (users)
-    Run keyword if    ${type of alert=CLIENT USER?}    Log to console    Email contains: Please note: You currently don't have access to the branch RF Branch 01 [Short name] of the client AUTO 01 [RF CLIENT]. Please ask a manager to grant you access before clicking on this link. Click here to view the review + email footer system notice
+    Run keyword if    ${type of alert=CLIENT USER?} and "${whose email box?}"=="RF SP user" and "${SendToAllClientContacts?}"=="None" or "${whose email box?}"=="RF Manager" and "${whose email box?}"=="RF Manager" and " ${type of alert=CONCENTRATED?}"=="False"    Should Contain    ${HTML}    Please note: You currently don't have access to the branch RF Branch 01 [Short name] of the client AUTO 01 [RF CLIENT]. Please ask a manager to grant you access before clicking on this link.
+    Run keyword if    ${type of alert=CLIENT USER?} and "${whose email box?}"=="RF SP user" and "${SendToAllClientContacts?}"=="None" or "${whose email box?}"=="RF Manager" and "${whose email box?}"=="RF Manager" and " ${type of alert=CONCENTRATED?}"=="False"    Should Contain    ${HTML}    Click here to view the review.
+    Run keyword if    ${type of alert=CLIENT USER?} and "${whose email box?}"=="RF SP user" and "${SendToAllClientContacts?}"=="None" or "${whose email box?}"=="RF Manager" and "${whose email box?}"=="RF Manager" and " ${type of alert=CONCENTRATED?}"=="False"    GMAIL: FOOTER (users)
+    Run keyword if    ${type of alert=CLIENT USER?} and "${whose email box?}"=="RF SP user" and "${SendToAllClientContacts?}"=="None" or "${whose email box?}"=="RF Manager" and "${whose email box?}"=="RF Manager" and "${type of alert=CONCENTRATED?}"=="False"    Log to console    Email contains: Please note: You currently don't have access to the branch RF Branch 01 [Short name] of the client AUTO 01 [RF CLIENT]. Please ask a manager to grant you access before clicking on this link. Click here to view the review + email footer system notice
     ${ALL_LINKS}    Get Links from Email    ${LATEST}
     Log to console    Go to --> ${ALL_LINKS}[0] (URL from alert email)
-    Run keyword if    ${type of alert=CLIENT USER?}    Go To    ${ALL_LINKS}[0]
-    Run keyword if    ${type of alert=CLIENT USER?}    Wait until page contains    Full review report: AUTO 01 [RF CLIENT] - RF Branch 01 [Short name]
+    Run keyword if    ${type of alert=CLIENT USER?} and "${whose email box?}"=="RF SP user" and "${SendToAllClientContacts?}"=="None" or "${whose email box?}"=="RF Manager" and "${whose email box?}"=="RF Manager" and "${type of alert=CONCENTRATED?}"=="False"    Go To    ${ALL_LINKS}[0]
+    Run keyword if    ${type of alert=CLIENT USER?} and "${whose email box?}"=="RF SP user" and "${SendToAllClientContacts?}"=="None" or "${whose email box?}"=="RF Manager" and "${whose email box?}"=="RF Manager" and "${type of alert=CONCENTRATED?}"=="False"    Wait until page contains    Full review report: AUTO 01 [RF CLIENT] - RF Branch 01 [Short name]
+    #
+    Run keyword if    ${type of alert=CLIENT USER?} and "${whose email box?}"=="RF Shopper"    Check default codes table    ${ReviewID}
     #
     Mark All Emails As Read
     Delete All Emails
@@ -13430,7 +13476,7 @@ GMAIL: GET ALERT EMAIL.SD
 
 Manage allowed users.AD
     [Arguments]    ${checked table?}    ${search item}    ${allow access from element}    ${move element locator}
-    #Wait until page contains
+    Wait until page contains element    ${checked table?}
     log to console    Validating non/authorized shoppers...
     @{elements}    Get List Items    ${checked table?}
     #iterate for each row
@@ -13445,7 +13491,10 @@ Manage allowed users.AD
     Scroll element into view    //*[contains(text(), '${search item}')]
     select from list by label    ${allow access from element}    ${search item}
     click element    ${move element locator}
-    sleep    3
+    Run keyword and ignore error    click element    //select[@id='bla2']
+    sleep    1
+    Click Save/Add/Delete/Cancel button.AD
+    Wait until page contains    saved successfully
     [Return]    done
 
 Get list of attached files.AD
@@ -13959,7 +14008,7 @@ Check report-failed-email page.AD
     go to.AD    ${URL}/report-failed-email.php
     Log to console    Checking failed email reports page (will retry in case if email is stucked here)
     ${text visible?}    Run keyword and return status    Page should contain    ${exp email title}
-    Log to console    Expected fail email visible? = "${text visible?}"
+    Log to console    Fail alert email is visible on fail report page? = "${text visible?}"
     Run keyword if    ${text visible?}    Get ID    id="table_rows"    ${exp email title}    2    8
     sleep    1
     Run keyword if    ${text visible?}    Log to console    Retry failed email
@@ -13967,7 +14016,7 @@ Check report-failed-email page.AD
     Run keyword if    ${text visible?}    Click element    //*[@id="side_menu"]/tbody/tr/td/form[1]/input[2]
     Run keyword if    ${text visible?}    Wait until page contains    Done
 
-Similate alert.AD
+Simulate alert.AD
     go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
     Wait until page contains element    //input[@id='SimulateAlerts']
     Click element    //input[@id='SimulateAlerts']
@@ -13978,6 +14027,9 @@ Similate alert.AD
     #
     go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
     Wait until page contains element    //input[@id='checkAndSendAlerts']
-    Log to console    Clicking button - "Send Alert if needed"
+    Execute JavaScript    window.document.getElementById("checkAndSendAlerts").scrollIntoView(true)
+    Log to console    Clicking button - "Send Alert if needed" REVIEW ID: ${ReviewID}
     Click element    //input[@id='checkAndSendAlerts']
     Wait until page contains    Alerts sent
+    Log to console    Alert sent message is seen (+)
+    #

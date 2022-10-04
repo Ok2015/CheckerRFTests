@@ -58,6 +58,12 @@ Client. Add/Update branch
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+    #
+        go to.AD    ${URL}/company-display.php
+        Select dropdown.AD    //*[@id="idCitySelectionStyleEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Instant search box')]
+        Click Save/Add/Delete/Cancel button.AD
+        Wait until page contains    Display settings saved successfully
+    #
         Search Client.AD
         Search branch.AD
         Add/edit new branch.AD    ${Short auto branch name 01}    ${Full auto branch name 01}
@@ -66,6 +72,7 @@ Client. Add/Update branch
     [Teardown]    Close Browser.AD
 
 Client. Add branch contact
+    [Tags]    Critical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -86,6 +93,7 @@ Client. Add branch contact
     [Teardown]    Close Browser.AD
 
 Client. Branch characteristic value is deleted successfully
+    [Tags]    Critical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window

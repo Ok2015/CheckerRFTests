@@ -418,14 +418,14 @@ Shopper is registered and autoapproved after passing Certification. FU
         Click Save/Add/Delete/Cancel button.AD
         Wait until page contains    successfully
     ##
-        Search the Q-ry(via table).AD    ${Robot q-ry}    7
-        Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
-        Set q-ry brief.AD
-        Validate and Import questions.AD    RF QRY [TESTING].xlsx    RF QRY [PREPROD].xlsx    RF QRY [DEMO].xlsx
+    #    Search the Q-ry(via table).AD    ${Robot q-ry}    7
+    #    Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
+    #    Set q-ry brief.AD
+    #    Validate and Import questions.AD    RF QRY [TESTING].xlsx    RF QRY [PREPRODUCTION].xlsx    RF QRY [DEMO].xlsx
     ##
         Log to console    Let`s create a user
         Open registration page and check agreement box(es)
-        ${random string}=    Generate Random String    4    [LETTERS]
+        ${random string}=    Generate Random String    8    [LETTERS]
         set global variable    ${random string}
         ${mobile}=    Generate Random String    10    [NUMBERS]
         set global variable    ${mobile}
@@ -456,9 +456,10 @@ Shopper is registered and autoapproved after passing Certification. FU
         Page should contain    RF Certificate for shopper self registration
         Page should contain    ${Robot q-ry}
         click element    //*[@id="table_rows"]/tbody/tr/td[2]/a
-        Begin scorecard.SD    Additional info - ${DD.MM.YY} RF Registration    1988    I am free text enetred by reviewer - ${DD.MM.YY} RF Registration    Internal message added by RF shopper (date: ${DD.MM.YY})    NO    NO    id=finishCrit
+        Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF    2000    Free text message    Internal message    NO
+        Click element    id=finishCrit
         Wait until page contains    Thank you for filling this review    8
-        #    Wait until page contains    Certificate passed successfully
+        Wait until page contains    Certificate passed successfully
         Enter login and password.SD    RF-${random string}    RF-${random string}
         Enable agreements.SD
         go to.AD    ${URL}/c_main.php

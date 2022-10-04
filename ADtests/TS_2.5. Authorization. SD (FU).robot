@@ -126,10 +126,7 @@ Deactivated shopper can not login.SD
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search shopper.AD
         Search shopper by AD    ${RobotTestShopper 02}
-        go to    ${URL}/c_login.php
-        Check LogIn page.SD
-        Log To Console    ${\n}Login to account: username:${RobotTestShopper 01}/pass:${RobotTestShopper 01}
-        Check errors on page [-1]
+        go to.AD    ${URL}/c_login.php
         Wait Until Page Contains Element    name=username
         Input Text    name=username    ${RobotTestShopper 01}
         Input Text    name=password    ${RobotTestShopper 01}
@@ -144,12 +141,11 @@ Deactivated shopper can not login.SD
         ...    ELSE    Log to console    Shopper is not found in a system.
         Log To Console    ${\n}Login to account: username:${RobotTestShopper 01}/pass:${RobotTestShopper 01}
         Check errors on page [-1]
-        go to    ${URL}/c_login.php
+        go to.AD    ${URL}/c_login.php
         Wait Until Page Contains Element    name=username
         Input Text    name=username    ${RobotTestShopper 01}
         Input Text    name=password    ${RobotTestShopper 01}
         Click Element    ${id=submit_button}
-        Check errors on page [-1]
         Enable agreements.SD
         Wait Until Page Contains    Welcome,
     END
@@ -196,13 +192,11 @@ SD user can remove own profile.SD
         Set checkbox.AD    //input[@id='field_CheckerCanDeletePersonalData']    true
         Set checkbox.AD    //input[@id='field_CheckerDEF_CanEditSelfInfo']    true
         Click element    //input[@id='save']
-        Go to    ${URL}/c_login.php
-        Check errors on page [-1]
-        Check LogIn page.SD
+        go to.AD    ${URL}/c_login.php
+    #
         Enter login and password.SD    ${RobotTestShopper 05}    ${RobotTestShopper 05}
         Remove yourself from the system.SD
-        Go to    ${URL}/c_login.php
-        Check LogIn page.SD
+        go to.AD    ${URL}/c_login.php
         Enter login and password.SD    ${RobotTestShopper 05}    ${RobotTestShopper 05}
         ${status1}    ${value1}=    Run Keyword And Ignore Error    Page Should Contain    has been blocked. Please contact the administrator () to unblock it.
         Run Keyword If    '${status1}'=='PASS'    Log to console    Result: has been blocked. Please contact the administrator () to unblock it.
@@ -231,8 +225,6 @@ SD user can not remove own profile.SD
         go to.AD    ${URL}/company-display.php
         Set checkbox.AD    //input[@id='field_ShowCountriesInDD']    true
         Click Save/Add/Delete/Cancel button.AD
-        go to.AD    ${URL}/c_login.php
-        Check LogIn page.SD
         Enter login and password.SD    ${RobotTestShopper 05}    ${RobotTestShopper 05}
         Log To Console    Shopper can not see element //input[@id='remove']
         go to.AD    ${URL}/checkers.php?edit=y&auth_mode=2
@@ -278,7 +270,7 @@ Registered shopper email resets the password.SD
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
-        ${email}=    Set variable    robotmailbox01@gmail.com
+        ${email}=    Set variable    robotshopperemail@gmail.com
         SET UP
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Allow assessor to modify these fields about himself.AD    true
@@ -299,7 +291,7 @@ Registered shopper email resets the password.SD
         Run Keyword If    '${check emails?}'=='False'    Log to console    Pls enable email check to test pass reset email (-)
         Run Keyword If    '${check emails?}'=='False'    Search profile.AD    ${RobotTestShopper 02}
         Run Keyword If    '${check emails?}'=='False'    Edit shopper profile.AD    ${RobotTestShopper 02}
-        Run Keyword If    '${check emails?}'=='True'    GMAIL: Recover password.SD
+        Run Keyword If    '${check emails?}'=='True'    GMAIL: Recover password.SD    ${RFShopperEmail}    ${shopper email app password}
     END
     Close Browser
     [Teardown]    Close Browser.AD

@@ -376,9 +376,9 @@ Client. Add alert(s)
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
-        Add/Edit alert.AD    Accepted, awaiting implementation    ${AlertName 01}    1=1    xpath=//li[contains(.,'Survey report')]    Attachment    None    true    ${empty}    true    None    This is an alert text "${AlertName 01}" ${Usual Text Codes Table} ${RF REVN DT}    No
-        Add/Edit alert.AD    Finished, awaiting approval    ${AlertName 02}    1=1    xpath=//li[contains(.,'Survey report-v6')]    Attachment    None    true    ${empty}    true    None    This is an alert text "${AlertName 02}" ${Usual Text Codes Table} ${RF REVN DT}    No
-        Add/Edit alert.AD    Approved    ${AlertName 03}    1=1    xpath=//li[contains(.,'EmailVisitReport')]    Attachment    None    true    ${empty}    true    None    This is an alert text "${AlertName 03}" ${Usual Text Codes Table} ${RF REVN DT}    No
+        Add/Edit alert.AD    Accepted, awaiting implementation    ${AlertName 01}    1=1    xpath=//li[contains(.,'Survey report')]    Attachment    None    true    ${empty}    true    None    This is an alert text "${AlertName 01}" ${Usual Text Codes Table} ${RF REVN DT}    No    None
+        Add/Edit alert.AD    Finished, awaiting approval    ${AlertName 02}    1=1    xpath=//li[contains(.,'Survey report-v6')]    Attachment    None    true    ${empty}    true    None    This is an alert text "${AlertName 02}" ${Usual Text Codes Table} ${RF REVN DT}    No    None
+        Add/Edit alert.AD    Approved    ${AlertName 03}    1=1    xpath=//li[contains(.,'EmailVisitReport')]    Attachment    None    true    ${empty}    true    None    This is an alert text "${AlertName 03}" ${Usual Text Codes Table} ${RF REVN DT}    No    None
     END
     Close Browser
     [Teardown]    Close Browser.AD
@@ -398,7 +398,7 @@ Alert. Create alert and delete it
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
     #
-        Add/Edit alert.AD    Finished, awaiting approval    ${AlertName}    $[221]$>=0 & $[218]$='RF Questionnaire [Shoppers]'    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${RFShopperEmail}    true    None    Some contetnt goes here    No
+        Add/Edit alert.AD    Finished, awaiting approval    ${AlertName}    $[221]$>=0 & $[218]$='RF Questionnaire [Shoppers]'    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${RFShopperEmail}    true    None    Some contetnt goes here    No    None
     #
         go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}
         Click link    default=${AlertName}
@@ -429,20 +429,14 @@ Alert. Send concentrated alert
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    None    true    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    None    true    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
         go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
         Click link    default=${AlertName}
         Wait until page contains element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
         Click element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
         Set checkbox.AD    //input[@id='field_AllowEmailDigest']    true
-        Manage allowed users.AD    //td[3]/div[2]/select[@id='SelectedUsers']    ROBOT [MANAGER] (ROBOT [MANAGER])    //*[@id="bla1"]
+        Manage allowed users.AD    //td[3]/div[2]/select[@id='SelectedUsers']    ROBOT [MANAGER] (ROBOT [MANAGER])    //*[@id="bla1"]    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
         Click Save/Add/Delete/Cancel button.AD
-        go to.AD    ${URL}/report-failed-email.php
-        Log to console    Deleting old failed email reports...
-        ${text visible?}    Run keyword and return status    Page should contain element    //input[@class='btn-input'][1]
-        Run keyword if    ${text visible?}    Click element    //input[@class='btn-input'][1]
-        Run keyword if    ${text visible?}    Click element    //input[@id='Delete']
-        Run keyword if    ${text visible?}    Wait until page contains    Deleted
         Open Operational Panel.AD
     #
         ${1 Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
@@ -493,7 +487,7 @@ Alert. Do not send alert on days
         Set global variable    ${AlertName}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
-        Add/Edit alert.AD    Approved    ${AlertName}    1=1    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    None    None    123    No
+        Add/Edit alert.AD    Approved    ${AlertName}    1=1    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    None    None    123    No    None
         go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}
         Click link    default=${AlertName}
         Wait until page contains element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
@@ -580,43 +574,28 @@ Alert. Send alert to special email with PDF +no attachment (positive + negative)
         Set global variable    ${ReviewID}
         Get Review handling details page.AD    ${ReviewID}
         Get Order details page.AD    ${Dictionary}[OrderID]
-        Add/Edit alert.AD    Approved    ${AlertName}    $[207]$=${Rounded result} || $[221]$>=${Dictionary}[Result] & $[218]$='RF Questionnaire [Shoppers]' || $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No
+        Add/Edit alert.AD    Approved    ${AlertName}    $[207]$=${Rounded result} || $[221]$>=${Dictionary}[Result] & $[218]$='RF Questionnaire [Shoppers]' || $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
     #
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
-        Log to console    Clicking button - Send Alert if needed
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
-    #
-        go to.AD    ${URL}/report-failed-email.php
-        Log to console    Checking failed email reports page...
-        ${text visible?}    Run keyword and return status    Page should contain    Email subject: RF_ALERT REVIEW - ${ReviewID} - NO ATTACHMENTS
-        Should Be Equal As Strings    ${text visible?}    False
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT REVIEW - ${ReviewID} - NO ATTACHMENTS
     #
         GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT REVIEW - ${ReviewID} - NO ATTACHMENTS    RF Shopper
     #
         Log to console    CASE 2: NEGATIVE, alert which will be not sent due to false score alert condition
-        Add/Edit alert.AD    Approved    ${AlertName}    $[207]$=3690 || $[221]$>=4500 & $[218]$='RF Questionnaire [Shoppers]' || $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    true    None    This is an alert text "${AlertName}" ${RF REVN DT}    No
+        Add/Edit alert.AD    Approved    ${AlertName}    $[207]$=3690 || $[221]$>=4500 & $[218]$='RF Questionnaire [Shoppers]' || $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    true    None    This is an alert text "${AlertName}" ${RF REVN DT}    No    None
     #
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
-        Log to console    Clicking button - Send Alert if needed
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
-    #
-        go to.AD    ${URL}/report-failed-email.php
-        Log to console    Checking failed email reports page...
-        ${text visible?}    Run keyword and return status    Page should contain    Email subject: RF_ALERT REVIEW - ${ReviewID} - NO ATTACHMENTS
-        Should Be Equal As Strings    ${text visible?}    False
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT REVIEW - ${ReviewID} - NO ATTACHMENTS
     #
         ${results}=    Run keyword and return status    GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT REVIEW - ${ReviewID} - NO ATTACHMENTS    RF Shopper
         Should Be Equal As Strings    ${results}    False
         Log to console    ---------Actual Status---------: ${\n} NO ALERT EMAIL IS RECEIVED (+)
     #
         Log to console    CASE 3: NEGATIVE, alert will be not sent due to false (qre name) alert condition
-        Add/Edit alert.AD    Approved    ${AlertName}    $[207]$=${Rounded result} || $[221]$>=${Dictionary}[Result] & $[218]$='RF Questionnaire [Shoppers 2]' & $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    true    None    This is an alert text "${AlertName}" ${RF REVN DT}    No
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
-        Log to console    Clicking button - Send Alert if needed
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
+        Add/Edit alert.AD    Approved    ${AlertName}    $[207]$=${Rounded result} || $[221]$>=${Dictionary}[Result] & $[218]$='RF Questionnaire [Shoppers 2]' & $[204]$='RFCheckerCode_02'    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    true    None    This is an alert text "${AlertName}" ${RF REVN DT}    No    None
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT REVIEW - ${ReviewID} - NO ATTACHMENTS
+    #
         ${results}=    Run keyword and return status    GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT REVIEW - ${ReviewID} - NO ATTACHMENTS    RF Shopper
         Should Be Equal As Strings    ${results}    False
         Log to console    ---------Actual Status---------: ${\n} NO ALERT EMAIL IS RECEIVED (+)
@@ -644,34 +623,24 @@ FTP Alert - PDF
         Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-v6')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-v6')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
         Open Operational Panel.AD
     #
         ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Set global variable    ${Finished review ID}
         Get attached files (Review handling details page).AD    ${Finished review ID}    Not archived
     #
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${Finished review ID}
-        Log to console    Sending alert for REVIEW ID: ${Finished review ID}
-        Sleep    1
-        Execute JavaScript    window.document.getElementById("checkAndSendAlerts").scrollIntoView(true)
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
+        Simulate alert.AD
         Connect FTP    ${Finished review ID}.pdf    Not archived
     #CASE 2
         Log to console    ${\n}(!) CASE 2: Attached files (archived) can not be seeen/downloaded via FTP
         Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
         Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${Finished review ID}
+        Simulate alert.AD
         ${Archived?}    Run keyword and return status    Page should contain    Archived
         Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[2]
         Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[4]
         Run keyword if    ${any attachment?}>0    Page should contain    Archived
-        Log to console    Sending alert for REVIEW ID: ${Finished review ID}
-        Sleep    1
-        Execute JavaScript    window.document.getElementById("checkAndSendAlerts").scrollIntoView(true)
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
         Connect FTP    ${Finished review ID}.pdf    Archived
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END
@@ -698,23 +667,12 @@ Alert. Send alert email with attachments + HTML
         Get BR property ID. AD    Manager
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
     #
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${SP user email address}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${SP user email address}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
         Open Operational Panel.AD
         Get Review handling details page.AD    ${ReviewID}
     #
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
-        Log to console    Clicking button - "Send Alert if needed". Please wait....
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
-    #
-        go to.AD    ${URL}/report-failed-email.php
-        Log to console    Checking failed email reports page (will retry in case if email is stucked here)
-        ${text visible?}    Run keyword and return status    Page should contain    Email subject: RF_ALERT REVIEW - ${ReviewID} - WITH ATTACHMENTS
-        Run keyword if    ${text visible?}    Get ID    id="table_rows"    Email subject: RF_ALERT REVIEW - ${ReviewID} - WITH ATTACHMENTS    2    8
-        sleep    1
-        Run keyword if    ${text visible?}    Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[1]/input
-        Run keyword if    ${text visible?}    Click element    //*[@id="side_menu"]/tbody/tr/td/form[1]/input[2]
-        Run keyword if    ${text visible?}    Wait until page contains    Done
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT REVIEW - ${ReviewID} - WITH ATTACHMENTS
         GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT REVIEW - ${ReviewID} - WITH ATTACHMENTS    RF SP user
     #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
@@ -742,23 +700,13 @@ Alert. Send alert email to all branch contact with attachments + HTML
         Get BR property ID. AD    Manager
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
     #
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
         Open Operational Panel.AD
         Get Review handling details page.AD    ${ReviewID}
     #
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
-        Log to console    Clicking button - Send Alert if needed
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT REVIEW - ${ReviewID} - WITH ATTACHMENTS
     #
-        go to.AD    ${URL}/report-failed-email.php
-        Log to console    Checking failed email reports page (will retry in case if email is stucked here)
-        ${text visible?}    Run keyword and return status    Page should contain    Email subject: RF_ALERT REVIEW - ${ReviewID} - WITH ATTACHMENTS
-        Run keyword if    ${text visible?}    Get ID    id="table_rows"    Email subject: RF_ALERT REVIEW - ${ReviewID} - WITH ATTACHMENTS    2    8
-        sleep    1
-        Run keyword if    ${text visible?}    Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[1]/input
-        Run keyword if    ${text visible?}    Click element    //*[@id="side_menu"]/tbody/tr/td/form[1]/input[2]
-        Run keyword if    ${text visible?}    Wait until page contains    Done
         GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO ALL BRANCH CONTACTS - REVIEW - ${ReviewID}    RF Shopper
     #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
@@ -789,25 +737,12 @@ Alert. Send alert email to role
         Get BR property ID. AD    Manager
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
     #
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
         Open Operational Panel.AD
         Get Review handling details page.AD    ${ReviewID}
     #
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
-        Log to console    Simulating sending alert by clicking button - "Send Alert if needed"...
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
-        Log to console    Alert sent message is seen (+)
-    #
-        go to.AD    ${URL}/report-failed-email.php
-        Log to console    Checking failed email reports page (will retry in case if email is stucked here)
-        ${text visible?}    Run keyword and return status    Page should contain    Email subject: RF_ALERT REVIEW - ${ReviewID} - WITH ATTACHMENTS
-        Run keyword if    ${text visible?}    Get ID    id="table_rows"    Email subject: RF_ALERT REVIEW - ${ReviewID} - WITH ATTACHMENTS    2    8
-        sleep    1
-        Run keyword if    ${text visible?}    Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[1]/input
-        Run keyword if    ${text visible?}    Click element    //*[@id="side_menu"]/tbody/tr/td/form[1]/input[2]
-        Run keyword if    ${text visible?}    Wait until page contains    Done
-        ...    ELSE    Log to console    Is failed alert notification visible?="${text visible?}"
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT REVIEW - ${ReviewID} - WITH ATTACHMENTS
         GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO ROLE - REVIEW - ${ReviewID}    RF SP user
     #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
@@ -833,41 +768,29 @@ FTP Alert - file HTML
         Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-File HTML')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-File HTML')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
         Open Operational Panel.AD
     #
         ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Set global variable    ${Finished review ID}
         Get attached files (Review handling details page).AD    ${Finished review ID}    Not archived
     #
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${Finished review ID}
-        Log to console    Sending alert for REVIEW ID: ${Finished review ID}
-        Sleep    1
-        Execute JavaScript    window.document.getElementById("checkAndSendAlerts").scrollIntoView(true)
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
+        Simulate alert.AD
         Connect FTP    ${Finished review ID}.htm    Not archived
     #CASE 2
         Log to console    ${\n}(!) CASE 2: Attached files (archived) can not be seeen/downloaded via FTP
         Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
         Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${Finished review ID}
-        ${Archived?}    Run keyword and return status    Page should contain    Archived
-        Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[2]
-        Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[4]
-        Run keyword if    ${any attachment?}>0    Page should contain    Archived
-        Log to console    Sending alert for REVIEW ID: ${Finished review ID}
-        Execute JavaScript    window.document.getElementById("checkAndSendAlerts").scrollIntoView(true)
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
+        Simulate alert.AD
         Connect FTP    ${Finished review ID}.htm    Archived
+    #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END
     Close Browser
     [Teardown]    Close Browser.AD
 
 Alert. Send alert email to client users
-    [Tags]    Editor
+    [Tags]    Editor    Alert
     [Setup]
     [Timeout]
     @{urls}=    String.Split String    ${TestURLs}    ,
@@ -879,69 +802,41 @@ Alert. Send alert email to client users
         ${AlertName}=    Set variable    RF_ALERT TO CLIENT USER - REVIEW - $[203]$
         Set global variable    ${AlertName}
     #
-        Log to console    Case 1: send alert to "2" client users
+        Log to console    Case 2: send alert for "2" client`s users (1ne user with branch access and 2nd without access - both will receive system alert email)
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
+        Search user profile.AD    RF user 03 [SP USER]    Special permissions
+        Edit branch access    Add all
+        Search user profile.AD    RF user 02 [SP USER]    Special permissions
+        Edit branch access    Remove all
     #
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
-    #
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
+        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
+        Click link    default=${AlertName}
         Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 02 [SP USER] (RF user 02 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
+        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
+        Click link    default=${AlertName}
         Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 03 [SP USER] (RF user 03 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
         Open Operational Panel.AD
         Get Review handling details page.AD    ${ReviewID}
-    #
-        Similate alert.AD
-    #
+        Simulate alert.AD
         Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
     #
-        ${results}=    Run keyword and return status    GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper
-        Should Be Equal As Strings    ${results}    False
-        Log to console    ---------Actual Status--------- NO ALERT EMAIL IS RECEIVED (+)
         GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper
+    #
+        Log to console    Case 2: send alert for "2" client`s users (user with branch access will receive alert and users without branch access - will receive system notice with full review report link)
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    true
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user    # system notice because no bran access
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper    # full report
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Manager    # system notice because no bran access
     #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END
     Close Browser
-    [Teardown]    Close Browser.AD
-
-FTP
-    [Timeout]
-    Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
-    ftp connect    ftp.drivehq.com    vishav-ftp    ftp@2020
-    Dir
-    #Download File    image_0.PNG    ${CURDIR}\\Resources\\Extra files\\FTP files
-    Run keyword and ignore error    Mkd    RFALERTS
-    Run keyword and ignore error    Rmd    RF ALERTS
-    #Cwd    RF ALERTS
-    #Upload File    ${CURDIR}\\Resources\\Extra files\\Images\\UsersIcon.png
-    Dir
-    Run keyword and ignore error    Download File    278067.pdf    ${CURDIR}\\Resources\\Extra files\\FTP files
-    ${name}    Set variable    file_example_WAV_1MG.wav
-    ${extra part}    Fetch from right    ${name}    .
-    Log to console    Actual filename: ${\n}${name}..${extra part}
-    Log to console    Expected filename: ${\n} file_example_WAV_1MG.wav..wav
-    Download File    ${name}..${extra part}    ${CURDIR}\\Resources\\Extra files\\FTP files
-    Run keyword and ignore error    FtpLibrary.Delete    UsersIcon.png
-    Run keyword and ignore error    FtpLibrary.Delete    image_0.PNG
-    Run keyword and ignore error    FtpLibrary.Delete    image_0.PNG.done
-    Run keyword and ignore error    FtpLibrary.Delete    export68--58312-6960550.xls.done
-    Run keyword and ignore error    FtpLibrary.Delete    export68--57874-2295108.xls.done
-    Run keyword and ignore error    FtpLibrary.Delete    export68--57770-1002855.xls.done
-    Run keyword and ignore error    FtpLibrary.Rmd    export68--57700-9278550.xls.done
-    Run keyword and ignore error    FtpLibrary.Delete    export68--57158-8392608.xls.done
-    Run keyword and ignore error    FtpLibrary.Delete    export68--57087-9232755.xls.done
-    Dir
-    Cwd    RFALERTS
-    Pwd
-    Dir
-    Get All Ftp Connections
-    Get Welcome
-    ftp close
-    Run keyword and ignore error    File Should Not Be Empty    ${CURDIR}\\Resources\\Extra files\\FTP files\\278067.pdf
-    Directory Should Not Be Empty    ${CURDIR}\\Resources\\Extra files\\FTP files
-    File Should Exist    ${CURDIR}\\Resources\\Extra files\\FTP files\\278067.pdf
-    #Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
     [Teardown]    Close Browser.AD
