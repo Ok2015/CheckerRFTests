@@ -355,8 +355,8 @@ System design editor > Upload images (logo, header and background)
     Close Browser
     [Teardown]    Close Browser.AD
 
-Default Email footers > Edit email default footers. FU
-    [Tags]    Editor    Critical
+Default Email footers > Edit and send Mass email to check email default footers. FU
+    [Tags]    Editor    Critical    Gmail
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -365,16 +365,14 @@ Default Email footers > Edit email default footers. FU
         SET UP
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Edit default footers for outgoing Email messages
-        Send email via mass page.AD    1    0
-        go to.AD    ${URL}/report-failed-email.php
-        Wait until page contains    Failed Email messages
-        ${is text is visible?}    Run keyword and return status    Page should contain    Subject: Test Email (${DD.MM.YY})
-        Run Keyword If    ${is text is visible?}    Click element    //input[@class='btn-input'][1]
-        Run Keyword If    ${is text is visible?}    Click element    //input[@id='Retry']
-        Run Keyword If    ${is text is visible?}    Wait until page contains    Sent:
-        Run Keyword If    '${check emails?}'=='True'    GMAIL: Sent mass email.AD    U    -
-        Send email via mass page.AD    0    1
-        Run Keyword If    '${check emails?}'=='True'    GMAIL: Sent mass email.AD    S    -
+    #
+        Send email via mass page.AD    U
+        Check report-failed-email page.AD    Subject: Test Email (${DD.MM.YY})
+        GMAIL: Sent mass email.AD    ${SP user email address}    ${SP user email pass}    U
+    #
+        Send email via mass page.AD    S
+        Check report-failed-email page.AD    Subject: Test Email (${DD.MM.YY})
+        GMAIL: Sent mass email.AD    ${RFShopperEmail}    ${shopper email app password}    S
     END
     Close Browser
     [Teardown]    Close Browser.AD

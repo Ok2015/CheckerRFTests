@@ -1685,7 +1685,7 @@ Edit questionnaire.AD
     Input Text    //input[@id='field_SetDescription']    Questionnaire description: RF REVN DT ${DD.MM.YY}
     Input Text    //input[@id='field_SetCode']    ${code}
     Input Text    //input[@id='field_QuestionsPerPage']    50
-    Run keyword if    ${certificate}    Select dropdown.AD    //*[@id="idDependencyCertificateLinkEditbox"]/table/tbody/tr/td/span/button/span[2]    xpath=//li[contains(.,'RF 001-Shopper Registration [Certificate]')]
+    #    Run keyword if    ${certificate}    Select dropdown.AD    //*[@id="idDependencyCertificateLinkEditbox"]/table/tbody/tr/td/span/button/span[2]    xpath=//li[contains(.,'RF 001-Shopper Registration [Certificate]')]
     Run keyword if    ${certificate}    Input text    //input[@id='field_MaxRetake']    0
     Run keyword if    ${certificate}    Input text    //input[@id='field_RetakeChillingDays']    0
     Run keyword if    ${certificate}    Input text    //input[@id='field_DependencySetGrade']    0
@@ -1725,7 +1725,7 @@ Edit questionnaire.AD
     Set checkbox.AD    //input[@id='field_IsAvailableToAllClients']    true
     Set checkbox.AD    //input[@id='field_ShowNotFilled']    true
     Set checkbox.AD    //input[@id='field_IsGlobalSet']    true
-    Set checkbox.AD    //input[@id='field_VOIPAllowed']    None
+    Set checkbox.AD    //input[@id='field_VOIPAllowed']    true
     Set checkbox.AD    //input[@id='field_AllowSimulation']    true
     Set checkbox.AD    //input[@id='field_AllowCheckerToSetFinishTime']    None
     Set checkbox.AD    //input[@id='field_AnswersActAsSubmit']    true
@@ -1798,7 +1798,7 @@ Edit questionnaire.AD
     CHECKBOX SHOULD BE SELECTED    //input[@id='field_AllowCheckerToSetLang']
     CHECKBOX SHOULD BE SELECTED    //input[@id='field_IsGlobalSet']
     CHECKBOX SHOULD BE SELECTED    //input[@id='field_IsAvailableToAllClients']
-    CHECKBOX SHOULD NOT BE SELECTED    //input[@id='field_VOIPAllowed']
+    CHECKBOX SHOULD BE SELECTED    //input[@id='field_VOIPAllowed']
     CHECKBOX SHOULD BE SELECTED    //input[@id='field_AllowSimulation']
     Log to console    "${Robot q-ry}" qry description has been updated/saved successfully
     Page should contain    Edit questionnaire contents
@@ -2202,7 +2202,7 @@ Deactivate shopper with assigned jobs
     Run keyword if    '${status}'=='true'    Log to console    Shopper status checkbox is active
     Click element    //input[@id='field_IsActive']
     Click element    id=save
-    Page should contain    saved successfully
+    Wait until page contains    saved successfully
     Exit forloop
 
 Cancel order assignation
@@ -4998,16 +4998,16 @@ Set assessors self registration options
     log to console    "Can edit availability regions during registration"='No'
     input text    //input[@id='field_ProfileCompletionRequired']    0
     ####
-    Page should contain element    //tr[@id='tr_AvoidDuplicatesFields']
-    Page should contain element    //input[@id='field_AutoApproveSelfReg']
-    Page should contain element    //td[@id='idPostRegistrationCertificationEditbox']
-    Page should contain element    //input[@id='field_ProfileCompletionRequired']
-    Page should contain element    //td[@id='idProfileCompletionRequiredEditbox']
-    Page should contain element    //input[@id='field_DaysToCompleteRegistration']
+    Wait until page contains element    //tr[@id='tr_AvoidDuplicatesFields']
+    Wait until page contains element    //input[@id='field_AutoApproveSelfReg']
+    Wait until page contains element    //td[@id='idPostRegistrationCertificationEditbox']
+    Wait until page contains element    //input[@id='field_ProfileCompletionRequired']
+    Wait until page contains element    //td[@id='idProfileCompletionRequiredEditbox']
+    Wait until page contains element    //input[@id='field_DaysToCompleteRegistration']
     #Page should contain element    //div[@id='slider-range-field_DaysToCompleteRegistration']
     Page should contain element    //input[@id='field_DefaultAvailabilityRadious']
     Page should contain element    //td[@id='idDefaultAvailabilityRadiousEditbox']
-    Page should contain element    //input[@id='field_CheckerDEF_NewCheckerCanEditRegions']
+    Wait until page contains element    //input[@id='field_CheckerDEF_NewCheckerCanEditRegions']
     Page should contain element    //td[@id='idSelfRegCityFieldTypeEditbox']
     Page should contain element    //input[@id='field_CheckerRegistrationCaptcha']
     # \ \ \ Wait until page contains element \ \ \ //*[@id="cke_1_contents"]/iframe
@@ -5017,7 +5017,7 @@ Set assessors self registration options
     Page should contain element    //input[@id='field_CrrUpdateByEmail']
     # \ \ \ Page should contain element \ \ \ //input[@id='field_CheckerWelcomeSubj']
     # \ \ \ Page should contain element \ \ \ //*[@id="cke_field_CheckerWelcomeMsg"]
-    Page should contain element    //*[@id="cke_field_RegistrationProcessCompleteMessage"]
+    Wait until page contains element    //*[@id="cke_field_RegistrationProcessCompleteMessage"]
     Page should contain element    xpath=//a[@href="company-checker-disp.php"]
     Page should contain element    xpath=//a[@href="company-agreements.php"]
     Page should contain element    xpath=//a[@href="checker-props.php"]
@@ -7209,7 +7209,7 @@ GMAIL: FOOTER (users)
     Should Contain    ${HTML}    RF REVN DT
     Should Contain    ${HTML}    ENV/SYS
     Should Contain    ${HTML}    <a href="${URL}">${URLIndex}</a>
-    Log to console    Footer (email) text is correct (+)
+    Log to console    --- User Footer (email) text is correct (+)
 
 GMAIL: FOOTER (shoppers)
     #    Should Contain    ${HTML}    ${DD.MM.YY}    # email footer text
@@ -7219,7 +7219,7 @@ GMAIL: FOOTER (shoppers)
     Should Contain    ${HTML}    RF REVN DT
     Should Contain    ${HTML}    ENV/SYS
     Should Contain    ${HTML}    ${URLIndex}    #    <a href="${URL}">${URLIndex}</a>
-    Log to console    Footer (email) text is correct (+)
+    Log to console    --- Shopper Footer (email) text is correct (+)
 
 GMAIL: BRIEFING
     Should Contain    ${HTML}    Briefing content:    # email footer text
@@ -7587,13 +7587,13 @@ GMAIL: Scorecard was sent back.AD
     Log to console    Deleting all inbox email. Closing Mailbox.
 
 GMAIL: Sent mass email.AD
-    [Arguments]    ${check footer for shoppers?}    ${check footer for users?}
+    [Arguments]    ${user}    ${password}    ${check footer for whom?}
     Log to console    Expected email: "Test Email Subject ${DD.MM.YY}"
     Log to console    ${\n}--------------------------Open Mailbox ("${user}")--------------------------
     Open Mailbox    host=${host}    user=${user}    password=${password}
     #Get Email Body    1
     ${LATEST} =    Wait For Email    sender=info-${URLIndex}-system@checker-soft.com    timeout=20
-    Log to console    Done. Waiting email from sender="info-testing@checker-soft.com"; timeout=20sec. Please wait....
+    Log to console    Done. Waiting email from sender=info-${URLIndex}-system@checker-soft.com; timeout=20sec. Please wait....
     Log to console    Email is received. Index =${LATEST}. Checking email details...
     ${parts}=    Walk Multipart Email    ${LATEST}
     @{fields}=    Get Multipart Field Names
@@ -7610,18 +7610,18 @@ GMAIL: Sent mass email.AD
     should contain    ${from}    Checker Software Systems LTD [${URLIndex} system]
     should contain    ${from}    info-${URL1index}-system@checker-soft.com
     should contain    ${from}    info-${URL1index}-system@checker-soft.com
-    should contain    ${to}    robotmailbox01@gmail.com" <robotmailbox01@gmail.com>
+    should contain    ${to}    ${user}
     should contain    ${subject}    Subject: Test Email (${DD.MM.YY})
     ###
     FOR    ${i}    IN RANGE    ${parts}
         Walk Multipart Email    ${LATEST}
         ${content-type}=    Get Multipart Content Type
         Continue For Loop If    "${content-type}"!="text/html"
-        ${payload}=    Get Multipart Payload    decode=True
-        set global variable    ${payload}
-        Run Keyword If    "${check footer for shoppers?}"=="S"    GMAIL: FOOTER (shoppers)
-        Run Keyword If    "${check footer for users?}"=="U"    GMAIL: FOOTER (users)    # check email footer text
-        Should Contain    ${payload}    This test email was sent using page&nbsp;.../mass-sms.php
+        ${HTML}    Get Multipart Payload    decode=True
+        set global variable    ${HTML}
+        Run Keyword If    "${check footer for whom?}"=="S"    GMAIL: FOOTER (shoppers)
+        Run Keyword If    "${check footer for whom?}"=="U"    GMAIL: FOOTER (users)    # check email footer text
+        Should Contain    ${HTML}    This test email was sent using page&nbsp;.../mass-sms.php
     #${HTML}=    Open Link from Mail    ${LATEST}
     #Should Contain    ${HTML}    Your email address has been updated
     END
@@ -9625,16 +9625,17 @@ Shopper comments is not visible.AD
     Element text should be    //td[1]/fieldset[1]/span[@class='critInfoItemTitle'][18]    Free text
 
 Send email via mass page.AD
-    [Arguments]    ${send to shopper?}    ${send to user?}
+    [Arguments]    ${send to whom?}
     go to.AD    ${URL}/mass-sms.php
     Log to console    Go to ${URL}/mass-sms.php
     Wait until page contains element    //select[@id='ClientID']    15
-    Run Keyword If    ${send to shopper?}==1    Select dropdown.AD    //select[@id='ClientID']    xpath=//option[contains(.,'${RobotTestClient}')]
-    Run Keyword If    ${send to shopper?}==1    select from list by label    id=lomeshane2    ${RobotAnalystUser 01}
-    Run Keyword If    ${send to shopper?}==1    Click element    //form/p[1]/table/tbody/tr/td[2]/input[@id='moveButton']
-    Run Keyword If    ${send to user?}==1    Click element    //form/p[1]/table/tbody/tr/td[2]/input[@id='moveButton']
-    Run Keyword If    ${send to user?}==1    select from list by label    //select[@id='lomeshane']    Robot 02 [Full Name]
-    Run Keyword If    ${send to user?}==1    Click element    //form/table/tbody/tr/td[2]/input[@id='moveButton']
+    Run Keyword If    "${send to whom?}"=="U"    Select dropdown.AD    //select[@id='ClientID']    xpath=//option[contains(.,'${RobotTestClient}')]
+    Run Keyword If    "${send to whom?}"=="U"    select from list by label    id=lomeshane2    RF user 02 [SP USER]
+    Run Keyword If    "${send to whom?}"=="U"    Click element    //form/p[1]/table/tbody/tr/td[2]/input[@id='moveButton']
+    Run Keyword If    "${send to whom?}"=="S"    Click element    //form/p[1]/table/tbody/tr/td[2]/input[@id='moveButton']
+    Run Keyword If    "${send to whom?}"=="S"    select from list by label    //select[@id='lomeshane']    Robot 02 [Full Name]
+    Run Keyword If    "${send to whom?}"=="S"    Click element    //form/table/tbody/tr/td[2]/input[@id='moveButton']
+    #
     Input text    //input[@id='subj']    Subject: Test Email (${DD.MM.YY})
     Run Keyword If    ${check env?}    Enter editor text.AD    //*[@id="cke_57"]    <p>This test email was sent using page&nbsp;.../mass-sms.php</p>
     Run Keyword If    '${check env?}'=='False'    Enter editor text.AD    //*[@id="cke_51"]    <p>This test email was sent using page&nbsp;.../mass-sms.php</p>
@@ -9644,7 +9645,7 @@ Send email via mass page.AD
     Click button    send
     Handle Alert
     Wait until page contains    Sent ok
-    Log to console    Status: Sent ok (+)
+    Log to console    Status: Email Sent ok (+)
     Log to console    Email Subject: "Test Email Subject ${DD.MM.YY}"
     Log to console    Email Body: "This test email was sent using page .../mass-sms.php Date: ${DD.MM.YY}"
 
@@ -12061,7 +12062,7 @@ Qry.Get answ ID.AD
         Set to dictionary    ${Dictionary}    ${Qn name} answer value=${Qn answer value}
         Set to dictionary    ${Dictionary}    ${Qn answer text}=${Qn answer ID}
     END
-    Log to console    ${Dictionary}
+    Log to console    Qre Ids: ${Dictionary}
 
 Get qn group ID.AD
     Go to2.AD    ${URL}/setedit-object-popup.php?SetID=${found ID}&DataID=${Dictionary}[c:QGroup01]
@@ -12080,6 +12081,7 @@ Check default qry elements.SD
     Page should contain element    //select[@id='AltLangID']
     Page should contain    Checker Software Systems LTD
     Page should contain element    //span[@id='cntdwn']
+    #    Element Should Be Visible    //body/canvas    #timer
 
 Fill in review as a shopper(GLOBAL).SD
     [Arguments]    ${finish action}
@@ -12101,7 +12103,6 @@ Fill in review as a shopper(GLOBAL).SD
     Check default qry elements.SD
     Page should contain    Q1
     Element Should Be Visible    //*[@id='opl-obj${Dictionary}[Q1]']/h3
-    Element Should Be Visible    //body/canvas    #timer
     Element Should Not Be Visible    //*[@id='opl-obj${Dictionary}[Q2]']/h3
     Element Should Not Be Visible    //*[@id='opl-obj${Dictionary}[Q3]']/h3
     Element Should Not Be Visible    //*[@id='opl-obj${Dictionary}[Q4]']/h3
@@ -12181,7 +12182,8 @@ Fill in review as a shopper(GLOBAL).SD
     Wait until element is visible    //div[@id='opl-obj${Dictionary}[Q7]']/h3
     Element should contain    //div[@id='opl-obj${Dictionary}[Q7]']/p    Question description Q7
     Element should contain    //div[@id='opl-obj${Dictionary}[Q7]']/h3    Q7. Are you interested in Checker Solution -> The Professional Platform For Mystery Shopping Providers & CX/VoC Researchers? SELECT 'YES' to see Q8 *
-    Click element    id=obj${Dictionary}[Q7]_${Dictionary}[YES]
+    Click element    id=obj${Dictionary}[Q7]_${Dictionary}[YES+]    #    id=obj${Dictionary}[Q7]_${Dictionary}[YES]
+    Click element    //textarea[@id='obj${Dictionary}[Q3]-mi']
     #Validate element attribute.AD    //input[@id='obj${Dictionary}[Q7]2']    checked    true
     sleep    1
     Wait until element is visible    //div[@id='opl-obj${Dictionary}[Q8]']/h3
@@ -12302,7 +12304,7 @@ Fill in review as a shopper(GLOBAL).SD
     #    Validate element attribute.AD    //select[@id='obj${Dictionary}[Q11]']/option[3]    selected    true
     click element    obj${Dictionary}[c:FinisTime]
     sleep    2
-    click element    1
+    click element    //*[@id="ui-datepicker-div"]/div[3]/button[1]
     click element    //*[@id="ui-datepicker-div"]/div[3]/button[2]
     sleep    1
     #Click element    //*[@id="obj${Dictionary}[c:QGroup01]-placeholder"]/p/table/tbody/tr[4]/td[4]/input
@@ -12311,7 +12313,9 @@ Fill in review as a shopper(GLOBAL).SD
     sleep    1
     Handle alerts and extra pop up
     Check default qry elements.SD
-    Wait until page contains    $[1,question_object_id]
+    Run keyword and ignore error    Click element    //input[@id='continue']
+    Handle alerts and extra pop up
+    Wait until page contains    This Is the End and THANK YOU!
     Page should contain    Q1 You have selected: "SHOW"
     Page should contain    Q3 Free text is: "CHECKER"
     Page should contain    Q9 Date of entered input is: "
@@ -12686,7 +12690,8 @@ Begin scorecard (OPlogic=no).SD
     Run keyword if    "${brif visible?}"=="True"    Check brif.SD
     #
     #
-    ${Get text}    get text    //form[@id='crit_form']/div[@id='question-area']/span[@class='tedit-desc'][1]
+    Run keyword and ignore error    select frame    ${Iframe}
+    ${Get text}    get text    //div[@id='question-area']/span[@class='tedit-desc'][1]
     ${Var 2}    Fetch From Left    ${Get text}    )
     ${Review Number}    Fetch From Right    ${Var 2}    :
     ${Review Number}    Strip String    ${Review Number}
@@ -13804,7 +13809,7 @@ Get project ID.AD
     Log to console    ${expected project} ID; ${expected project} name
 
 Handle alerts and extra pop up
-    FOR    ${rowindex}    IN RANGE    16
+    FOR    ${rowindex}    IN RANGE    20
         ${is element visible}    Run keyword and return status    Page should contain    Wrong code
         #    Exit For Loop If    ${is element visible}==False
         Run keyword and ignore error    Handle Alert

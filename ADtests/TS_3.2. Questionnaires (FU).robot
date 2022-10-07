@@ -478,7 +478,7 @@ New questionnaire is created successfully (GLOBAL)
         #    [Qry] Edit QN.AD    ${Dictionary2}[Q5]    Check boxes    -
         #    [Qry] Edit QN.AD    ${Dictionary2}[Q6]    Check boxes    -
         #    [Qry] Edit QN.AD    ${Dictionary2}[Q7]    Radio buttons    -
-        #    [Qry] Edit QN.AD    ${Dictionary2}[Q8]    Check boxes    $[1,${Dictionary2}[Q7]]$='YES'
+        #    [Qry] Edit QN.AD    ${Dictionary2}[Q8]    Check boxes    $[1,${Dictionary2}[Q7]]$='YES+'
         #    [Qry] Edit QN.AD    ${Dictionary2}[Q9]    Drop-down    $[2,${Dictionary2}[Q4]]$=22
         #    [Qry] Edit QN.AD    ${Dictionary2}[Q10]    Check boxes    $[12,Q9,3]$=1 & $[12,Q9,4]$=1    #press continue to check code!
         #    [Qry] Edit QN.AD    ${Dictionary2}[Q11]    Rating-stars    -

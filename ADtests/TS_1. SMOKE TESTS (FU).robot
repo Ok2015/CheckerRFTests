@@ -179,7 +179,7 @@ PhoneSurvey_03: Shopper submits a Phone survey (check saved answers)
         Search the Q-ry (via search bar).AD    RF Questionnaire [Surveys]
         Edit questionnaire.AD    RFQRY-SUR-01    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
         Get question ID
-        #    Search Client.AD
+        Search Client.AD
         #    Search/add Survey.AD    ${RF survey name}    RF Questionnaire [Surveys]
         #    Check Authorized surveyors.AD    /surveyors.php?SurveyID=${ReviewID}    ${RobotTestShopper 02}
         Search/create Sample.AD
@@ -281,7 +281,7 @@ Checkertificate_04: Shopper submits a Checkertificate review (check only review 
         set global variable    ${Robot q-ry}
     #
         Search the Q-ry(via table).AD    ${Robot q-ry}    7
-    #    Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
+        #    Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
         Get question ID
     #
         Login as a Shopper
@@ -314,10 +314,10 @@ Checkertificate_04: Shopper submits a Checkertificate review (check only review 
         Check Review Subm Time    SubmissionTime (2022).xlsx    4    Thank you    # № of sheet
         Page should contain    Thank you for filling this review
         Page should contain    Certificate passed successfully
-    #    Page should contain    No need to add certificate for this checker
-    #    Page should contain    No need to give any set permissions
-    #    Page should contain    Adding certificate to Checker
-    #    Page should contain    Checker should be certified to this certificate
+        #    Page should contain    No need to add certificate for this checker
+        #    Page should contain    No need to give any set permissions
+        #    Page should contain    Adding certificate to Checker
+        #    Page should contain    Checker should be certified to this certificate
         Page should contain    ${Robot Certificate}
         Check errors on page [-1]
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
