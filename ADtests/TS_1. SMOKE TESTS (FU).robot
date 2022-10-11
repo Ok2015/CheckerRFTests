@@ -183,18 +183,7 @@ PhoneSurvey_03: Shopper submits a Phone survey (check saved answers)
         #    Search/add Survey.AD    ${RF survey name}    RF Questionnaire [Surveys]
         #    Check Authorized surveyors.AD    /surveyors.php?SurveyID=${ReviewID}    ${RobotTestShopper 02}
         Search/create Sample.AD
-        go to.AD    ${URL}/sample-edit.php?SampleID=${ReviewID}
-        Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
-        Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
-        Wait until page contains    New row
-        ${mobile}=    Generate Random String    10    [NUMBERS]
-        ${ID}    Generate Random String    10    [NUMBERS]
-        Run keyword and ignore error    Input text    //input[@id='field_CellNumber']    +9${mobile}
-        Run keyword and ignore error    Input text    //input[@id='field_Cellular']    +9${mobile}
-        Run keyword and ignore error    Input text    //input[@id='field_SmpRowID']    ${ID}
-        Run keyword and ignore error    Input text    //input[@id='field_Sample_row_ID']    ${ID}
-        Click element    //input[@id='addnew']
-        Wait until page contains    Row 0 added successfully
+        Add sample row.AD
     #
         Login as a Shopper
         go to.AD    ${URL}/c_survey-select.php

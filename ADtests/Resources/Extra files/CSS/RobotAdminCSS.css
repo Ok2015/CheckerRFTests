@@ -2119,6 +2119,10 @@ body[class*="page-menu"] #FiltersArea>table {
 .page-edit-multiple-orders #side_menu>tbody>tr>td {
   height: fit-content;
 }
+
+.filters + .filters {
+  display: none;
+}
 @media screen and (max-width:1400px) {
     td.contentInsideMain a,
     td.contentInsideMain span {
@@ -3639,6 +3643,13 @@ body.page-edit-entire-crit table.checkboxes_answers_table input[type="checkbox"]
     content: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3e%3c!-- Font Awesome Free 5.15.3 by %40fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --%3e%3cpath d='M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V86c0-3.3 2.7-6 6-6h340c3.3 0 6 2.7 6 6v340c0 3.3-2.7 6-6 6z' fill='%237dc617'/%3e%3c/svg%3e ");
 }
 
+tr.report1:hover td input[type="checkbox"]:hover,
+tr.report2:hover td input[type="checkbox"]:hover,
+tr.db1:hover td input[type="checkbox"]:hover,
+tr.db2:hover td input[type="checkbox"]:hover,
+tr.db-current:hover td input[type="checkbox"]:hover {
+    content: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3e%3c!-- Font Awesome Free 5.15.3 by %40fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --%3e%3cpath d='M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-6 400H54c-3.3 0-6-2.7-6-6V86c0-3.3 2.7-6 6-6h340c3.3 0 6 2.7 6 6v340c0 3.3-2.7 6-6 6z' fill='%23fff'/%3e%3c/svg%3e ");
+}
 tr.report1 td input[type="checkbox"]:checked,
 tr.report2 td input[type="checkbox"]:checked,
 tr.db1 td input[type="checkbox"]:checked,
@@ -3647,6 +3658,22 @@ tr.db-current td input[type="checkbox"]:checked,
 .ui-widget:not(.ui-tabs) input[type="checkbox"]:checked,
 body.page-edit-entire-crit table.checkboxes_answers_table input[type="checkbox"]:checked {
     content: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3e%3c!-- Font Awesome Free 5.15.3 by %40fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --%3e%3cpath d='M400 480H48c-26.51 0-48-21.49-48-48V80c0-26.51 21.49-48 48-48h352c26.51 0 48 21.49 48 48v352c0 26.51-21.49 48-48 48zm-204.686-98.059l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.248-16.379-6.249-22.628 0L184 302.745l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.25 16.379 6.25 22.628.001z' fill='%237dc617'/%3e%3c/svg%3e ");
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    -webkit-appearance: none !important;
+    position: relative;
+    top: 0px;
+    padding: 0px;
+    margin-left: 0px;
+}
+
+tr.report1:hover td input[type="checkbox"]:checked,
+tr.report2:hover td input[type="checkbox"]:checked,
+tr.db1:hover td input[type="checkbox"]:checked,
+tr.db2:hover td input[type="checkbox"]:checked,
+tr.db-current:hover td input[type="checkbox"]:checked{
+    content: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 512'%3e%3c!-- Font Awesome Free 5.15.3 by %40fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --%3e%3cpath d='M400 480H48c-26.51 0-48-21.49-48-48V80c0-26.51 21.49-48 48-48h352c26.51 0 48 21.49 48 48v352c0 26.51-21.49 48-48 48zm-204.686-98.059l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.248-16.379-6.249-22.628 0L184 302.745l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.25 16.379 6.25 22.628.001z' fill='%23fff'/%3e%3c/svg%3e ");
     width: 20px;
     height: 20px;
     display: inline-block;

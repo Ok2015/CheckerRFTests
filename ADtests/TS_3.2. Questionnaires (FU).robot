@@ -341,7 +341,7 @@ New questionnaire is created successfully (Training)
     [Teardown]    Close Browser.AD
 
 New questionnaire is created successfully (SMS)
-    [Tags]    Editor    Questionnaire
+    [Tags]    Editor
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window

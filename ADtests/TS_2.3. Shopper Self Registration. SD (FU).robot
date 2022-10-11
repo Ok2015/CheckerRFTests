@@ -259,8 +259,8 @@ Reviewer with details that already exist in the system can not be registered. FU
         Click element    //input[@id='addnew']
     # \ \ \ wait until page contains \ \ \ details already exist in the system. You can not register more than once.
     # \ \ \ log to console \ \ \ RESULT: "These assessor details already exist in the system. You can not register more than once." message can be seen
-        Page should contain    Username contains invalid characters
-        Page should contain    Password contains invalid characters
+        #    Page should contain    Username contains invalid characters
+        Page should contain    contains invalid characters
         log to console    RESULT: "Password contains invalid characters" and "Username contains invalid characters" messages can be seen
         log to console    ${\n}CASE4: Let`s try to register a user with already registered in a system details (IDNumber, SSN)
         Open registration page and check agreement box(es)
@@ -268,16 +268,25 @@ Reviewer with details that already exist in the system can not be registered. FU
         Page should contain    Invalid email address
         Self register of new shopper.SD    ${random string}    ${Robot country 01}    ${Robot region 01}    ${Robot city 01}    ${random string}@gmail.com    345345354
     #go back
-        Input Text    //input[@id='field_IdNumber']    IdNumber - RF 001
-        Page should contain    Duplicate field.
-        log to console    RESULT: IDNumber field="Duplicate field" message can be seen
-        Input Text    //input[@id='field_IdNumber']    ${random string}
-        Input Text    //input[@id='field_SSN']    SSN - RF 001
-        Page should contain    Duplicate field.
-        log to console    RESULT: SSN field="Duplicate field" message can be seen
-        #Input Text    //input[@id='field_BirthDate']    02-02-0000
-        Input Text    //input[@id='field_SSN']    ${random string}
-        #Page should contain    Incorrect age
+        Run Keyword If    ${testing?}    Input Text    //input[@id='field_IdNumber']    IdNumber - RF 001
+        Run Keyword If    ${testing?}    Page should contain    Duplicate field.
+        Run Keyword If    ${testing?}    log to console    RESULT: IDNumber field="Duplicate field" message can be seen
+        Run Keyword If    ${testing?}    Input Text    //input[@id='field_IdNumber']    ${random string}
+        Run Keyword If    ${testing?}    Input Text    //input[@id='field_SSN']    SSN - RF 001
+        Run Keyword If    ${testing?}    Page should contain    Duplicate field.
+        Run Keyword If    ${testing?}    log to console    RESULT: SSN field="Duplicate field" message can be seen
+        Input Text    //input[@id='field_BirthDated']    33
+        Input Text    //input[@id='field_BirthDatem']    33
+        Input Text    //input[@id='field_BirthDatey']    0000
+        Run Keyword If    ${testing?}    Input Text    //input[@id='field_SSN']    ${random string}
+        click element    //input[@id='field_BirthDated']
+        Page should contain    Incorrect age
+        Page should contain    * Maximum value is 31
+        Page should contain    * Maximum value is 12
+        Page should contain    * Minimum value is 1902
+        Input Text    //input[@id='field_BirthDatey']    3333
+        click element    //input[@id='field_BirthDated']
+        Page should contain    * Maximum value is 2015
         log to console    RESULT: Birthday field="Incorrect age" message can be seen
     END
     close all browsers
@@ -418,10 +427,10 @@ Shopper is registered and autoapproved after passing Certification. FU
         Click Save/Add/Delete/Cancel button.AD
         Wait until page contains    successfully
     ##
-    #    Search the Q-ry(via table).AD    ${Robot q-ry}    7
-    #    Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
-    #    Set q-ry brief.AD
-    #    Validate and Import questions.AD    RF QRY [TESTING].xlsx    RF QRY [PREPRODUCTION].xlsx    RF QRY [DEMO].xlsx
+        #    Search the Q-ry(via table).AD    ${Robot q-ry}    7
+        #    Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
+        #    Set q-ry brief.AD
+        #    Validate and Import questions.AD    RF QRY [TESTING].xlsx    RF QRY [PREPRODUCTION].xlsx    RF QRY [DEMO].xlsx
     ##
         Log to console    Let`s create a user
         Open registration page and check agreement box(es)

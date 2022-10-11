@@ -12,40 +12,78 @@ Library           ImapLibrary
 *** Test Cases ***
 Order: Single and Mass orders with rich descr are created successfully
     [Tags]    Order
+    [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
         SET UP
-        ${test order description}    Set variable    <h4 style="color: blue; text-align: center;"><span style="font-size:10px;"><em><u>Robot order </u></em></span><span style="color:#ff8c00;">test</span> №10 SINGLE (${DD.MM.YY}) </h4>
-        ${test order description mass}=    Set variable    <h3 style="text-align: right;"><u> <strong>Robot order<u><em>MASS</em></u><span style="font-size:12px;"><span style="font-family:comic sans ms,cursive;"><span style="color:#b22222;">№</span><span style="background-color:#ffa500;">1</span><span style="background-color:yellow;">0</span></span></span> <em>(${DD.MM.YY}) </em></u></h3>
-        Set global variable    ${test order description}
-        Set global variable    ${test order description mass}
+        ${single rich order description}    Set variable    <p style="text-align:center">(S) RF ORDER №10&nbsp;${DD.MM.YY}+<strong><span style="font-size:10px">re</span>ac</strong>h<em><span style="background-color:#f1c40f">de</span></em><u>sc<span style="color:#2980b9">ri</span></u><cite>p<span style="color:#2980b9">tio</span>n</cite></p>
+        ${mass rich order description}    Set variable    <p style="text-align:center">(M) RF ORDER №10&nbsp;${DD.MM.YY}+<strong><span style="font-size:10px">re</span>ac</strong>h<em><span style="background-color:#f1c40f">de</span></em><u>sc<span style="color:#2980b9">ri</span></u><cite>p<span style="color:#2980b9">tio</span>n</cite></p>
+        ${single order description}    Set variable    (S) RF ORDER №10 ${DD.MM.YY}
+        ${mass order description}    Set variable    (M) RF ORDER №10 ${DD.MM.YY}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Create test order (Single)    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
-        Create test order (MASS) - BASIC    ${test order description mass}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
-        #Manage Orders.table export    ${test order description 05}    ${RobotTestClient}
+        Create test order (Single)    ${single rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
+        Create test order (MASS) - BASIC    ${mass rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
+    #    Manage Orders.table export    ${test order description 05}    ${RobotTestClient}
+        go to.AD    ${URL}/orders-assignment-manual.php
+        Check Search a shopper filters.AD
+        Wait until page contains element    //input[@id='disregardCheckerAvailability']
+        Wait until page contains element    //input[@id='shplst']
+        Wait until page contains element    //select[@id='theDate']
+        Wait until page contains element    //select[@id='untilDate']
+        Wait until page contains element    //select[@id='ClientID']
+        Wait until page contains element    //select[@id='RegionID']
+    #
+        Click element    id=ClientID
+        Click element    xpath=//option[contains(.,'${RobotTestClient}')]
+        Click element    //input[@id='update']
+        Page should contain    ${single order description}
+        Page should contain    ${mass order description}
+        Log to console    Manual assignment page: page contains newly created orders titles (+)
+    #
+        ${date+5days}    Add Time To Date    ${Ttime}    5 days    result_format=%d-%m-%Y
+        Input text    //input[@id='criorderdate']    ${date+5days}
+        Click element    //*[@id="Orders"]/tbody/tr[1]/td[1]/input
+        Click element    //*[@id="Orders"]/tbody/tr[2]/td[1]/input
+        Click element    //*[@id="updateAssignments"]
+        sleep    2
+        Check errors on page [-1]
+        Page should not contain    ${single order description}
+        Page should not contain    ${mass order description}
+        Log to console    Manual assignment page: page does not contains newly created orders titles after changing dates (+)
+    #
+        go to.AD    ${URL}/operation-panel.php?StatusID=1
+        Log to console    Searching a RF review (q-re="RF Questionnaire [Shoppers]")
+        Wait until page contains element    //input[@id='end_date']
+        Input text    //input[@id='end_date']    ${date+5days}
+        Input text    //input[@id='start_date']    ${date+5days}
+        Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
+        Validate value (text)    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    AUTO 01 [RF CLIENT]
+        Click element    //input[@id='show']
+        Wait until page contains element    //*[@id="SetID"]
+        Page should contain    ${single order description}
+        Page should contain    ${mass order description}
+        Log to console    OPanel: OP contains newly created orders titles with updating dates in status "Ordered, waiting assignment" (+)
+    #
         go to.AD    ${URL}/crit-orders-handle.php
         Click element    id=ClientID
         Click element    xpath=//option[contains(.,'${RobotTestClient}')]
         Click element    //input[@id='update']
-        Page should contain    Robot orderMASS№10 (${DD.MM.YY})
-        Page should contain    Robot order test №10 SINGLE (${DD.MM.YY})
-        Log to console    Page should contain    Robot orderMASS№10 (${DD.MM.YY}) Page should contain    Robot order test №10 SINGLE (${DD.MM.YY})
         Click element    //*[@id="side_menu"]/tbody/tr/td[3]/form[2]/p/table[3]/tbody/tr/td[1]/input
         Click element    id=cancelOrders
         sleep    1
         Click element    //span/select[@id='ClientID']
         Element should not contain    //span/select[@id='ClientID']    xpath=//option[contains(.,'${RobotTestClient}')]
         Page should not contain    xpath=//option[contains(.,'${RobotTestClient}')]
-        Page should not contain    Robot orderMASS№10 (${DD.MM.YY})
-        Page should not contain    Robot order test №10 SINGLE (${DD.MM.YY})
+        Page should not contain    ${single order description}
+        Page should not contain    ${mass order description}
         Check errors on page [-1]
         Log to console    Select filter="unassigned", select all orders, press Cancel and confirm
         Log to console    Dropbox "Client name" does not contan "${RobotTestClient}"
-        Log to console    Page does not contain text: ${RobotTestClient}
-        Log to console    Page does not contain text: ${test order description}
+        Log to console    Page does not contain text: "${RobotTestClient}"
+        Log to console    Page does not contain text: "${single order description}" and "${mass order description}"
         Log to console    "${RobotTestClient}" orders (unassigned) were cancelled!
     END
     Close Browser
@@ -749,7 +787,7 @@ JOB: Alert. Send repeatedly(Off)+Alert condition
         Assign order (via orders-management.php).AD    ${test order description}
         Run Keyword If    '${check emails?}'=='True'    GMAIL: Assignment notification.AD
         Search the Q-ry (via search bar).AD    ${RobotQ-ry SHOPPERS}
-        Edit questionnaire.AD    RFQRY-SHO-03    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
+        Edit questionnaire.AD    RFQRY-SHO-03    Flat average - questions average only    //div[9]/ul/li[1]/label    allow both
         Get question ID
         Login as a Shopper
         JOB PAGE: get table titles and IDs

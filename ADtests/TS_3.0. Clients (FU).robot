@@ -26,6 +26,7 @@ Client. Add client and edit
         Login as a Shopper
         go to.AD    ${URL}/c_ordered-crits.php
         Page should contain    ${RF Type of client}
+        go to.AD    ${URL}/colorwheel-select.php
     END
     Close Browser
     [Teardown]    Close Browser.AD

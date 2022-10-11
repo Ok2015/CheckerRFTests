@@ -44,9 +44,13 @@ Management > add Survey (EMAIL)
     FOR    ${URL}    IN    @{urls}
         set global variable    ${URL}
         SET UP
+        ${RF sample name}    set variable    RF SAMPLE 01
+        set global variable    ${RF sample name}
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Search Client.AD
-        Search/add Survey.AD    RF SURVEY [EMAIL]    RF Questionnaire [Email]
+        Search/add Survey.AD    RF SURVEY [EMAIL]    RF Questionnaire [Email]    Email
+        Search/create Sample.AD
+        Add sample row.AD
     #
         go to.AD    ${URL}/survey-workers.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/surveyors.php?SurveyID=${SurveyID}
@@ -62,6 +66,9 @@ Management > add Survey (EMAIL)
         go to.AD    ${URL}/survey2-priorities.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey2-filter-conditions.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey-send-invitations.php?SurveyID=${SurveyID}
+        go to.AD    ${URL}/survey-send-invitations.php?SurveyID=${SurveyID}&PersonStatus=0
+        Wait until page contains element    //button[@class='add-filter']
+        Page should contain    Send survey invitations by email
     END
     Close Browser
     [Teardown]    Close Browser.AD
@@ -81,7 +88,7 @@ Management > add Survey (SMS)
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Search Client.AD
         Search/create Sample.AD
-        Search/add Survey.AD    RF SURVEY [SMS]    RF Questionnaire [SMS]
+        Search/add Survey.AD    RF SURVEY [SMS]    RF Questionnaire [SMS]    SMS
         go to.AD    ${URL}/surveyors.php?SurveyID=${SurveyID}
         Manage sample fields.AD
     END
@@ -100,7 +107,7 @@ Management > add Survey (PHONE)
         set global variable    ${RF survey name}
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Search Client.AD
-        Search/add Survey.AD    ${RF survey name}    RF Questionnaire [Surveys]
+        Search/add Survey.AD    ${RF survey name}    RF Questionnaire [Surveys]    Phone
         Manage sample fields.AD
         Check Authorized surveyors.AD    /surveyors.php?SurveyID=${ReviewID}    ${RobotTestShopper 02}
     ####

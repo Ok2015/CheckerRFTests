@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -2674,6 +2674,7 @@ Check errors on page [-1]
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    reportErrorOrWarning
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    Deprecated:
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    warning:
+    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    File not found
     ${ActualPageUrl} =    Execute Javascript    return window.location.href
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Log    [Sub task] Status: OK (+) -> no fatal/database errors, warnings or (deprecated) notices.
     [Teardown]
@@ -3075,23 +3076,23 @@ Make visible Job columns.AD
     Run Keyword If    ${preprod?}    Set checkbox.AD    //input[@id='visible_job_board_Apply']    ${exp status}
     ##
     Wait until page contains    Job board settings
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //*[@id="visible_assigned_jobs_Briefing"]
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //*[@id="visible_assigned_jobs_ClientName"]
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_SetName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_AlternateClientDescription']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_CriticismPayment']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_OrderStartTime']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_Description']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_BranchFullname']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_Briefing']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_CriticismPayment']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_OrderStartTime']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_Description']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_ClientName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_SetName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_BranchFullname']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_AlternateClientDescription']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Briefing']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //*[@id="visible_assigned_jobs_Briefing"]
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //*[@id="visible_assigned_jobs_ClientName"]
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_SetName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_AlternateClientDescription']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_CriticismPayment']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_OrderStartTime']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_Description']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_BranchFullname']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_Briefing']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_CriticismPayment']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_OrderStartTime']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_Description']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_ClientName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_SetName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_BranchFullname']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_AlternateClientDescription']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Briefing']
     ##
     Click Save/Add/Delete/Cancel button.AD
     Wait until page contains    Changes saved successfully
@@ -3100,46 +3101,47 @@ Make visible Job columns.AD
     Log to console    "status" of all checkboxes = "${exp status}"
     go to.AD    ${URL}/settings-jobboard.php
     Wait until page contains    Job board settings
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //*[@id="visible_assigned_jobs_Briefing"]
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //*[@id="visible_assigned_jobs_ClientName"]
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_SetName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_AlternateClientDescription']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_CriticismPayment']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_OrderStartTime']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_Description']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_BranchFullname']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_Briefing']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_CriticismPayment']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_OrderStartTime']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_Description']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_ClientName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_SetName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_BranchFullname']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_AlternateClientDescription']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Briefing']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_OrderID']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Date']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_ClientName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_SetName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Description']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_BranchName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_BranchFullname']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_OrderStartTime']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_BranchAddressFields']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_Zipcode']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_AlternateClientName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_BranchPhone']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_Zipcode']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_BranchAddressFields']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_AlternateClientName']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_BranchPhone']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_AlternateClientDescription']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Zipcode']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Purchase']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_OrderEndTime']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_BranchPhone']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_BranchOpeningHours']
-    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_CriticismPayment']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //*[@id="visible_assigned_jobs_Briefing"]
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //*[@id="visible_assigned_jobs_ClientName"]
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_SetName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_AlternateClientDescription']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_CriticismPayment']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_OrderStartTime']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_Description']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_BranchFullname']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_Briefing']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_CriticismPayment']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_OrderStartTime']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_Description']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_ClientName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_SetName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_BranchFullname']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_AlternateClientDescription']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Briefing']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_OrderID']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Date']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_ClientName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_SetName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Description']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_BranchName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_BranchFullname']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_OrderStartTime']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_BranchAddressFields']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_Zipcode']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_AlternateClientName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_assigned_jobs_BranchPhone']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_Zipcode']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_BranchAddressFields']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_AlternateClientName']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible2_assigned_jobs_BranchPhone']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_AlternateClientDescription']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Zipcode']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_Purchase']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_OrderEndTime']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_BranchPhone']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_BranchOpeningHours']
+    #    Run Keyword If    ${preprod?}    Checkbox should be selected    //input[@id='visible_job_board_CriticismPayment']
+    #
 
 Set checkbox.AD
     [Arguments]    ${element ID}    ${exp status}
@@ -10249,7 +10251,7 @@ Go to.AD
     ${stop} =    Get Current Date
     ${diff} =    Subtract Date From Date    ${stop}    ${start}
     Log to console    Page load time = "${diff}" ("sec.ms") (+)
-    Run keyword if    "${exp url}"=="${URL}/checkers-assignments-list.php" or "${exp url}"=="${URL}/shopper_availablity_report.php" or "${exp url}"=="${URL}/crits-handling.php" or "${exp url}"=="${URL}/checkers-assignation.php"    Log to console    ${exp url} - this page speed load is too high (and this is why validation speed is skipped)
+    Run keyword if    "${exp url}"=="${URL}/checkers-assignments-list.php" or "${exp url}"=="${URL}/shopper_availablity_report.php" or "${exp url}"=="${URL}/crits-handling.php" or "${exp url}"=="${URL}/checkers-assignation.php" or "${exp url}"=="${URL}/region-cities.php"    Log to console    ${exp url} - this page speed load is too high (and this is why validation speed is skipped)
     ...    ELSE    Should be True    ${diff} < 25    msg=Fail! The total page load time was more than 25 seconds!!! (-)
     #
     ${Pageurl} =    Execute Javascript    return window.location.href
@@ -10785,7 +10787,7 @@ Add record(ID).AD
     Wait Until Page Contains    successfully
 
 Search/add Survey.AD
-    [Arguments]    ${RF survey name}    ${RF q-ry name}
+    [Arguments]    ${RF survey name}    ${RF q-ry name}    ${SType}
     [Tags]    (FIX?)
     ${i}=    set variable    1
     FOR    ${i}    IN RANGE    2
@@ -10822,6 +10824,21 @@ Search/add Survey.AD
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_61_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Run Keyword If    ${demo?}    Enter editor text.AD    //*[@id="cke_72_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Page should contain    ${Note for surveyors}
+    input text    //input[@id='field_RecordingFileName']    RF Recording File Name
+    Click element    //*[@id="toggler"]
+    Wait until element is visible    //input[@id='field_EmailSubj']
+    input text    //input[@id='field_EmailSubj']    RF Email subject for the invitation \
+    Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_179_label"]    RF Email body for the invitation
+    input text    //*[@id="field_EmailLinkText"]    RF Link text in invitation Email \
+    Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_911_label"]    RF Thank you message, right after filling the survey
+    input text    //input[@id='field_LandingPage']    https://www.checker-soft.com/
+    input text    //input[@id='field_RedirectAfter']    3
+    input text    //input[@id='field_FromName']    From RF
+    input text    //input[@id='field_Email']    rf email
+    input text    //input[@id='field_EmailThankYouSubject']    RF EmailThankYouSubject
+    input text    //textarea[@id='field_EmailThankYouMessage']    RF EmailThankYou
+    Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_972_label"]    RF Message to show when the Email survey is finished
+    Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_1033_label"]    RF Expired message
     Get ID from ad bar.AD    &edit=    &page_var_sorting_column
     Click Save/Add/Delete/Cancel button.AD
     Wait Until Page Contains    successfully
@@ -14038,3 +14055,42 @@ Simulate alert.AD
     Wait until page contains    Alerts sent
     Log to console    Alert sent message is seen (+)
     #
+
+Check Search a shopper filters.AD
+    Run keyword and ignore error    Select frame    external
+    Wait until page contains    Search a shopper
+    Wait until page contains element    //*[@id="RegionID"]
+    Wait until page contains element    //*[@id="CityID"]
+    Wait until page contains element    //*[@id="zipcode"]
+    Wait until page contains element    //*[@id="shopper_name_search"]
+    Wait until page contains element    //*[@id="Email"]
+    Wait until page contains element    //*[@id="Phone"]
+    Wait until page contains element    //*[@id="AgeStart"]
+    Wait until page contains element    //*[@id="AgeEnd"]
+    Wait until page contains element    //*[@id="CritCount_Approved_Min"]
+    Wait until page contains element    //*[@id="CritCount_Approved_Max"]
+    Wait until page contains element    //*[@id="RegDateFrom"]
+    Wait until page contains element    //*[@id="RegDateTo"]
+    Wait until page contains element    //*[@id="CritFinishTime_To"]
+    Wait until page contains element    //*[@id="CritFinishTime_From"]
+    Wait until page contains element    //*[@id="LastLogin_From"]
+    Wait until page contains element    //*[@id="LastLogin_To"]
+    Wait until page contains element    //*[@id="go"]
+    Wait until page contains element    //*[@id="frm"]/a
+    Run keyword and ignore error    Unselect frame
+
+Add sample row.AD
+    go to.AD    ${URL}/sample-edit.php?SampleID=${Sample ID}&addnew=yup
+    #    Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
+    #    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
+    Wait until page contains    New row
+    ${mobile}=    Generate Random String    10    [NUMBERS]
+    ${ID}    Generate Random String    10    [NUMBERS]
+    Run keyword and ignore error    Input text    //input[@id='field_CellNumber']    +9${mobile}
+    Run keyword and ignore error    Input text    //input[@id='field_Cellular']    +9${mobile}
+    Run keyword and ignore error    Input text    //input[@id='field_SmpRowID']    ${ID}
+    Run keyword and ignore error    Input text    //input[@id='field_Sample_row_ID']    ${ID}
+    Run keyword and ignore error    Input text    //input[@id='field_EmailForSurveying']    ${SP user email address}
+    Click element    //input[@id='addnew']
+    Wait until page contains    Row 0 added successfully
+    Log to console    Added new row for sample (ID: ${Sample ID})
