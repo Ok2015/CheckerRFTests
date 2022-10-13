@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -10886,7 +10886,7 @@ Search/add Survey.AD
     ${SurveyID}=    set variable    ${found ID}
     Set global variable    ${SurveyID}
     Set global variable    ${RF survey name}
-    #SMS Surveys
+    #SMS Surveys - check saved settings
     Validate value (value)    //input[@id='field_SMSSurveySendingEndDayTime']    09:00
     Validate value (value)    //input[@id='field_SMSSurveySendingDayTime']    18:00
     Validate value (value)    //input[@id='field_SmsSenderName']    RF SMS SENDER
@@ -12741,10 +12741,11 @@ Begin scorecard (OPlogic=no).SD
     Log To Console    Starting the scorecard...selecting the answers and additional info...
     Run keyword and ignore error    Execute Javascript    window.document.getElementById("accept").scrollIntoView(true);
     Run keyword and ignore error    Click element    //tr[${index}]/td[${Begin scorecard ID}]/form/input[1]
+    Run keyword and ignore error    Handle Alert
     ${Iframe}    set variable    questionnaire
     Set global variable    ${Iframe}
     Run keyword and ignore error    select frame    ${Iframe}
-    Run keyword if    "${Robot q-ry}"=="RF Questionnaire [Certificate]"    Handle Alert
+    Run keyword and ignore error    Handle Alert
     #
     ${brif visible?}    Run keyword and return status    page should contain    (2 min read)
     Run keyword if    "${brif visible?}"=="True"    Check brif.SD
@@ -12914,29 +12915,32 @@ Begin scorecard (OPlogic=no).SD
 
 Manage passed certificates.AD
     go to.AD    ${URL}/manage-certificates.php?CertificateID=${CertID}
+    ${exp name}    Set variable    Robot 02 [Full Name] (Robot 02 [Short Name])
     #Wait until page contains
     log to console    Validating authorized shoppers...
     @{elements}    Get List Items    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[3]/select
+    ${allowed users?}    Get length    @{elements}
+    Return from keyword if    ${allowed users?}==0    #    "${element}"=="${empty}"
     #iterate for each row
     FOR    ${element}    IN    @{elements}
         Log to console    Authorized assessor --> "${element}"
-        Log    '${element}' vs '${RobotTestShopper 02}'
-        Run keyword if    '${element}'=='${RobotTestShopper 02}'    Log to console    '${RobotTestShopper 02}' is in authorized shoppers
-        Run keyword if    '${element}'=='${RobotTestShopper 02}'    Exit for loop
-        ${expected name?}    Run keyword and return status    Should be equal    Robot 02 [Full Name] (Robot 02 [Short Name])    ${element}
-        Return from keyword if    "${element}"=="${empty}" or "${expected name?}"=="False"
+        Log    '${element}' vs '"${exp name}"
+        Run keyword if    '${element}'=='${exp name}'    Log to console    '${RobotTestShopper 02}' is in authorized shoppers
+        Run keyword if    '${element}'=='${exp name}'    Exit for loop
+        ${expected name?}    Run keyword and return status    Should be equal    ${exp name}    ${element}
+        Return from keyword if    "${element}"=="${empty}"
     END
     log to console    Removing the access for "${RobotTestShopper 02}"...
     Click element    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[3]/select/option
     Check errors on page [-1]
     #Click element    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[1]
     Scroll element into view    //*[contains(text(), '${RobotTestShopper 02}')]
-    select from list by label    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[3]/select    Robot 02 [Full Name] (Robot 02 [Short Name])
+    select from list by label    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[3]/select    ${exp name}
     sleep    1
     Click element    //table[@id='side_menu']/tbody/tr/td[@class='middle-right']/center/form/table/tbody/tr/td[2]/input[1]
     Click Save/Add/Delete/Cancel button.AD
     ${actual value}    Get text    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[1]/select
-    Should contain    ${actual value}    Robot 02 [Full Name] (Robot 02 [Short Name])
+    Should contain    ${actual value}    ${exp name}
     Log to console    Access for "${RobotTestShopper 02}" has been removed (+)
     [Return]    done
 
@@ -13032,9 +13036,9 @@ Check Review Subm Time
         #    ${strTempTitleValue}    OpenPyxlLibrary.Read Cell Data By Coordinates    ${WorkSheetName${sheet arg}}    ${index}    ${ROW_ID1}
         ${data1}    OpenPyxlLibrary.Read Cell Data By Coordinates    ${WorkSheetName${sheet arg}}    ${ROW_ID1}    2
         ${data2}    OpenPyxlLibrary.Read Cell Data By Coordinates    ${WorkSheetName${sheet arg}}    ${ROW_ID1}    4
-        Run keyword if    "${data1}"=="None" or "${data1}"=="***" or "${data1}"=="[TESTING]" or "${data1}"=="Submission time"    Log to console    ${ROW_ID1}."${data1}" Skipping this!
+        Run keyword if    "${data1}"=="None" or "${data1}"=="***" or "${data1}"=="[TESTING]" or "${data1}"=="Submission time"    log    ${ROW_ID1}."${data1}" Skipping this!
         ...    ELSE IF    ${testing?}    Append to list    ${Excel_List}    ${data1}
-        Run keyword if    "${data2}"=="None" or "${data2}"=="***" or "${data2}"=="[PREPRODUCTION]" or "${data2}"=="Submission time"    Log to console    ${ROW_ID1}."${data2}" Skipping this!
+        Run keyword if    "${data2}"=="None" or "${data2}"=="***" or "${data2}"=="[PREPRODUCTION]" or "${data2}"=="Submission time"    log    ${ROW_ID1}."${data2}" Skipping this!
         ...    ELSE IF    ${preprod?}    Append to list    ${Excel_List}    ${data2}
         log    ${Excel_List}
         ${ROW_ID1}    Evaluate    ${ROW_ID1}+1

@@ -282,7 +282,7 @@ Checkertificate_04: Shopper submits a Checkertificate review (check only review 
         Page should contain    ${Robot Description Certificate}
         Log to console    "${Robot Certificate}" is visible (${Robot Description Certificate})
         Click element    //*[@id="table_rows"]/tbody/tr/td[2]/a
-        Handle alert
+        Run keyword and ignore error    Handle alert
     ##################
         Run keyword if    ${testing?}    Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF    2000    I am a Free text RF message    I am an Internal RF message    No
         Run keyword if    ${testing?}    Click element    //*[@id="saveAndExit"]

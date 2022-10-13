@@ -412,7 +412,7 @@ Alert. Create alert and delete it
     Close Browser
     [Teardown]    Close Browser.AD
 
-Alert. Send concentrated alert
+FTP Alert - PDF
     [Tags]    Editor    Alert
     [Setup]
     [Timeout]
@@ -422,54 +422,72 @@ Alert. Send concentrated alert
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
         SET UP
-        ${AlertName}=    Set variable    RF_ALERT - CONCENTRATED ALERT
+        ${AlertName}=    Set variable    RF_ALERT - FTP - PDF
         Set global variable    ${AlertName}
-    #
+    #CASE 1
+        Log to console    ${\n}(!) CASE 1: Attached files (not archived) can be seeen/downloaded via FTP
+        Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
+        Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
-        Get section ID. AD    Section 01 [RF]
-        Get BR property ID. AD    Manager
-        Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    None    true    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
-        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
-        Click link    default=${AlertName}
-        Wait until page contains element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
-        Click element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
-        Set checkbox.AD    //input[@id='field_AllowEmailDigest']    true
-        Manage allowed users.AD    //td[3]/div[2]/select[@id='SelectedUsers']    ROBOT [MANAGER] (ROBOT [MANAGER])    //*[@id="bla1"]    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
-        Click Save/Add/Delete/Cancel button.AD
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-v6')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
         Open Operational Panel.AD    Approved
     #
-        ${1 Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        ${2 Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[2]/td[2]/a[1]
-        Set global variable    ${1 Finished review ID}
-        Set global variable    ${2 Finished review ID}
-        Log to console    Sending alert for ${1 Finished review ID} and ${2 Finished review ID}
-        Execute JavaScript    window.document.getElementById("filter_1").scrollIntoView(true)
-        Sleep    1
-        Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
-        Sleep    1
-        Click element    //*[@id="table_rows"]/tbody/tr[2]/td[1]/input
-        Sleep    1
-        Execute JavaScript    window.document.getElementById("checkAndSendAlerts").scrollIntoView(true)
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent for: ${1 Finished review ID}, ${2 Finished review ID}
-        go to.AD    ${URL}/report-failed-email.php
-        Log to console    Checking failed email reports page...
-        ${text visible?}    Run keyword and return status    Page should contain    Email subject: ${AlertName}
-        Log to console    Alert failed? -> "${text visible?}"
-        Run keyword if    ${text visible?}    Get ID    id="table_rows"    Email subject: ${AlertName}    2    8
-        sleep    1
-        Run keyword if    ${text visible?}    Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[1]/input
-        Run keyword if    ${text visible?}    Click element    //*[@id="side_menu"]/tbody/tr/td/form[1]/input[2]
-        Run keyword if    ${text visible?}    Wait until page contains    Done
-        GMAIL: GET ALERT EMAIL.SD    Email subject: ${AlertName}    RF Manager
+        ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        Set global variable    ${Finished review ID}
+        Get attached files (Review handling details page).AD    ${Finished review ID}    Not archived
     #
-        Get Review handling details page.AD    ${1 Finished review ID}
-        Check default codes table    ${1 Finished review ID}
-        Get Review handling details page.AD    ${2 Finished review ID}
-        Check default codes table    ${2 Finished review ID}
-        #    #
+        Simulate alert.AD
+        Connect FTP    ${Finished review ID}.pdf    Not archived
+    #CASE 2
+        Log to console    ${\n}(!) CASE 2: Attached files (archived) can not be seeen/downloaded via FTP
+        Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
+        Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
+        Simulate alert.AD
+        ${Archived?}    Run keyword and return status    Page should contain    Archived
+        Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[2]
+        Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[4]
+        Run keyword if    ${any attachment?}>0    Page should contain    Archived
+        Connect FTP    ${Finished review ID}.pdf    Archived
+        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
+FTP Alert - file HTML
+    [Tags]    Editor    Alert
+    [Setup]
+    [Timeout]
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        ${AlertName}=    Set variable    RF_ALERT - FTP - HTML
+        Set global variable    ${AlertName}
+    #CASE 1
+        Log to console    ${\n}(!) CASE 1: Attached files (not archived) can be seeen/downloaded on FTP
+        Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
+        Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Search client using search bar.AD
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-File HTML')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
+        Open Operational Panel.AD    Approved
+    #
+        ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        Set global variable    ${Finished review ID}
+        Get attached files (Review handling details page).AD    ${Finished review ID}    Not archived
+    #
+        Simulate alert.AD
+        Connect FTP    ${Finished review ID}.htm    Not archived
+    #CASE 2
+        Log to console    ${\n}(!) CASE 2: Attached files (archived) can not be seeen/downloaded via FTP
+        Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
+        Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
+        Simulate alert.AD
+        Connect FTP    ${Finished review ID}.htm    Archived
+    #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END
     Close Browser
@@ -606,48 +624,6 @@ Alert. Send alert to special email with PDF +no attachment (positive + negative)
     Close Browser
     [Teardown]    Close Browser.AD
 
-FTP Alert - PDF
-    [Tags]    Editor    Alert
-    [Setup]
-    [Timeout]
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        ${AlertName}=    Set variable    RF_ALERT - FTP - PDF
-        Set global variable    ${AlertName}
-    #CASE 1
-        Log to console    ${\n}(!) CASE 1: Attached files (not archived) can be seeen/downloaded via FTP
-        Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
-        Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-v6')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
-        Open Operational Panel.AD    Approved
-    #
-        ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        Set global variable    ${Finished review ID}
-        Get attached files (Review handling details page).AD    ${Finished review ID}    Not archived
-    #
-        Simulate alert.AD
-        Connect FTP    ${Finished review ID}.pdf    Not archived
-    #CASE 2
-        Log to console    ${\n}(!) CASE 2: Attached files (archived) can not be seeen/downloaded via FTP
-        Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
-        Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
-        Simulate alert.AD
-        ${Archived?}    Run keyword and return status    Page should contain    Archived
-        Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[2]
-        Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[4]
-        Run keyword if    ${any attachment?}>0    Page should contain    Archived
-        Connect FTP    ${Finished review ID}.pdf    Archived
-        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
-    END
-    Close Browser
-    [Teardown]    Close Browser.AD
-
 Alert. Send alert email with attachments + HTML
     [Tags]    Editor    Alert    runme
     [Setup]
@@ -751,45 +727,6 @@ Alert. Send alert email to role
     Close Browser
     [Teardown]    Close Browser.AD
 
-FTP Alert - file HTML
-    [Tags]    Editor    Alert
-    [Setup]
-    [Timeout]
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        ${AlertName}=    Set variable    RF_ALERT - FTP - HTML
-        Set global variable    ${AlertName}
-    #CASE 1
-        Log to console    ${\n}(!) CASE 1: Attached files (not archived) can be seeen/downloaded on FTP
-        Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
-        Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-File HTML')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
-        Open Operational Panel.AD    Approved
-    #
-        ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        Set global variable    ${Finished review ID}
-        Get attached files (Review handling details page).AD    ${Finished review ID}    Not archived
-    #
-        Simulate alert.AD
-        Connect FTP    ${Finished review ID}.htm    Not archived
-    #CASE 2
-        Log to console    ${\n}(!) CASE 2: Attached files (archived) can not be seeen/downloaded via FTP
-        Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
-        Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
-        Simulate alert.AD
-        Connect FTP    ${Finished review ID}.htm    Archived
-    #
-        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
-    END
-    Close Browser
-    [Teardown]    Close Browser.AD
-
 Alert. Send alert email to client users
     [Tags]    Editor    Alert
     [Setup]
@@ -837,6 +774,69 @@ Alert. Send alert email to client users
         GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper    # full report
         GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Manager    # system notice because no bran access
     #
+        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
+Alert. Send concentrated alert
+    [Tags]    Editor    Alert
+    [Setup]
+    [Timeout]
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        ${AlertName}=    Set variable    RF_ALERT - CONCENTRATED ALERT
+        Set global variable    ${AlertName}
+    #
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Search client using search bar.AD
+        Get section ID. AD    Section 01 [RF]
+        Get BR property ID. AD    Manager
+        Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    None    true    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
+        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
+        Click link    default=${AlertName}
+        Wait until page contains element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
+        Click element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
+        Set checkbox.AD    //input[@id='field_AllowEmailDigest']    true
+        Manage allowed users.AD    //td[3]/div[2]/select[@id='SelectedUsers']    ROBOT [MANAGER] (ROBOT [MANAGER])    //*[@id="bla1"]    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
+        Click Save/Add/Delete/Cancel button.AD
+        Open Operational Panel.AD    Approved
+    #
+        ${1 Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        ${2 Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[2]/td[2]/a[1]
+        Set global variable    ${1 Finished review ID}
+        Set global variable    ${2 Finished review ID}
+        Log to console    Sending alert for ${1 Finished review ID} and ${2 Finished review ID}
+        Execute JavaScript    window.document.getElementById("filter_1").scrollIntoView(true)
+        Sleep    1
+        Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
+        Sleep    1
+        Click element    //*[@id="table_rows"]/tbody/tr[2]/td[1]/input
+        Sleep    1
+        Execute JavaScript    window.document.getElementById("checkAndSendAlerts").scrollIntoView(true)
+        Click element    //input[@id='checkAndSendAlerts']
+        Wait until page contains    Alerts sent for: ${1 Finished review ID}, ${2 Finished review ID}
+        go to.AD    ${URL}/report-failed-email.php
+        Log to console    Checking failed email reports page...
+        ${text visible?}    Run keyword and return status    Page should contain    Email subject: ${AlertName}
+        Log to console    Alert failed? -> "${text visible?}"
+        Run keyword if    ${text visible?}    Get ID    id="table_rows"    Email subject: ${AlertName}    2    8
+        sleep    1
+        Run keyword if    ${text visible?}    Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[1]/input
+        Run keyword if    ${text visible?}    Click element    //*[@id="side_menu"]/tbody/tr/td/form[1]/input[2]
+        Run keyword if    ${text visible?}    Wait until page contains    Done
+        GMAIL: GET ALERT EMAIL.SD    Email subject: ${AlertName}    RF Manager
+    #
+        Get Review handling details page.AD    ${1 Finished review ID}
+        Check default codes table    ${1 Finished review ID}
+        Get Review handling details page.AD    ${2 Finished review ID}
+        Check default codes table    ${2 Finished review ID}
+        #    #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END
     Close Browser
