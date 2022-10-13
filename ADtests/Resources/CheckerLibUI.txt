@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -12919,7 +12919,8 @@ Manage passed certificates.AD
     #Wait until page contains
     log to console    Validating authorized shoppers...
     @{elements}    Get List Items    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[3]/select
-    ${allowed users?}    Get length    @{elements}
+    ${allowed users?}    Get length    ${elements}
+    Log to console    Authorized shoppers in total: ${allowed users?}
     Return from keyword if    ${allowed users?}==0    #    "${element}"=="${empty}"
     #iterate for each row
     FOR    ${element}    IN    @{elements}
@@ -14221,3 +14222,40 @@ Send survey invitation.AD
     Wait until page contains    Sent 1
     Check errors on page [-1]
     Log to console    Status: Send survey invitation is sent (only 1st row from table) (+)
+
+Add survey status.AD
+    [Arguments]    ${exp name}    ${exp type}
+    go to.AD    ${URL}/survey-statuses.php?SurveyID=${SurveyID}
+    Wait until page contains    Survey statuses
+    ${is element visible?}    Run keyword and return status    Page should contain    ${exp name}
+    Run Keyword If    ${is element visible?}    click link    default=${exp name}
+    Run Keyword If    ${is element visible?}==False    go to.AD    ${URL}/survey-statuses.php?&addnew=yup&SurveyID=${SurveyID}
+    Wait until page contains element    //input[@id='field_Name']
+    Input text    //input[@id='field_Name']    ${exp name}
+    Select dropdown.AD    //*[@id="idTypeEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${exp type}')]
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Input text    //input[@id='field_MaxRetries']    5
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Input text    //input[@id='field_ReturnAfterDays']    1
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Input text    //input[@id='field_ReturnAfterHours']    1
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Input text    //input[@id='field_ReturnAfterMinutes']    1
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Validate value (value)    //input[@id='field_MaxRetries']    5
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Validate value (value)    //input[@id='field_ReturnAfterDays']    1
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Validate value (value)    //input[@id='field_ReturnAfterHours']    1
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Validate value (value)    //input[@id='field_ReturnAfterMinutes']    1
+    Validate value (value)    //input[@id='field_Name']    ${exp name}
+    Click Save/Add/Delete/Cancel button.AD
+    Wait until page contains    Item '${exp name}'
+    Wait until page contains    successfully
+    Wait until page contains    Survey statuses
+    click link    default=${exp name}
+    Wait until page contains element    //input[@id='field_Name']
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Input text    //input[@id='field_MaxRetries']    5
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Input text    //input[@id='field_ReturnAfterDays']    1
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Input text    //input[@id='field_ReturnAfterHours']    1
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Input text    //input[@id='field_ReturnAfterMinutes']    1
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Validate value (value)    //input[@id='field_MaxRetries']    5
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Validate value (value)    //input[@id='field_ReturnAfterDays']    1
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Validate value (value)    //input[@id='field_ReturnAfterHours']    1
+    Run Keyword If    "${exp type}"=="Asked to be contacted later"    Validate value (value)    //input[@id='field_ReturnAfterMinutes']    1
+    Validate value (value)    //input[@id='field_Name']    ${exp name}
+    Check errors on page [-1]
+    Log to console    Survey status: "${exp name}" added/updated (+)

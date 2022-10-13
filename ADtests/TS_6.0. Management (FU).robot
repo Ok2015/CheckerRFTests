@@ -146,7 +146,10 @@ Management > add Survey (PHONE)
         Search Client.AD
         Search/add Survey.AD    ${RF survey name}    RF Questionnaire [Surveys]    Phone
         Manage sample fields.AD
-        Check Authorized surveyors.AD    /surveyors.php?SurveyID=${ReviewID}    ${RobotTestShopper 02}
+        Check Authorized surveyors.AD    /surveyors.php?SurveyID=${SurveyID}    ${RobotTestShopper 02}
+        Add survey status.AD    STATUS A (Refused)    Refused
+        Add survey status.AD    STATUS B (Completed a survey)    Completed a survey
+        Add survey status.AD    STATUS C (Asked to be contacted later)    Asked to be contacted later
     ####
         Login as a Shopper
         go to.AD    ${URL}/c_survey-select.php
