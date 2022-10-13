@@ -1,7 +1,7 @@
 *** Variables ***
 #Rev date: 07.04.2022 (v.003)
 ${host}           imap.gmail.com
-${ROBOT MANGAER email address}    robotmailbox01@gmail.com
+${ROBOT MANAGER email address}    robotmailbox01@gmail.com
 ${ROBOT MANAGER email password}    ceuqxttxiywrnpio
 ${SHOPPER_URL}    /c_login.php
 ${LOCAL_LIB}      ${CURDIR}/CheckerLibUI.txt
@@ -190,3 +190,4 @@ ${RF visit template}    RF template 01
 ${shopper email app password}    yqlkegdczklxmski
 ${SP user email address}    robotspuser@gmail.com
 ${SP user email pass}    vuzwonwfmswmungp
+${MY MTS}         +380951232658

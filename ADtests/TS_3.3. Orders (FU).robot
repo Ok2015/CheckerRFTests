@@ -21,12 +21,13 @@ Order: Single and Mass orders with rich descr are created successfully
         SET UP
         ${single rich order description}    Set variable    <p style="text-align:center">(S) RF ORDER №10&nbsp;${DD.MM.YY}+<strong><span style="font-size:10px">re</span>ac</strong>h<em><span style="background-color:#f1c40f">de</span></em><u>sc<span style="color:#2980b9">ri</span></u><cite>p<span style="color:#2980b9">tio</span>n</cite></p>
         ${mass rich order description}    Set variable    <p style="text-align:center">(M) RF ORDER №10&nbsp;${DD.MM.YY}+<strong><span style="font-size:10px">re</span>ac</strong>h<em><span style="background-color:#f1c40f">de</span></em><u>sc<span style="color:#2980b9">ri</span></u><cite>p<span style="color:#2980b9">tio</span>n</cite></p>
-        ${single order description}    Set variable    (S) RF ORDER №10 ${DD.MM.YY}
-        ${mass order description}    Set variable    (M) RF ORDER №10 ${DD.MM.YY}
+        ${single order description}    Set variable    (S) RF ORDER №10 ${DD.MM.YY}
+        ${mass order description}    Set variable    (M) RF ORDER №10 ${DD.MM.YY}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+    #
         Create test order (Single)    ${single rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         Create test order (MASS) - BASIC    ${mass rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
-    #    Manage Orders.table export    ${test order description 05}    ${RobotTestClient}
+        #    Manage Orders.table export    ${test order description 05}    ${RobotTestClient}
         go to.AD    ${URL}/orders-assignment-manual.php
         Check Search a shopper filters.AD
         Wait until page contains element    //input[@id='disregardCheckerAvailability']
@@ -39,8 +40,8 @@ Order: Single and Mass orders with rich descr are created successfully
         Click element    id=ClientID
         Click element    xpath=//option[contains(.,'${RobotTestClient}')]
         Click element    //input[@id='update']
-        Page should contain    ${single order description}
-        Page should contain    ${mass order description}
+        Element Should Contain    //*[@id="Orders"]/tbody/tr[1]/td[3]/p    ${mass order description}    collapse_spaces=True
+        Element Should Contain    //*[@id="Orders"]/tbody/tr[2]/td[3]/p    ${single order description}    collapse_spaces=True
         Log to console    Manual assignment page: page contains newly created orders titles (+)
     #
         ${date+5days}    Add Time To Date    ${Ttime}    5 days    result_format=%d-%m-%Y
@@ -50,8 +51,8 @@ Order: Single and Mass orders with rich descr are created successfully
         Click element    //*[@id="updateAssignments"]
         sleep    2
         Check errors on page [-1]
-        Page should not contain    ${single order description}
-        Page should not contain    ${mass order description}
+        should NOT contain    //*[@id="Orders"]/tbody/tr[1]/td[3]/p    ${mass order description}
+        should NOT contain    //*[@id="Orders"]/tbody/tr[2]/td[3]/p    ${single order description}
         Log to console    Manual assignment page: page does not contains newly created orders titles after changing dates (+)
     #
         go to.AD    ${URL}/operation-panel.php?StatusID=1
@@ -63,8 +64,8 @@ Order: Single and Mass orders with rich descr are created successfully
         Validate value (text)    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    AUTO 01 [RF CLIENT]
         Click element    //input[@id='show']
         Wait until page contains element    //*[@id="SetID"]
-        Page should contain    ${single order description}
-        Page should contain    ${mass order description}
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[1]/td[4]/p    ${mass order description}+reachdescri
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[2]/td[4]/p    ${single order description}+reachdescri
         Log to console    OPanel: OP contains newly created orders titles with updating dates in status "Ordered, waiting assignment" (+)
     #
         go to.AD    ${URL}/crit-orders-handle.php
@@ -146,11 +147,9 @@ Order: Manager dis/approves a review (via OP page)
         ${Free text message}    Set variable    Fee text entered by RF reviewer - ${DD.MM.YY}
         Set global variable    ${Free text message}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        go to.AD    ${URL}/operation-panel.php
-        Wait until page contains    Operation panel
-        Input text    //input[@id='start_date']    01-06-2022
-        Input text    //input[@id='end_date']    ${DD.MM.YY}
-        Click element    //input[@id='show']
+    #
+        Open Operational Panel.AD    Finished, awaiting approval
+        Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Click element    //tr[@class='report1 '][1]/td[@class='report-firstcol']/input
         ${disapproved review}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Click element    //input[@id='DisApproveCrits']
@@ -163,14 +162,37 @@ Order: Manager dis/approves a review (via OP page)
     #
         go to.AD    ${URL}/crit-handling-details.php?CritID=${disapproved review}
         Wait until page contains    Review handling details
+        Check errors on page [-1]
         Page should contain    Disapproved
         Page should contain    ${disapproved review}
         go to.AD    ${URL}/crit-handling-details.php?CritID=${approved review}
         Wait until page contains    Review handling details
         Page should contain    ${approved review}
         Page should contain    Approved
+        Check errors on page [-1]
         Log to console    "${approved review}" has been approved via OP
         Log to console    "${disapproved review}" has been disapproved via OP
+        Open Operational Panel.AD    Approved
+        Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
+        Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
+        Click element    //input[@id='DisApproveCrits']
+        Wait until page contains    disapproved
+        Click element    //input[@id='show']
+        Wait until page contains element    //input[@id='show']
+        Check errors on page [-1]
+        Page should not contain    ${ReviewID}
+        Log to console    The reviews were dispproved in bulk via OP (+)
+        Open Operational Panel.AD    Disapproved
+        Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
+        ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
+        Click element    //input[@id='ApproveCrits']
+        Wait until page contains    The following reviews were approved:
+        Click element    //input[@id='show']
+        Wait until page contains element    //input[@id='show']
+        Page should not contain    ${ReviewID}
+        Check errors on page [-1]
+        Log to console    The reviews were approved in bulk via OP (+)
     END
     Close Browser
     [Teardown]    Close Browser.AD

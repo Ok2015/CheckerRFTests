@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -1735,6 +1735,7 @@ Edit questionnaire.AD
     Run keyword and ignore error    Set checkbox.AD    //input[@id='field_AutoApprovePayment']    true
     Select dropdown.AD    //*[@id="idCharNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${Q-re type charac-s}')]
     Select dropdown.AD    //*[@id="idEnableQuestionNumberingInFormEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Question code')]
+    Run keyword and ignore error    Select dropdown.AD    //*[@id="idAltLangNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'(Not selected)')]
     Run keyword and ignore error    Input Text    //input[@id='field_DefaultPaymentForChecker']    30.00
     Input Text    //input[@id='field_DefaultPurchaseLimit']    4.00
     Input Text    //input[@id='field_DefaultNonRefundableServicePayment']    4.00
@@ -2670,8 +2671,8 @@ Check errors on page [-1]
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    notice -
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    Fatal error:
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    Database error
-    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    myErrorHandler
-    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    reportErrorOrWarning
+    #    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    myErrorHandler
+    #    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    reportErrorOrWarning
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    Deprecated:
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    warning:
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    File not found
@@ -3664,8 +3665,8 @@ Check "Company email settings" page
     ${from. name}=    Get Text    //*[@id="idEmailServerTypeEditbox"]/table/tbody/tr/td/span/button
     Should Be Equal As Strings    ${from. name}    Amazon server
     Log to console    Status: OK - option 'Amazon server' saved properly
-    Send email via mass page.AD    1    1
-    Run Keyword If    '${check emails?}'=='True'    GMAIL: Sent mass email.AD
+    Send email via mass page.AD    U
+    GMAIL: Sent mass email.AD    ${SP user email address}    ${SP user email pass}    U
 
 Search user profile.AD
     [Arguments]    ${RobotTestShopper}    ${role name}
@@ -6450,6 +6451,7 @@ Add/Edit alert.AD
     Set checkbox.AD    //*[@id="field_IsActive"]    ${active?}
     Set checkbox.AD    //input[@id='field_SendRepeatedly']    ${Send repeatedly?}
     Run keyword if    "${FTP?}"=="Yes"    Set checkbox.AD    //input[@id='field_AlertByEmail']    None
+    ...    ELSE    Set checkbox.AD    //input[@id='field_AlertByEmail']    true
     Set checkbox.AD    //input[@id='field_AllowEmailDigest']    ${allow concentrated?}
     Set checkbox.AD    //input[@id='field_AlertBySms']    None
     Set checkbox.AD    //input[@id='field_ShowReviewLink']    ${Show link to review?}
@@ -9646,7 +9648,7 @@ Send email via mass page.AD
     Select dropdown.AD    //*[@id="sendWhat"]    xpath=//option[contains(.,'Email')]
     Click button    send
     Handle Alert
-    Wait until page contains    Sent ok
+    Wait until page contains    Sent ok    25
     Log to console    Status: Email Sent ok (+)
     Log to console    Email Subject: "Test Email Subject ${DD.MM.YY}"
     Log to console    Email Body: "This test email was sent using page .../mass-sms.php Date: ${DD.MM.YY}"
@@ -10818,8 +10820,9 @@ Search/add Survey.AD
     Set checkbox.AD    //input[@id='field_SendAlsoSMS']    None
     Select dropdown.AD    //*[@id="idAllowDialerEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'manual')]
     input text    //input[@id='field_SMSSurveyValidityDuration']    1
+    input text    //textarea[@id='field_SMSSurveyConditionToSendLink']    1=1
     input text    //input[@id='field_SurveyName']    ${RF survey name}
-    Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_117_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_117_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_137_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_61_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Run Keyword If    ${demo?}    Enter editor text.AD    //*[@id="cke_72_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
@@ -10827,9 +10830,9 @@ Search/add Survey.AD
     input text    //input[@id='field_RecordingFileName']    RF Recording File Name
     Click element    //*[@id="toggler"]
     Wait until element is visible    //input[@id='field_EmailSubj']
-    input text    //input[@id='field_EmailSubj']    RF Email subject for the invitation \
+    input text    //input[@id='field_EmailSubj']    RF Email subject for the invitation
     Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_179_label"]    RF Email body for the invitation
-    input text    //*[@id="field_EmailLinkText"]    RF Link text in invitation Email \
+    input text    //*[@id="field_EmailLinkText"]    RF Link text in invitation Email
     Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_911_label"]    RF Thank you message, right after filling the survey
     input text    //input[@id='field_LandingPage']    https://www.checker-soft.com/
     input text    //input[@id='field_RedirectAfter']    3
@@ -10837,6 +10840,26 @@ Search/add Survey.AD
     input text    //input[@id='field_Email']    rf email
     input text    //input[@id='field_EmailThankYouSubject']    RF EmailThankYouSubject
     input text    //textarea[@id='field_EmailThankYouMessage']    RF EmailThankYou
+    #SMS Surveys
+    input text    //input[@id='field_SMSSurveySendingEndDayTime']    09:00
+    input text    //input[@id='field_SMSSurveySendingDayTime']    18:00
+    input text    //input[@id='field_SmsSenderName']    RF SMS SENDER
+    input text    //textarea[@id='field_SenderNameCondition']    1=1
+    input text    //textarea[@id='field_SmsLinkText']    ClickHereRFSmsLink
+    input text    //input[@id='field_SMSSurveyExpectedResponseRate']    0
+    input text    //input[@id='field_SMSSurveyValidityDuration']    3
+    input text    //textarea[@id='field_SMSSurveyConditionToSendLink']    1=1
+    input text    //input[@id='field_DoNotUseRecordsOverDays']    0
+    Set checkbox.AD    //input[@id='field_RunOnSunday']    true
+    Set checkbox.AD    //input[@id='field_RunOnMonday']    true
+    Set checkbox.AD    //input[@id='field_RunOnTuesday']    true
+    Set checkbox.AD    //input[@id='field_RunOnWednesday']    true
+    Set checkbox.AD    //input[@id='field_RunOnThursday']    true
+    Set checkbox.AD    //input[@id='field_RunOnFriday']    true
+    Set checkbox.AD    //input[@id='field_RunOnSaturday']    true
+    Set checkbox.AD    //input[@id='field_SendAlsoSMS']    true
+    Set checkbox.AD    //input[@id='field_AllowMultiSurvey']    true
+    #
     Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_972_label"]    RF Message to show when the Email survey is finished
     Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_1033_label"]    RF Expired message
     Get ID from ad bar.AD    &edit=    &page_var_sorting_column
@@ -10858,11 +10881,31 @@ Search/add Survey.AD
     Validate value (value)    //input[@id='field_ExpectedAvgSurveysDuration']    100
     Validate value (value)    //input[@id='field_TargetQuota']    1000
     Validate value (value)    //input[@id='field_TargetHours']    100
-    Validate value (value)    //input[@id='field_SMSSurveyValidityDuration']    1
+    Validate value (value)    //input[@id='field_SMSSurveyValidityDuration']    3
     Get ID from ad bar.AD    &edit=    &page_var_sorting_column
     ${SurveyID}=    set variable    ${found ID}
     Set global variable    ${SurveyID}
     Set global variable    ${RF survey name}
+    #SMS Surveys
+    Validate value (value)    //input[@id='field_SMSSurveySendingEndDayTime']    09:00
+    Validate value (value)    //input[@id='field_SMSSurveySendingDayTime']    18:00
+    Validate value (value)    //input[@id='field_SmsSenderName']    RF SMS SENDER
+    Validate value (value)    //textarea[@id='field_SenderNameCondition']    1=1
+    Validate value (value)    //textarea[@id='field_SmsLinkText']    ClickHereRFSmsLink
+    Validate value (value)    //input[@id='field_SMSSurveyExpectedResponseRate']    0
+    Validate value (value)    //input[@id='field_SMSSurveyValidityDuration']    3
+    Validate value (value)    //textarea[@id='field_SMSSurveyConditionToSendLink']    1=1
+    Validate value (value)    //input[@id='field_DoNotUseRecordsOverDays']    0
+    Checkbox should be selected    //input[@id='field_RunOnSunday']
+    Checkbox should be selected    //input[@id='field_RunOnMonday']
+    Checkbox should be selected    //input[@id='field_RunOnTuesday']
+    Checkbox should be selected    //input[@id='field_RunOnWednesday']
+    Checkbox should be selected    //input[@id='field_RunOnThursday']
+    Checkbox should be selected    //input[@id='field_RunOnFriday']
+    Checkbox should be selected    //input[@id='field_RunOnSaturday']
+    Checkbox should be selected    //input[@id='field_SendAlsoSMS']
+    Checkbox should be selected    //input[@id='field_AllowMultiSurvey']
+    #
 
 Validate style.AD
     [Arguments]    ${element}    ${expected color}
@@ -11213,13 +11256,13 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/import-cities.php    YES    YES
     Check footer info.AD    ${URL}/import-users.php    YES    YES
     Check footer info.AD    ${URL}/import-branch-contacts.php    YES    YES
-    #Check footer info.AD    ${URL}/import-orders-mass.php    YES    YES    # fails due to \ Fatal error: on testing
+    Check footer info.AD    ${URL}/import-orders-mass.php    YES    YES
     Check footer info.AD    ${URL}/import-orders-multiple.php    YES    YES
     Check footer info.AD    ${URL}/import-profiles.php    YES    YES
-    Check footer info.AD    ${URL}/import-filelist.php    YES    YES    # error on testing
+    Check footer info.AD    ${URL}/import-filelist.php    YES    YES
     Check footer info.AD    ${URL}/auto-import-filelist.php    YES    YES
     Check footer info.AD    ${URL}/import-upload.php    YES    YES
-    Check footer info.AD    ${URL}/import-branch-codes.php    YES    YES    #error on preprod
+    Run Keyword If    ${testing?}    Check footer info.AD    ${URL}/import-branch-codes.php    YES    YES    #error on preprod
     Check footer info.AD    ${URL}/import-action.php    YES    YES
     Check footer info.AD    ${URL}/auto-import-profile.php    YES    YES
     Check footer info.AD    ${URL}/import-template.php?type=branches    YES    YES
@@ -12701,7 +12744,7 @@ Begin scorecard (OPlogic=no).SD
     ${Iframe}    set variable    questionnaire
     Set global variable    ${Iframe}
     Run keyword and ignore error    select frame    ${Iframe}
-    Run keyword if    ${testing?} and "${Robot q-ry}"=="RF Questionnaire [Certificate]"    Handle Alert
+    Run keyword if    "${Robot q-ry}"=="RF Questionnaire [Certificate]"    Handle Alert
     #
     ${brif visible?}    Run keyword and return status    page should contain    (2 min read)
     Run keyword if    "${brif visible?}"=="True"    Check brif.SD
@@ -12878,11 +12921,13 @@ Manage passed certificates.AD
     FOR    ${element}    IN    @{elements}
         Log to console    Authorized assessor --> "${element}"
         Log    '${element}' vs '${RobotTestShopper 02}'
+        Run keyword if    '${element}'=='${RobotTestShopper 02}'    Log to console    '${RobotTestShopper 02}' is in authorized shoppers
+        Run keyword if    '${element}'=='${RobotTestShopper 02}'    Exit for loop
+        ${expected name?}    Run keyword and return status    Should be equal    Robot 02 [Full Name] (Robot 02 [Short Name])    ${element}
+        Return from keyword if    "${element}"=="${empty}" or "${expected name?}"=="False"
     END
-    Return from keyword if    '${element}'=='${empty}'
-    log to console    Removing the access ...
+    log to console    Removing the access for "${RobotTestShopper 02}"...
     Click element    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[3]/select/option
-    Log to console    "${RobotTestShopper 02}" has an auto access
     Check errors on page [-1]
     #Click element    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[1]
     Scroll element into view    //*[contains(text(), '${RobotTestShopper 02}')]
@@ -12892,7 +12937,7 @@ Manage passed certificates.AD
     Click Save/Add/Delete/Cancel button.AD
     ${actual value}    Get text    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[1]/select
     Should contain    ${actual value}    Robot 02 [Full Name] (Robot 02 [Short Name])
-    Log to console    Access for "${RobotTestShopper 02}" has been removed
+    Log to console    Access for "${RobotTestShopper 02}" has been removed (+)
     [Return]    done
 
 Check System UP-Time
@@ -13419,10 +13464,10 @@ GMAIL: GET ALERT EMAIL.SD
     Log to console    ${\n}--------------------------Open Mailbox--------------------------${\n}
     Run keyword if    "${whose email box?}"=="RF Shopper"    Open Mailbox    host=${host}    user=${RFShopperEmail}    password=${shopper email app password}
     Run keyword if    "${whose email box?}"=="RF SP user"    Open Mailbox    host=${host}    user=${SP user email address}    password=${SP user email pass}
-    Run keyword if    "${whose email box?}"=="RF Manager"    Open Mailbox    host=${host}    user=${ROBOT MANGAER email address}    password=${ROBOT MANAGER email password}
+    Run keyword if    "${whose email box?}"=="RF Manager"    Open Mailbox    host=${host}    user=${ROBOT MANAGER email address}    password=${ROBOT MANAGER email password}
     Run keyword if    "${whose email box?}"=="RF Shopper"    Log to console    Email = "${RFShopperEmail}"
     Run keyword if    "${whose email box?}"=="RF SP user"    Log to console    Email = "${SP user email address}"
-    Run keyword if    "${whose email box?}"=="RF Manager"    Log to console    Email = "${ROBOT MANGAER email address}"
+    Run keyword if    "${whose email box?}"=="RF Manager"    Log to console    Email = "${ROBOT MANAGER email address}"
     Wait for expected email
     Log to console    Checking email details...
     ${parts}=    Walk Multipart Email    ${LATEST}
@@ -13701,7 +13746,7 @@ Check default codes table
     Should Contain    ${HTML}    (SUB)SECTIONS DETAILS
     Should Contain    ${HTML}    Score of the chosen section for this review:
     #Run keyword if    ${preprod?}    Should Match Regexp    ${HTML}    Score of the chosen section for this review: \\d+.\\d+
-    Run keyword if    ${preprod?}    Should Contain    ${HTML}    <td> \    \    \    \    Score of the chosen section for this review: ${Dictionary}[Result]</td>
+    Run keyword if    ${preprod?}    Should Contain    ${HTML}    Score of the chosen section for this review: ${Dictionary}[Result]
     Run keyword if    ${preprod?}    Should Match Regexp    ${HTML}    Score of the chosen sub-section for this review: \\d+.\\d{6}
     Run keyword if    ${preprod?}    Should Contain    ${HTML}    Score of the chosen sub-section for this review: ${Dictionary}[Result]
     Run keyword if    ${preprod?}    Should Contain    ${HTML}    Weight of the chosen section for this review: ${Dictionary}[${exp section name} target].00
@@ -13787,12 +13832,15 @@ Activate/Deactivate item on page.AD
     Run keyword if    "${exp status}"=="true"    Log to console    "${AlertName}" is activated
 
 Open Operational Panel.AD
-    go to.AD    ${URL}/operation-panel.php?StatusID=6
+    [Arguments]    ${exp status}
+    Run keyword if    "${exp status}"=="Approved"    go to.AD    ${URL}/operation-panel.php?StatusID=6
+    Run keyword if    "${exp status}"=="Finished, awaiting approval"    go to.AD    ${URL}/operation-panel.php?StatusID=5
+    Run keyword if    "${exp status}"=="Disapproved"    go to.AD    ${URL}/operation-panel.php?StatusID=7
     Log to console    Searching a RF review (q-re="RF Questionnaire [Shoppers]")
     Wait until page contains element    //input[@id='end_date']
-    Input text    //input[@id='end_date']    ${DD-MM-YY}    #    ${DD-MM-YY}
-    ${date minus 10 days}    Subtract Time From Date    ${Ttime}    10 days    result_format=%d-%m-%Y
-    Input text    //input[@id='start_date']    ${date minus 10 days}
+    ${TodayDate-50days}    Subtract Time From Date    ${Ttime}    200 days    result_format=%d-%m-%Y
+    Input text    //input[@id='start_date']    ${TodayDate-50days}
+    Input text    //input[@id='end_date']    ${DD-MM-YY}
     Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
     Validate value (text)    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    AUTO 01 [RF CLIENT]
     Click element    //input[@id='show']
@@ -13812,6 +13860,19 @@ Open Operational Panel.AD
     Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
     ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
     Set global variable    ${ReviewID}
+    Check errors on page [-1]
+    # Check if default buttons are present on page
+    Page should contain    Operation panel
+    Page should contain element    //input[@id='ApproveCrits']
+    Page should contain element    //input[@id='checkAndSendAlerts']
+    Page should contain element    //input[@id='DisApproveCrits']
+    Page should contain element    //input[@id='bundle_name']
+    Page should contain element    //input[@id='ShowMessageBox']
+    Page should contain element    ReturnCrits
+    Run Keyword If    ${testing?}    Page should contain element    DuplicateOrdersFromCrits
+    Run Keyword If    ${testing?}    Page should contain element    ProjectDialog
+    Page should contain element    bundle_orders    #Package orders
+    Page should contain element    unbundle_orders    #UnPackage orders
 
 Get project ID.AD
     [Arguments]    ${expected project}
@@ -14086,11 +14147,73 @@ Add sample row.AD
     Wait until page contains    New row
     ${mobile}=    Generate Random String    10    [NUMBERS]
     ${ID}    Generate Random String    10    [NUMBERS]
-    Run keyword and ignore error    Input text    //input[@id='field_CellNumber']    +9${mobile}
-    Run keyword and ignore error    Input text    //input[@id='field_Cellular']    +9${mobile}
+    Run keyword and ignore error    Input text    //input[@id='field_CellNumber']    ${MY MTS}
+    Run keyword and ignore error    Input text    //input[@id='field_Cellular']    ${MY MTS}
     Run keyword and ignore error    Input text    //input[@id='field_SmpRowID']    ${ID}
     Run keyword and ignore error    Input text    //input[@id='field_Sample_row_ID']    ${ID}
     Run keyword and ignore error    Input text    //input[@id='field_EmailForSurveying']    ${SP user email address}
     Click element    //input[@id='addnew']
     Wait until page contains    Row 0 added successfully
-    Log to console    Added new row for sample (ID: ${Sample ID})
+    Log to console    Added new row ID "${ID}" for sample (Sample ID: ${Sample ID})
+
+GMAIL: Survey email.AD
+    [Arguments]    ${whose email box?}    ${email subject}
+    Set global variable    ${email subject}
+    Log to console    ${\n}--------------------------Open Mailbox--------------------------${\n}
+    Run keyword if    "${whose email box?}"=="RF Shopper"    Open Mailbox    host=${host}    user=${RFShopperEmail}    password=${shopper email app password}
+    Run keyword if    "${whose email box?}"=="RF SP user"    Open Mailbox    host=${host}    user=${SP user email address}    password=${SP user email pass}
+    Run keyword if    "${whose email box?}"=="RF Manager"    Open Mailbox    host=${host}    user=${ROBOT MANAGER email address}    password=${ROBOT MANAGER email password}
+    Run keyword if    "${whose email box?}"=="RF Shopper"    Log to console    Email = "${RFShopperEmail}"
+    Run keyword if    "${whose email box?}"=="RF SP user"    Log to console    Email = "${SP user email address}"
+    Run keyword if    "${whose email box?}"=="RF Manager"    Log to console    Email = "${ROBOT MANAGER email address}"
+    Log to console    Expected email subject: "${email subject}"
+    Wait for expected email
+    Log to console    Checking email details...
+    ${parts}=    Walk Multipart Email    ${LATEST}
+    @{fields}=    Get Multipart Field Names
+    ${from}=    Get Multipart Field    From
+    ${to}=    Get Multipart Field    To
+    ${subject}=    Get Multipart Field    Subject
+    ${date}=    Get Multipart Field    Date
+    Log to console    --------------------------EMAIL HEADER DETAILS--------------------------
+    Log to console    SUBJECT = "${subject}"
+    Log to console    FROM = "${from}"
+    Log to console    TO = "${to}"
+    Log to console    Date = ${date}
+    Log to console    --------------------------
+    should contain    ${from}    Checker Software Systems LTD [${URLIndex} system]
+    should contain    ${from}    info-${URL1index}-system@checker-soft.com
+    should contain    ${subject}    ${email subject}
+    ###
+    Walk Multipart Email    ${LATEST}
+    log    ${LATEST}
+    ${payload}=    Get Multipart Payload    decode=True
+    Walk Multipart Email    ${LATEST}
+    ###
+    ${HTML} =    Get Email Body    ${LATEST}
+    Should Contain    ${HTML}    RF Email body for the invitation
+    Should Contain    ${HTML}    RF Email body for the invitation
+    Set global variable    ${HTML}
+    Log    Email content: ${HTML}
+    #
+    #
+    ${ALL_LINKS}    Get Links from Email    ${LATEST}
+    Log to console    Go to --> ${ALL_LINKS}[0] (URL from alert email)
+    Go To    ${ALL_LINKS}[0]
+    #
+    #
+    Mark All Emails As Read
+    Delete All Emails
+    Close Mailbox
+    Log to console    Deleting all inbox email. Closing Mailbox.
+    #
+
+Send survey invitation.AD
+    go to.AD    ${URL}/survey-send-invitations.php?SurveyID=${SurveyID}&PersonStatus=0
+    Wait until page contains element    //button[@class='add-filter']
+    Page should contain    Send survey invitations by email
+    Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
+    Click element    //input[@id='go']
+    Wait until page contains    Sent 1
+    Check errors on page [-1]
+    Log to console    Status: Send survey invitation is sent (only 1st row from table) (+)

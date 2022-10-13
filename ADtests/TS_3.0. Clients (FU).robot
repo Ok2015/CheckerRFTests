@@ -438,7 +438,7 @@ Alert. Send concentrated alert
         Set checkbox.AD    //input[@id='field_AllowEmailDigest']    true
         Manage allowed users.AD    //td[3]/div[2]/select[@id='SelectedUsers']    ROBOT [MANAGER] (ROBOT [MANAGER])    //*[@id="bla1"]    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
         Click Save/Add/Delete/Cancel button.AD
-        Open Operational Panel.AD
+        Open Operational Panel.AD    Approved
     #
         ${1 Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         ${2 Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[2]/td[2]/a[1]
@@ -569,7 +569,7 @@ Alert. Send alert to special email with PDF +no attachment (positive + negative)
         ${Attachment}    Set variable    None
         Set global variable    ${Attachment}
     #
-        Open Operational Panel.AD
+        Open Operational Panel.AD    Approved
         Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
         ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Set global variable    ${ReviewID}
@@ -625,7 +625,7 @@ FTP Alert - PDF
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-v6')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
-        Open Operational Panel.AD
+        Open Operational Panel.AD    Approved
     #
         ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Set global variable    ${Finished review ID}
@@ -669,7 +669,7 @@ Alert. Send alert email with attachments + HTML
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
     #
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${SP user email address}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
-        Open Operational Panel.AD
+        Open Operational Panel.AD    Approved
         Get Review handling details page.AD    ${ReviewID}
     #
         Simulate alert.AD
@@ -702,7 +702,7 @@ Alert. Send alert email to all branch contact with attachments + HTML
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
     #
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
-        Open Operational Panel.AD
+        Open Operational Panel.AD    Approved
         Get Review handling details page.AD    ${ReviewID}
     #
         Simulate alert.AD
@@ -739,7 +739,7 @@ Alert. Send alert email to role
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
     #
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
-        Open Operational Panel.AD
+        Open Operational Panel.AD    Approved
         Get Review handling details page.AD    ${ReviewID}
     #
         Simulate alert.AD
@@ -770,7 +770,7 @@ FTP Alert - file HTML
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-File HTML')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
-        Open Operational Panel.AD
+        Open Operational Panel.AD    Approved
     #
         ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Set global variable    ${Finished review ID}
@@ -814,14 +814,14 @@ Alert. Send alert email to client users
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    None    None
         go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
         Click link    default=${AlertName}
         Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 02 [SP USER] (RF user 02 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
         go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
         Click link    default=${AlertName}
         Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 03 [SP USER] (RF user 03 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
-        Open Operational Panel.AD
+        Open Operational Panel.AD    Approved
         Get Review handling details page.AD    ${ReviewID}
         Simulate alert.AD
         Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
@@ -830,7 +830,7 @@ Alert. Send alert email to client users
         GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper
     #
         Log to console    Case 2: send alert for "2" client`s users (user with branch access will receive alert and users without branch access - will receive system notice with full review report link)
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    true
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    None    true
         Simulate alert.AD
         Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
         GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user    # system notice because no bran access
