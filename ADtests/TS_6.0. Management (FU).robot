@@ -150,6 +150,36 @@ Management > add Survey (PHONE)
         Add survey status.AD    STATUS A (Refused)    Refused
         Add survey status.AD    STATUS B (Completed a survey)    Completed a survey
         Add survey status.AD    STATUS C (Asked to be contacted later)    Asked to be contacted later
+    #
+        go to.AD    ${URL}/phone-survey-management-summary.php
+        Wait until page contains    Surveys management summary
+        Input text    //input[@id='rangeStart']    01-01-2021
+        Input text    //input[@id='rangeEnd']    01-01-2022
+        Click element    //input[@id='go']
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[1]    Survey name
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[2]    Type
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[3]    Planned hourly surveys average per surveyor
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[4]    Reviews/Hr
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[5]    Duration
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[6]    Reviews count
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[7]    Stack
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[8]    Date of sample addition
+    #
+        go to.AD    ${URL}/phone-survey-management-summary.php
+        Wait until page contains    Surveys management summary
+        Select dropdown.AD    //*[@id="type"]    //*[@id="type"]/option[2]
+        Input text    //input[@id='rangeStart']    01-01-2021
+        Input text    //input[@id='rangeEnd']    01-01-2022
+        Click element    //input[@id='go']
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[1]    Survey name
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[2]    Type
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[3]    Runs Now
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[4]    Last status
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[5]    Invited
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[6]    Invited read
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[7]    In progress
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[8]    Reviews count
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[9]    Date of sample addition
     ####
         Login as a Shopper
         go to.AD    ${URL}/c_survey-select.php

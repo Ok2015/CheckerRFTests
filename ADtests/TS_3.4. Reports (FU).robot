@@ -10,6 +10,7 @@ Resource          ${CURDIR}/Resources/Settings.txt
 
 *** Test Cases ***
 Reports. Check report page elements
+    [Tags]    Report
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -17,13 +18,14 @@ Reports. Check report page elements
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Final score report: check elements
+    #    Final score report: check elements
         Reports: Final score - chart
     END
     Close Browser
     [Teardown]    Close Browser.AD
 
 Finall score report. Compare report values vs OP
+    [Tags]    Report
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -33,7 +35,7 @@ Finall score report. Compare report values vs OP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Grab values from OP
         Reports: Final score - table
-    #Reports: Final score - chart    draft
+        Reports: Final score - chart
     END
     Close Browser
     [Teardown]    Close Browser.AD
