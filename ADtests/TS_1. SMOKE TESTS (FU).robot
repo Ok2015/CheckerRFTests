@@ -55,7 +55,7 @@ MysteryShopping_01: Shopper submits a review (check only review statuses and sav
         Set focus to element    //*[@id="assignmenttable"]/tbody/tr/td[1]/input
         Click Element    //*[@id="assignmenttable"]/tbody/tr/td[1]/input
         Click Element    //input[@id='do_assignment']
-        Page should contain    1 orders assigned
+        Wait until page contains    1 orders assigned    8
         Log to console    Order `${found order ID}` (description="${test order description}") is assigned!
         Element text should be    //table/tbody/tr/td[1]/span[@class='CritInfoItem'][9]    Assigned, awaiting shopper acceptance
         Wait until page contains    ${test order description}

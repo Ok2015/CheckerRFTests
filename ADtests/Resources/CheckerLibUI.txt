@@ -1732,6 +1732,8 @@ Edit questionnaire.AD
     Run keyword if    '${Robot q-ry}'=='RF Questionnaire [GLOBAL]'    Set checkbox.AD    //input[@id='field_AnswersActAsSubmit']    None
     Set checkbox.AD    //input[@id='field_ConfirmationQuestions']    None
     Set checkbox.AD    //input[@id='field_AnswersActAsSubmit']    None
+    Set checkbox.AD    //*[@id="field_AskForPurchaseDetails"]    None
+    Set checkbox.AD    //*[@id="field_AskForTransportationDetails"]    None
     Run keyword and ignore error    Set checkbox.AD    //input[@id='field_AutoApprovePayment']    true
     Select dropdown.AD    //*[@id="idCharNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${Q-re type charac-s}')]
     Select dropdown.AD    //*[@id="idEnableQuestionNumberingInFormEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Question code')]
@@ -4507,69 +4509,84 @@ Edit shopper self registration messages
     Check errors on page [-1]
     Log to console    Registartion messages for shoppers are updated and saved
 
-Reports: Final score - chart
-    go to.AD    ${URL}/report-property.php
-    Wait until page contains element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[1]/td[2]/table/tbody/tr/td/span/button
+Reports: check if charts are visible
+    [Arguments]    ${exp URL}    ${Client}    ${PropID}    ${showClientColorGroup}    ${Past cycles enabled?}    ${Legend}
+    go to.AD    ${exp URL}
+    Wait until page contains    Choose client
     Page should contain element    xpath=//a[@href="main-menu.php"]
     Page should contain element    xpath=//a[@href="menu-reports.php"]
     Page should contain element    xpath=//a[@href="main-menu.php"]
-    Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[1]/td[2]/table/tbody/tr/td/span/button
-    Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[2]/td[2]/table/tbody/tr/td/span/button
-    #Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[3]/td[2]/table/tbody/tr/td/span/button
-    Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[4]/td[2]/table/tbody/tr/td/span/button
-    #Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[5]/td[2]/table/tbody/tr/td/span/button
-    Page should contain element    //*[@id="PropID"]
-    Page should contain element    //*[@id="FilteringSmp"]
-    #Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[8]/td[2]/button
-    #Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[9]/td[2]/table/tbody/tr/td/span/button
-    #Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[11]/td[2]/button
-    #Page should contain element    //*[@id="watchedReviews"]    fix here
-    Page should contain element    //input[@id='rptBtmLn']
-    Page should contain element    //input[@id='rptHidGrd']
-    Page should contain element    //input[@id='rptavgcol']
-    Page should contain element    //input[@id='rptsumcol']
-    Page should contain element    //select[@id='rnk']
-    Page should contain element    //select[@id='scr']
-    Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[2]/td[2]/table/tbody/tr/td/span/button
-    Page should contain element    //div[@id='FiltersArea']/form/table[2]/tbody/tr[1]/td/label/input
-    Page should contain element    //div[@id='FiltersArea']/form/table[2]/tbody/tr[2]/td/label/input
-    Page should contain element    //div[@id='FiltersArea']/form/table[2]/tbody/tr[3]/td[1]/label
-    Page should contain element    //table/tbody/tr/td/span/select[@id='DyChartType']
-    Page should contain element    //table/tbody/tr/td/input[@id='DycX']
-    Page should contain element    //table/tbody/tr/td/input[@id='ys']
-    Page should contain element    //input[@id='DycY']
-    Page should contain element    //tbody/tr/td/input[@id='ye']
-    Page should contain element    //input[@id='cid']
-    Page should contain element    //input[@id='nod']
-    Page should contain element    //select[@id='slo']
-    Page should contain element    //tr[5]/td/label/input
-    Page should contain element    //input[@id='submitAsPopup']
-    #Page should contain element    //input[@id='AddToReportsList']
-    Page should contain element    //form/input[@id='go']
-    Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[1]/td[1]/table/tbody/tr/td/span/button
-    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[2]/td[2]/input[1]
-    Page should contain element    //td[2]/table/tbody/tr[2]/td[2]/input[2]
-    Page should contain element    //select[@id='selectedCycleExtent']
-    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[1]/input
-    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[2]/input
-    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[3]/input
-    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[4]/input
-    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[5]/input
-    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[6]/input
-    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[7]/input
-    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[8]/input
-    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[9]/input
-    Page should contain element    //select[@id='showClientColorGroup']
-    Page should contain element    //select[@id='sei']
+    #    Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[1]/td[2]/table/tbody/tr/td/span/button
+    #    Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[2]/td[2]/table/tbody/tr/td/span/button
+    #    Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[4]/td[2]/table/tbody/tr/td/span/button
+    #    Page should contain element    //*[@id="PropID"]
+    #    Page should contain element    //*[@id="FilteringSmp"]
+    #    Page should contain element    //input[@id='rptBtmLn']
+    #    Page should contain element    //input[@id='rptHidGrd']
+    #    Page should contain element    //input[@id='rptavgcol']
+    #    Page should contain element    //input[@id='rptsumcol']
+    #    Page should contain element    //select[@id='rnk']
+    #    Page should contain element    //select[@id='scr']
+    #    Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[2]/td[2]/table/tbody/tr/td/span/button
+    #    Page should contain element    //div[@id='FiltersArea']/form/table[2]/tbody/tr[1]/td/label/input
+    #    Page should contain element    //div[@id='FiltersArea']/form/table[2]/tbody/tr[2]/td/label/input
+    #    Page should contain element    //div[@id='FiltersArea']/form/table[2]/tbody/tr[3]/td[1]/label
+    #    Page should contain element    //table/tbody/tr/td/span/select[@id='DyChartType']
+    #    Page should contain element    //table/tbody/tr/td/input[@id='DycX']
+    #    Page should contain element    //table/tbody/tr/td/input[@id='ys']
+    #    Page should contain element    //input[@id='DycY']
+    #    Page should contain element    //tbody/tr/td/input[@id='ye']
+    #    Page should contain element    //input[@id='cid']
+    #    Page should contain element    //input[@id='nod']
+    #    Page should contain element    //select[@id='slo']
+    #    Page should contain element    //tr[5]/td/label/input
+    #    Page should contain element    //input[@id='submitAsPopup']
+    #    #Page should contain element    //input[@id='AddToReportsList']
+    #    Page should contain element    //form/input[@id='go']
+    #    Page should contain element    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[1]/td[1]/table/tbody/tr/td/span/button
+    #    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[2]/td[2]/input[1]
+    #    Page should contain element    //td[2]/table/tbody/tr[2]/td[2]/input[2]
+    #    Page should contain element    //select[@id='selectedCycleExtent']
+    #    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[1]/input
+    #    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[2]/input
+    #    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[3]/input
+    #    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[4]/input
+    #    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[5]/input
+    #    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[6]/input
+    #    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[7]/input
+    #    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[8]/input
+    #    Page should contain element    //tbody/tr/td[2]/table/tbody/tr[3]/td[2]/label[9]/input
+    #    Page should contain element    //select[@id='showClientColorGroup']
+    #    Page should contain element    //select[@id='sei']
     #
-    Click element    //div[@id='FiltersArea']/form/table[2]/tbody/tr[3]/td[1]/label/input
-    #    Set checkbox.AD    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[2]/table/tbody/tr[2]/td[2]/input[1]    true
-    Select dropdown.AD    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[1]/td[2]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'AUTO 01 [RF CLIENT]')]
+    Set checkbox.AD    showPastDateCycles    ${Past cycles enabled?}
+    Input text    pastDateCyclesNumber    3
+    Click element    //*[@id="FiltersArea"]/form/table[2]/tbody/tr[1]/td/label
+    ${Past date cycles is on?}    Run keyword and return status    Checkbox should be selected    showPastDateCycles
+    Log to console    Past date cycles is on?=${Past date cycles is on?}
+    Set checkbox.AD    //input[@id='cid']    None
+    Input text    //input[@id='ys']    0
+    Input text    //input[@id='ye']    100
+    Input text    //input[@id='DycY']    500
+    Input text    //input[@id='DycX']    800
+    Input text    //td/input[@id='nod']    3
+    sleep    1
+    Run keyword and ignore error    Select dropdown.AD    //*[@id="slo"]    ${Legend}
+    Run keyword and ignore error    click element    //div[@id='FiltersAreaLink']/a[@class='togglefiltersclass']
+    Select dropdown.AD    //*[@id="showClientColorGroup"]    ${showClientColorGroup}
+    Select dropdown.AD    //*[@id="PropID"]    ${PropID}
+    Run keyword and ignore error    click element    //div[@id='FiltersAreaLink']/a[@class='togglefiltersclass']
+    Run keyword and ignore error    Select dropdown.AD    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[1]/td[2]/table/tbody/tr/td/span/button    ${Client}    #//*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[1]/td[2]/table/tbody/tr/td/span/button
+    Run keyword and ignore error    Select dropdown.AD    //*[@id="FiltersArea"]/form/table[1]/tbody/tr[1]/td[2]/table/tbody/tr/td/span/button    ${Client}
+    Run keyword if    "${exp URL}"=="${URL}/report-performance-concentr.php"    Wait until page contains element    //*[@id="red_border"]/tbody
+    ...    ELSE    Wait until page contains element    //*[@id="report_property"]
+    ###
+    Run keyword and ignore error    click element    //div[@id='FiltersAreaLink']/a[@class='togglefiltersclass']
+    click element    //div[@id='FiltersArea']/form/table[2]/tbody/tr[3]/td[1]/label/input
+    click element    //div[@id='FiltersArea']/form/input[@id='go']
     ${how many?}    Get Element Count    //*[@id="DyChartType"]/option
     Log to console    Total chart types: "${how many?}"
-    click element    //div[@id='FiltersAreaLink']/a[@class='togglefiltersclass']
     #    Select dropdown.AD    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[2]/td[2]/table/tbody/tr/td/span/button
-    #    Select dropdown.AD    //*[@id="FiltersArea"]/form/table[1]/tbody/tr/td[1]/table/tbody/tr[3]/td[2]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'AUTO 01 [RF CLIENT]')]
     FOR    ${i}    IN RANGE    31    #62
         ${i}    Evaluate    ${i}+1
         #    click element    //table[@id='width_limiter']/tbody/tr/td[@id='the_cell_with_the_program']/table[@id='side_menu']/tbody/tr/td[@class='middle-right']/div[@id='FiltersArea']/form/table[2]/tbody/tr[3]/td[1]/label/input
@@ -4581,29 +4598,31 @@ Reports: Final score - chart
         Scroll Element Into View    //span[contains(.,'${chart name}')]
         #    select from list by value    //select[@id='DyChartType']    Column3D hc
         Click element    //*[@id="DyChartType"]/option[${i}]
-        Check errors on page [-1]
+        Run Keyword Unless    ${i}==26 or ${i}==2 or ${i}==5    Check errors on page [-1]
         sleep    1
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-        #    Wait until page contains    Branch performance summary across 2 date cycles
-        #    Wait until page contains    AUTO 01 [RF CLIENT]
-        Run keyword if    ${i}==26 or ${i}==2 or ${i}==5    Log to console    ${chart name} - skipped!
-        ...    ELSE    Wait until page contains    Performance summary, ordered by branches
-        Run keyword if    ${i}==26 or ${i}==2 or ${i}==5    Log to console    ${chart name} - skipped!
-        ...    ELSE    Wait until page contains    AUTO 01 [RF CLIENT] \ Starting from 01.10.2022 Ending at ${DD.MM.YY}
-        Run keyword if    ${i}==26 or ${i}==2 or ${i}==5    Log to console    ${chart name} - skipped!
+        #    Run Keyword Unless    ${Past date cycles is on?}==True and ${i}==26 or ${i}==2 or ${i}==5    Wait until page contains    Performance summary, ordered by
+        #    Run Keyword Unless    ${Past date cycles is on?}==True and ${i}==26 or ${i}==2 or ${i}==5    Wait until page contains    Ending at ${DD.MM.YY}
+        Run keyword if    ${i}==26 or ${i}==2 or ${i}==5    Log    ${chart name} - skipped!
         ...    ELSE    Wait until page contains element    //table[@class='begin-report-area']/tbody/tr/td[@class='begin-report-area-td']/center    5
-        Run keyword if    ${i}==26 or ${i}==2 or ${i}==5    Log to console    ${chart name} - skipped!
-        ...    ELSE    Wait until page contains element    //div[@id='FiltersAreaLink']/a[@class='togglefiltersclass']
-        #    Wait until page contains element    //table[@class='begin-report-area']/tbody/tr[2]/td/center/form/input[1]
-        #    Wait until page contains element    //select[@id='selectedCycleExtent_bottom']
-        #    Wait until page contains element    //form/input[@class='btn-input']
-        Run keyword if    ${i}==26 or ${i}==2 or ${i}==5    Log to console    ${chart name} - skipped!
+        Run keyword if    ${i}==26 or ${i}==2 or ${i}==5    Log    ${chart name} - skipped!
+        ...    ELSE    Wait until page contains element    //div[@id='FiltersAreaLink']/a[@class='togglefiltersclass']    #    Run keyword if    ${i}==26    Log    ${chart name} - skipped!    # ELSE    Wait until page contains element    css:[class="highcharts-legend highcharts-no-tooltip"]
+        Run keyword if    ${i}==26 or ${i}==2 or ${i}==5    Log    ${chart name} - skipped!
         ...    ELSE    Wait until page contains element    css:[class="highcharts-button-box"]
-        #    Wait until page contains    Past date cycles
-        Run keyword if    ${i}==26 or ${i}==2 or ${i}==5    Log to console    ${chart name} - skipped!
+        Run keyword if    ${i}==26 or ${i}==2 or ${i}==5    Log    ${chart name} - skipped!
         ...    ELSE    Page should not contain    No Data To Display
-        log to console    Final score report: page contains "${chart name}" chart
+        Run keyword if    ${Past date cycles is on?}    Wait until page contains element    //table[@class='begin-report-area']/tbody/tr[2]/td/center/form/input[1]
+        Run keyword if    ${Past date cycles is on?}    Wait until page contains element    //select[@id='selectedCycleExtent_bottom']
+        Run keyword if    ${Past date cycles is on?}    Wait until page contains element    //form/input[@class='btn-input']
+        Run keyword if    ${Past date cycles is on?}    Wait until page contains    Past date cycles
+        Run keyword if    ${Past date cycles is on?}    Wait until page contains    Branch performance summary across 3 date cycles
+        Run keyword if    ${Past date cycles is on?}    Wait until page contains    AUTO 01 [RF CLIENT]
+        log to console    Report: page contains "${chart name}" chart (+)
+        sleep    1
     END
+    # testing ${i}==26 or ${i}==2 or ${i}==5 and ${Past date cycles is on?}==False
+    # past cycles disabled \ ${i}==26 preprod
+    log to console    "${exp URL}" page contains report in charts+table (+)
     [Teardown]
 
 Create graph color groups for client
@@ -6456,7 +6475,7 @@ Select dropdown.AD
     Click element    ${element ID}
     Run keyword and ignore error    Scroll Element Into View    ${exp value}
     sleep    1
-    wait until page contains element    ${exp value}    5
+    wait until page contains element    ${exp value}    10
     Run keyword and ignore error    Scroll Element Into View    ${exp value}
     set focus to element    ${exp value}
     Click element    ${exp value}
@@ -10865,9 +10884,11 @@ Search/add Survey.AD
     Click element    //*[@id="toggler"]
     Wait until element is visible    //input[@id='field_EmailSubj']
     input text    //input[@id='field_EmailSubj']    RF Email subject for the invitation
-    Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_179_label"]    RF Email body for the invitation
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_179_label"]    RF Email body for the invitation
+    Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_118_label"]    RF Email body for the invitation
     input text    //*[@id="field_EmailLinkText"]    RF Link text in invitation Email
-    Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_911_label"]    RF Thank you message, right after filling the survey
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_911_label"]    RF Thank you message, right after filling the survey
+    Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_503_label"]    RF Thank you message, right after filling the survey
     input text    //input[@id='field_LandingPage']    https://www.checker-soft.com/
     input text    //input[@id='field_RedirectAfter']    3
     input text    //input[@id='field_FromName']    From RF
@@ -10891,8 +10912,8 @@ Search/add Survey.AD
     Set checkbox.AD    //input[@id='field_RunOnThursday']    true
     Set checkbox.AD    //input[@id='field_RunOnFriday']    true
     Set checkbox.AD    //input[@id='field_RunOnSaturday']    true
-    Set checkbox.AD    //input[@id='field_SendAlsoSMS']    true
-    Set checkbox.AD    //input[@id='field_AllowMultiSurvey']    true
+    Set checkbox.AD    //input[@id='field_SendAlsoSMS']    None
+    Set checkbox.AD    //input[@id='field_AllowMultiSurvey']    None
     #
     Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_972_label"]    RF Message to show when the Email survey is finished
     Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_1033_label"]    RF Expired message
@@ -10937,8 +10958,8 @@ Search/add Survey.AD
     Checkbox should be selected    //input[@id='field_RunOnThursday']
     Checkbox should be selected    //input[@id='field_RunOnFriday']
     Checkbox should be selected    //input[@id='field_RunOnSaturday']
-    Checkbox should be selected    //input[@id='field_SendAlsoSMS']
-    Checkbox should be selected    //input[@id='field_AllowMultiSurvey']
+    Checkbox should not be selected    //input[@id='field_SendAlsoSMS']
+    Checkbox should not be selected    //input[@id='field_AllowMultiSurvey']
     #
 
 Validate style.AD
@@ -13754,11 +13775,11 @@ Check default codes table
     ${is it a numeric value?}    Convert To String    ${is it a numeric value?}
     Should Match Regexp    ${is it a numeric value?}    \\d{10}
     ${numeric value}    Get Regexp Matches    ${HTML}    Current time: \\d{10}
-    Log to console    ${numeric value} \ - contains 10 digits (+)
+    Log to console    ${numeric value} - contains 10 digits (+)
     ${is it a numeric value?}    Get Substring    ${numeric value}    -10
     ${is it a numeric value?}    Convert To String    ${is it a numeric value?}
     Should Match Regexp    ${is it a numeric value?}    \\d{10}
-    Log to console    ${numeric value} \ - contains 10 digits (+)
+    Log to console    ${numeric value} - contains 10 digits (+)
     Should Contain    ${HTML}    Publicized application comment:
     #
     Should Contain    ${HTML}    QUESTIONNAIRE DETAILS
@@ -13784,11 +13805,14 @@ Check default codes table
     Should Contain    ${HTML}    If specified BR property was chosen for the branch as one of its characteristics?: 1
     Should Contain    ${HTML}    (SUB)SECTIONS DETAILS
     Should Contain    ${HTML}    Score of the chosen section for this review:
-    #Run keyword if    ${preprod?}    Should Match Regexp    ${HTML}    Score of the chosen section for this review: \\d+.\\d+
-    Run keyword if    ${preprod?}    Should Contain    ${HTML}    Score of the chosen section for this review: ${Dictionary}[Result]
-    Run keyword if    ${preprod?}    Should Match Regexp    ${HTML}    Score of the chosen sub-section for this review: \\d+.\\d{6}
-    Run keyword if    ${preprod?}    Should Contain    ${HTML}    Score of the chosen sub-section for this review: ${Dictionary}[Result]
-    Run keyword if    ${preprod?}    Should Contain    ${HTML}    Weight of the chosen section for this review: ${Dictionary}[${exp section name} target].00
+    Should Contain    ${HTML}    Score of the chosen sub-section for this review:
+    Should Contain    ${HTML}    Weight of the chosen section for this review:
+    #
+    #    Should Match Regexp    ${HTML}    Score of the chosen section for this review: \\d+.\\d+
+    Should Contain    ${HTML}    ${Dictionary}[Result]
+    #    Run keyword if    ${preprod?}    Should Match Regexp    ${HTML}    Score of the chosen sub-section for this review: \\d+.\\d{6}    strip_spaces=True
+    #    Run keyword if    ${preprod?}    Should Contain    ${HTML}    Score of the chosen section for this review: 46.40    collapse_spaces=True
+    Run keyword if    ${preprod?}    Should Contain    ${HTML}    Weight of the chosen section for this review: ${Dictionary}[${exp section name} target].00    collapse_spaces=True
     Should Contain    ${HTML}    ******
     #
     #
@@ -13796,7 +13820,7 @@ Check default codes table
     #
     Run keyword if    ${ReviewID}>0    Should Contain    ${HTML}    ${ReviewID}
     Run keyword if    ${Dictionary}[Shopper phone]>0    Should Contain    ${HTML}    Phone of the shopper: ${Dictionary}[Shopper phone]
-    Should Contain    ${HTML}    ${Dictionary}[Shopper 1 email],${Dictionary}[Shopper 2 email]
+    Should Contain    ${HTML}    ${Dictionary}[Shopper 1 email],${Dictionary}[Shopper 2 email]    #fails here
     ${keys}    Get Dictionary Keys    ${Dictionary}
     ${is mass desc present?}    Run keyword and return status    Should Contain    ${Dictionary}    Mass order description
     Run keyword if    ${is mass desc present?}    Should Contain    ${HTML}    ${Dictionary}[Mass order description]
@@ -13877,7 +13901,7 @@ Open Operational Panel.AD
     Run keyword if    "${exp status}"=="Disapproved"    go to.AD    ${URL}/operation-panel.php?StatusID=7
     Log to console    Searching a RF review (q-re="RF Questionnaire [Shoppers]")
     Wait until page contains element    //input[@id='end_date']
-    ${TodayDate-50days}    Subtract Time From Date    ${Ttime}    200 days    result_format=%d-%m-%Y
+    ${TodayDate-50days}    Subtract Time From Date    ${Ttime}    50 days    result_format=%d-%m-%Y
     Input text    //input[@id='start_date']    ${TodayDate-50days}
     Input text    //input[@id='end_date']    ${DD-MM-YY}
     Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
@@ -14185,7 +14209,7 @@ Add sample row.AD
     #    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
     Wait until page contains    New row
     ${mobile}=    Generate Random String    10    [NUMBERS]
-    ${ID}    Generate Random String    10    [NUMBERS]
+    ${ID}    Generate Random String    5    [NUMBERS]
     Run keyword and ignore error    Input text    //input[@id='field_CellNumber']    ${MY MTS}
     Run keyword and ignore error    Input text    //input[@id='field_Cellular']    ${MY MTS}
     Run keyword and ignore error    Input text    //input[@id='field_SmpRowID']    ${ID}
@@ -14230,11 +14254,10 @@ GMAIL: Survey email.AD
     Walk Multipart Email    ${LATEST}
     ###
     ${HTML} =    Get Email Body    ${LATEST}
-    Should Contain    ${HTML}    RF Email body for the invitation
-    Should Contain    ${HTML}    RF Email body for the invitation
     Set global variable    ${HTML}
     Log    Email content: ${HTML}
     #
+    #    Should Contain    ${HTML}    RF Email body for the invitation
     #
     ${ALL_LINKS}    Get Links from Email    ${LATEST}
     Log to console    Go to --> ${ALL_LINKS}[0] (URL from alert email)
@@ -14250,6 +14273,9 @@ GMAIL: Survey email.AD
 Send survey invitation.AD
     go to.AD    ${URL}/survey-send-invitations.php?SurveyID=${SurveyID}&PersonStatus=0
     Wait until page contains element    //button[@class='add-filter']
+    Input text    smpInternalDateAdded[from]    ${DD-MM-YY}
+    Input text    smpInternalDateAdded[to]    ${DD-MM-YY}
+    Click element    //*[@id="filters-static-form"]/div/button[2]
     Page should contain    Send survey invitations by email
     Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
     Click element    //input[@id='go']

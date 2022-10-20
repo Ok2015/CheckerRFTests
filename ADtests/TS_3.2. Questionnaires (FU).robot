@@ -216,6 +216,7 @@ New questionnaire is created successfully + grant access (Shopper)
         Validate and Import questions.AD    RF QRY [TESTING].xlsx    RF QRY [PREPRODUCTION].xlsx    RF QRY [DEMO].xlsx
         Set q-ry brief.AD
     #    Get question ID
+        go to.AD    ${URL}/setedit-order-logic.php?SetID=${found ID}
     END
     Close Browser
     [Teardown]    Close Browser.AD
