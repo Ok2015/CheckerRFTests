@@ -13,7 +13,7 @@ Resource          ${CURDIR}/Resources/Settings.txt
 
 *** Test Cases ***
 Regional settings > test country, region and city are added
-    [Tags]    Critical
+    [Tags]    NotCritical
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}

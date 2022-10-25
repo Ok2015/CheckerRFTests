@@ -132,71 +132,6 @@ Order: Order assignment is cancelled by manager (order page)
     Close Browser
     [Teardown]    Close Browser.AD
 
-Order: Manager dis/approves a review (via OP page)
-    [Tags]    Order
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        ${test order description}=    Set variable    RF Order: M03 [To be accepted by a shopper, ${DD.MM.YY}]
-        Set global variable    ${test order description}
-        ${Internal message}    Set variable    Internal message added by RF shopper ${DD.MM.YY}
-        Set global variable    ${Internal message}
-        ${Free text message}    Set variable    Fee text entered by RF reviewer - ${DD.MM.YY}
-        Set global variable    ${Free text message}
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-    #
-        Open Operational Panel.AD    Finished, awaiting approval
-        Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        Click element    //tr[@class='report1 '][1]/td[@class='report-firstcol']/input
-        ${disapproved review}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        Click element    //input[@id='DisApproveCrits']
-        Wait until page contains    Reviews ${disapproved review} disapproved
-    #
-        Click element    //tr[@class='report1 '][1]/td[@class='report-firstcol']/input
-        ${approved review}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        Click element    //input[@id='ApproveCrits']
-        Wait until page contains    The following reviews were approved: ${approved review}
-    #
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${disapproved review}
-        Wait until page contains    Review handling details
-        Check errors on page [-1]
-        Page should contain    Disapproved
-        Page should contain    ${disapproved review}
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${approved review}
-        Wait until page contains    Review handling details
-        Page should contain    ${approved review}
-        Page should contain    Approved
-        Check errors on page [-1]
-        Log to console    "${approved review}" has been approved via OP
-        Log to console    "${disapproved review}" has been disapproved via OP
-        Open Operational Panel.AD    Approved
-        Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
-        Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
-        Click element    //input[@id='DisApproveCrits']
-        Wait until page contains    disapproved
-        Click element    //input[@id='show']
-        Wait until page contains element    //input[@id='show']
-        Check errors on page [-1]
-        Page should not contain    ${ReviewID}
-        Log to console    The reviews were dispproved in bulk via OP (+)
-        Open Operational Panel.AD    Disapproved
-        Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
-        ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
-        Click element    //input[@id='ApproveCrits']
-        Wait until page contains    The following reviews were approved:
-        Click element    //input[@id='show']
-        Wait until page contains element    //input[@id='show']
-        Page should not contain    ${ReviewID}
-        Check errors on page [-1]
-        Log to console    The reviews were approved in bulk via OP (+)
-    END
-    Close Browser
-    [Teardown]    Close Browser.AD
-
 Order: Single order assignment notification is recieved by shoppper
     [Tags]    Order    Order assignmnet    Operational settings
     @{urls}=    String.Split String    ${TestURLs}    ,
@@ -776,6 +711,71 @@ JOB: Manager returns review to shopper (from 2 pages: OP and handling details)
         Approve review.AD
         Check Edit review page.AD    Approved    46.40    Yes
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
+Order: Manager dis/approves a review (via OP page)
+    [Tags]    Order
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        ${test order description}=    Set variable    RF Order: M03 [To be accepted by a shopper, ${DD.MM.YY}]
+        Set global variable    ${test order description}
+        ${Internal message}    Set variable    Internal message added by RF shopper ${DD.MM.YY}
+        Set global variable    ${Internal message}
+        ${Free text message}    Set variable    Fee text entered by RF reviewer - ${DD.MM.YY}
+        Set global variable    ${Free text message}
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+    #
+        Open Operational Panel.AD    Finished, awaiting approval    //div/ul/li[2]/a/span[2]
+        ${finished reviews}    Run keyword and return status    Page should contain    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        Run keyword if    ${finished reviews}    Click element    //tr[@class='report1 '][1]/td[@class='report-firstcol']/input
+        ${disapproved review}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        Click element    //input[@id='DisApproveCrits']
+        Run keyword if    ${finished reviews}    Wait until page contains    Reviews ${disapproved review} disapproved
+    #
+        Click element    //tr[@class='report1 '][1]/td[@class='report-firstcol']/input
+        ${approved review}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        Click element    //input[@id='ApproveCrits']
+        Wait until page contains    The following reviews were approved: ${approved review}
+    #
+        go to.AD    ${URL}/crit-handling-details.php?CritID=${approved review}
+        Wait until page contains    Review handling details
+        Check errors on page [-1]
+        Page should contain    Approved
+        Page should contain    ${approved review}
+        go to.AD    ${URL}/crit-handling-details.php?CritID=${disapproved review}
+        Wait until page contains    Review handling details
+        Page should contain    ${disapproved review}
+        Page should contain    Disapproved
+        Check errors on page [-1]
+        Log to console    "${approved review}" has been approved via OP
+        Log to console    "${disapproved review}" has been disapproved via OP
+        Open Operational Panel.AD    Approved    ${RobotTestClient}
+        Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
+        Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
+        Click element    //input[@id='DisApproveCrits']
+        Wait until page contains    disapproved
+        Click element    //input[@id='show']
+        Wait until page contains element    //input[@id='show']
+        Check errors on page [-1]
+        Page should not contain    ${ReviewID}
+        Log to console    The reviews were dispproved in bulk via OP (+)
+        Open Operational Panel.AD    Disapproved    ${RobotTestClient}
+        Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
+        ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
+        Click element    //input[@id='ApproveCrits']
+        Wait until page contains    The following reviews were approved:
+        Click element    //input[@id='show']
+        Wait until page contains element    //input[@id='show']
+        Page should not contain    ${ReviewID}
+        Check errors on page [-1]
+        Log to console    The reviews were approved in bulk via OP (+)
     END
     Close Browser
     [Teardown]    Close Browser.AD

@@ -13,6 +13,7 @@ Resource          ${CURDIR}/Resources/Settings.txt
 
 *** Test Cases ***
 Display > check "Records per page"+"sorting" in tables
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -20,8 +21,8 @@ Display > check "Records per page"+"sorting" in tables
         set global variable    ${URL}
         SET UP
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Set Records per page    4    # set number of records on page here
-        Check records in tables.AD    4
+        Set Records per page    5    # set number of records on page here
+        Check records in tables.AD    5
         Set Records per page    100
     END
     Close Browser
@@ -86,6 +87,7 @@ Display > check "Date format" option on registration page (DD.MM.YY and MM.DD.YY
     [Teardown]    Close Browser.AD
 
 Display > valid image(s) for sys design can be added to a system
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -108,7 +110,7 @@ Display > valid image(s) for sys design can be added to a system
     [Teardown]    Close Browser.AD
 
 Display > check "Fraction digits" on refund report page
-    [Tags]    Critical
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -123,6 +125,7 @@ Display > check "Fraction digits" on refund report page
     [Teardown]    Close Browser.AD
 
 Display > uploaded "CSS files" are saved and applied to system design
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -139,6 +142,7 @@ Display > uploaded "CSS files" are saved and applied to system design
     [Teardown]    Close Browser.AD
 
 Display > add/delete valid/not valid icon(s)
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -167,7 +171,7 @@ Display > add/delete valid/not valid icon(s)
     [Teardown]    Close Browser.AD
 
 Display > check default empty/full "Graph color(s)" on Final Score report
-    [Tags]    Critical
+    [Tags]    Report
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -188,6 +192,7 @@ Display > check default empty/full "Graph color(s)" on Final Score report
     [Teardown]    Close Browser.AD
 
 Display > "The day in which the week starts" is saved in a system
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -207,6 +212,7 @@ Display > "The day in which the week starts" is saved in a system
     [Teardown]    Close Browser.AD
 
 Display > "Time format" (24H or AM/PM) is applied properly
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -275,6 +281,7 @@ Display > "Time format" (24H or AM/PM) is applied properly
     [Teardown]    Close Browser.AD
 
 Display > Show shoppers login link in users login screen
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -297,6 +304,7 @@ Display > Show shoppers login link in users login screen
     [Teardown]    Close Browser.AD
 
 System design editor > Upload images (logo, header and background)
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
