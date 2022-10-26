@@ -220,12 +220,13 @@ Custom fields > Add custom field (Shoppers)
         Wait until page contains    ShopperID
         Click Save/Add/Delete/Cancel button.AD
         Run keyword and ignore error    Click element    //*[@id="save"]
-        #    Wait until page contains    saved successfully
+            Page should contain    File RF good.png uploaded successfully!    25
+        Wait until page contains    saved successfully
         go to.AD    ${URL}/checkers.php?edit=${shopper found ID}
         Wait until page contains    ${Test Custom Field8}
-        Page should contain    The following files are attached:
+        Execute JavaScript    window.document.getElementById("field_CheckerPriority").scrollIntoView(true)
+        Wait until page contains    The following files are attached:
         Page should contain element    xpath=(//a[contains(text(),'RF good.png')])
-        #    Page should contain    Attach media file (max size: 6.50 M)
         Log to console    Saved properly ${Test Custom Field8}. Attached file: RF good.png
     #    Open registration page and check agreement box(es)
     #    Page should contain    ${Test Custom Field8}

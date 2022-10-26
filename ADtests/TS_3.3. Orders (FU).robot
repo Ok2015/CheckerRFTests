@@ -731,12 +731,12 @@ Order: Manager dis/approves a review (via OP page)
         Set global variable    ${Free text message}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
     #
+        Log to console    CASE 1: dis/approve of 1 review via OP (one by one)
         Open Operational Panel.AD    Finished, awaiting approval    //div/ul/li[2]/a/span[2]
-        ${finished reviews}    Run keyword and return status    Page should contain    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        Run keyword if    ${finished reviews}    Click element    //tr[@class='report1 '][1]/td[@class='report-firstcol']/input
+        Click element    //tr[@class='report1 '][1]/td[@class='report-firstcol']/input
         ${disapproved review}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Click element    //input[@id='DisApproveCrits']
-        Run keyword if    ${finished reviews}    Wait until page contains    Reviews ${disapproved review} disapproved
+        Wait until page contains    Reviews ${disapproved review} disapproved
     #
         Click element    //tr[@class='report1 '][1]/td[@class='report-firstcol']/input
         ${approved review}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
@@ -755,8 +755,11 @@ Order: Manager dis/approves a review (via OP page)
         Check errors on page [-1]
         Log to console    "${approved review}" has been approved via OP
         Log to console    "${disapproved review}" has been disapproved via OP
-        Open Operational Panel.AD    Approved    ${RobotTestClient}
+    ###
+        Log to console    CASE 2: disapprove reviews in bulk via OP
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
         Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
+        ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
         Click element    //input[@id='DisApproveCrits']
         Wait until page contains    disapproved
@@ -764,8 +767,12 @@ Order: Manager dis/approves a review (via OP page)
         Wait until page contains element    //input[@id='show']
         Check errors on page [-1]
         Page should not contain    ${ReviewID}
+        go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
+        Wait until page contains    Disapproved
         Log to console    The reviews were dispproved in bulk via OP (+)
-        Open Operational Panel.AD    Disapproved    ${RobotTestClient}
+    #
+        Log to console    CASE 3: approve reviews in bulk via OP
+        Open Operational Panel.AD    Disapproved    xpath=//li[contains(.,'${RobotTestClient}')]
         Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
         ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
@@ -773,8 +780,10 @@ Order: Manager dis/approves a review (via OP page)
         Wait until page contains    The following reviews were approved:
         Click element    //input[@id='show']
         Wait until page contains element    //input[@id='show']
-        Page should not contain    ${ReviewID}
         Check errors on page [-1]
+        Page should not contain    ${ReviewID}
+        go to.AD    ${URL}/crit-handling-details.php?CritID=${ReviewID}
+        Wait until page contains    Approved
         Log to console    The reviews were approved in bulk via OP (+)
     END
     Close Browser

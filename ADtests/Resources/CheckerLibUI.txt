@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -13901,25 +13901,26 @@ Open Operational Panel.AD
     Run keyword if    "${exp status}"=="Approved"    go to.AD    ${URL}/operation-panel.php?StatusID=6
     Run keyword if    "${exp status}"=="Finished, awaiting approval"    go to.AD    ${URL}/operation-panel.php?StatusID=5
     Run keyword if    "${exp status}"=="Disapproved"    go to.AD    ${URL}/operation-panel.php?StatusID=7
+    ...    ELSE    log to console    Selected review status: "${exp status}"
     Log to console    Searching a RF review (q-re="RF Questionnaire [Shoppers]")
     Wait until page contains element    //input[@id='end_date']
     ${TodayDate-50days}    Subtract Time From Date    ${Ttime}    50 days    result_format=%d-%m-%Y
     Input text    //input[@id='start_date']    ${TodayDate-50days}
     Input text    //input[@id='end_date']    ${DD-MM-YY}
-    Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${Client}')]
-    Validate value (text)    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    ${Client}
+    Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    ${Client}
+    #    Validate value (text)    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    ${Client}
     Click element    //input[@id='show']
-    Wait until page contains element    //*[@id="SetID"]
-    Click element    //*[@id="SetID"]
+    Run keyword if    "${Client}"=="xpath=//li[contains(.,'${RobotTestClient}')]"    Wait until page contains element    //*[@id="SetID"]
+    Run keyword if    "${Client}"=="xpath=//li[contains(.,'${RobotTestClient}')]"    Click element    //*[@id="SetID"]
     sleep    1
-    Select from list by label    //*[@id="SetID"]    RF Questionnaire [Shoppers]
+    Run keyword if    "${Client}"=="xpath=//li[contains(.,'${RobotTestClient}')]"    Select from list by label    //*[@id="SetID"]    RF Questionnaire [Shoppers]
     #Validate value (value)    //*[@id="SetID"]    RF Questionnaire [Shoppers]
     #
     sleep    1
-    Click element    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[4]/td[3]/span/button
+    Run keyword if    "${Client}"=="xpath=//li[contains(.,'${RobotTestClient}')]"    Click element    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[4]/td[3]/span/button
     sleep    1
     #Select from list by label    id=ProjectID    RF ACTIVE project 2022 [PROJECT]    #    ${Dictionary}[${Project Name} ID]
-    Click element    //*[@id="ui-multiselect-ProjectID-option-0"]
+    Run keyword if    "${Client}"=="xpath=//li[contains(.,'${RobotTestClient}')]"    Click element    //*[@id="ui-multiselect-ProjectID-option-0"]
     #
     Click element    //input[@id='show']
     sleep    2
@@ -14130,7 +14131,7 @@ Manage sample fields.AD
     Click element    //input[@id='save']
     #    Run keyword if    ${testing?}    Validate value (value)    //input[@id='PhoneNumberField[CellNumber]']    1
     #    Run keyword if    ${testing?}    Validate value (value)    //input[@id='SMSPhoneNumberField[CellNumber]']    1
-        Run keyword if    ${preprod?}    Validate value (value)    //input[@id='PhoneNumberField[Cellular]']    1
+    Run keyword if    ${preprod?}    Validate value (value)    //input[@id='PhoneNumberField[Cellular]']    1
     Run keyword if    ${preprod?}    Validate value (value)    //input[@id='SMSPhoneNumberField[Cellular]']    1
     Set checkbox.AD    //input[@id='SampleFieldsEditableBySurveyors[Cellular]']    true
     sleep    6
