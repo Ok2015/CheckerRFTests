@@ -401,6 +401,8 @@ Alert. Create alert and delete it
     #
         Add/Edit alert.AD    Finished, awaiting approval    ${AlertName}    $[221]$>=0 & $[218]$='RF Questionnaire [Shoppers]'    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${RFShopperEmail}    true    None    Some contetnt goes here    No    None
     #
+        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
+    #
         go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}
         Click link    default=${AlertName}
         Set checkbox.AD    //*[@id="field_IsActive"]    None
@@ -431,14 +433,14 @@ FTP Alert - PDF
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-v6')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
-        Open Operational Panel.AD    Approved
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
     #
-        ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        Set global variable    ${Finished review ID}
-        Get attached files (Review handling details page).AD    ${Finished review ID}    Not archived
+        ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        Set global variable    ${ReviewID}
+        Get attached files (Review handling details page).AD    ${ReviewID}    Not archived
     #
         Simulate alert.AD
-        Connect FTP    ${Finished review ID}.pdf    Not archived
+        Connect FTP    ${ReviewID}.pdf    Not archived
     #CASE 2
         Log to console    ${\n}(!) CASE 2: Attached files (archived) can not be seeen/downloaded via FTP
         Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
@@ -448,7 +450,7 @@ FTP Alert - PDF
         Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[2]
         Run keyword if    ${any attachment?}>0 and ${Archived?}==False    Click element    //tbody/tr[2]/td/fieldset/form[@id='_attachments']/input[4]
         Run keyword if    ${any attachment?}>0    Page should contain    Archived
-        Connect FTP    ${Finished review ID}.pdf    Archived
+        Connect FTP    ${ReviewID}.pdf    Archived
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END
     Close Browser
@@ -473,20 +475,20 @@ FTP Alert - file HTML
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search client using search bar.AD
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-File HTML')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
-        Open Operational Panel.AD    Approved
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
     #
-        ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        Set global variable    ${Finished review ID}
-        Get attached files (Review handling details page).AD    ${Finished review ID}    Not archived
+        ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        Set global variable    ${ReviewID}
+        Get attached files (Review handling details page).AD    ${ReviewID}    Not archived
     #
         Simulate alert.AD
-        Connect FTP    ${Finished review ID}.htm    Not archived
+        Connect FTP    ${ReviewID}.htm    Not archived
     #CASE 2
         Log to console    ${\n}(!) CASE 2: Attached files (archived) can not be seeen/downloaded via FTP
         Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
         Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
         Simulate alert.AD
-        Connect FTP    ${Finished review ID}.htm    Archived
+        Connect FTP    ${ReviewID}.htm    Archived
     #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END
@@ -587,7 +589,7 @@ Alert. Send alert to special email with PDF +no attachment (positive + negative)
         ${Attachment}    Set variable    None
         Set global variable    ${Attachment}
     #
-        Open Operational Panel.AD    Approved
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
         Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
         ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         Set global variable    ${ReviewID}
@@ -645,7 +647,7 @@ Alert. Send alert email with attachments + HTML
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
     #
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${SP user email address}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
-        Open Operational Panel.AD    Approved
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
         Get Review handling details page.AD    ${ReviewID}
     #
         Simulate alert.AD
@@ -678,7 +680,7 @@ Alert. Send alert email to all branch contact with attachments + HTML
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
     #
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
-        Open Operational Panel.AD    Approved
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
         Get Review handling details page.AD    ${ReviewID}
     #
         Simulate alert.AD
@@ -715,7 +717,7 @@ Alert. Send alert email to role
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
     #
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    No    None
-        Open Operational Panel.AD    Approved
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
         Get Review handling details page.AD    ${ReviewID}
     #
         Simulate alert.AD
@@ -758,7 +760,7 @@ Alert. Send alert email to client users
         go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
         Click link    default=${AlertName}
         Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 03 [SP USER] (RF user 03 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
-        Open Operational Panel.AD    Approved
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
         Get Review handling details page.AD    ${ReviewID}
         Simulate alert.AD
         Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
@@ -805,7 +807,7 @@ Alert. Send concentrated alert
         Set checkbox.AD    //input[@id='field_AllowEmailDigest']    true
         Manage allowed users.AD    //td[3]/div[2]/select[@id='SelectedUsers']    ROBOT [MANAGER] (ROBOT [MANAGER])    //*[@id="bla1"]    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
         Click Save/Add/Delete/Cancel button.AD
-        Open Operational Panel.AD    Approved
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
     #
         ${1 Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
         ${2 Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[2]/td[2]/a[1]

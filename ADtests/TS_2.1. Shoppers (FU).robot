@@ -20,6 +20,21 @@ Search test shopper (add new + edit profile)
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search profile.AD    ${RobotTestShopper 02}
         Edit shopper profile.AD    ${RobotTestShopper 02}
+        Login as a Shopper
+        go to.AD    ${URL}/c_unfinished-crits.php
+        go to.AD    ${URL}/c_certificate-list.php
+        go to.AD    ${URL}/c_file-library.php
+        go to.AD    ${URL}/c_show-sets.php
+        go to.AD    ${URL}/c_crit-history.php
+        go to.AD    ${URL}/c_add-refund.php
+        go to.AD    ${URL}/c_checker-regions.php?CheckerID=${found ID}
+        go to.AD    ${URL}/c_agreements.php
+        go to.AD    ${URL}/c_edit-availability.php
+        go to.AD    ${URL}/c_choose-client.php
+        go to.AD    ${URL}/c_ordered-crits.php
+        go to.AD    ${URL}/c_branch-addresses.php
+        go to.AD    ${URL}/checkers.php?edit=y&auth_mode=2
+        Log to console    Main shopper pages do not contains extra warnings/database errors...
     END
     Close Browser
     [Teardown]    Close Browser.AD

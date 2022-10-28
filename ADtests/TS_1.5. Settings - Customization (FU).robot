@@ -220,8 +220,8 @@ Custom fields > Add custom field (Shoppers)
         Wait until page contains    ShopperID
         Click Save/Add/Delete/Cancel button.AD
         Run keyword and ignore error    Click element    //*[@id="save"]
-            Page should contain    File RF good.png uploaded successfully!    25
-        Wait until page contains    saved successfully
+        Wait until page contains    File RF good.png uploaded successfully!    25
+        Wait until page contains    saved successfully    20
         go to.AD    ${URL}/checkers.php?edit=${shopper found ID}
         Wait until page contains    ${Test Custom Field8}
         Execute JavaScript    window.document.getElementById("field_CheckerPriority").scrollIntoView(true)

@@ -330,7 +330,7 @@ Operation > Pass Internet survey
         Search the Q-ry (via search bar).AD    RF Questionnaire [Internet]
         Get question ID
         Search Client.AD
-        Edit ISurvey.AD    1000000    RF Questionnaire [Internet]    BranchFullname 05 (for Internet Surveys)
+        Edit ISurvey.AD    1000000    RF Questionnaire [Internet]    ${Branch}
         go to.AD    ${URL}/i_survey-fill.php?SurveyID=${ReviewID}
         Log to console    Starting the review at ${URL}/i_survey-fill.php?SurveyID=${ReviewID}
         Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF - INTERNET SURVEY    2000    I am free text entered by reviewer - ${DD.MM.YY} RF - INTERNET SURVEYEXTRACHARACTERS    Internal message added by RF shopper (date: ${DD.MM.YY})    NO

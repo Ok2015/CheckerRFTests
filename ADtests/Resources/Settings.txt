@@ -191,3 +191,6 @@ ${shopper email app password}    yqlkegdczklxmski
 ${SP user email address}    robotspuser@gmail.com
 ${SP user email pass}    vuzwonwfmswmungp
 ${MY MTS}         +380951232658
+${FTPServer}      ftp.drivehq.com
+${FTPUser}        vishav-ftp
+${FTPPass}        ftp@2020

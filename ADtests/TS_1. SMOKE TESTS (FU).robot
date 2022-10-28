@@ -106,7 +106,7 @@ InternetSurvey_02: Shopper submits an Internet survey (check only review statuse
         Set global variable    ${URL}
         SET UP
         ${ISurveyName}=    Set variable    RF Survey 01 [Internet Survey]
-        ${Branch}=    Set variable    RF Branch 11 (Internet Surveys) [Short name]
+        ${Branch}=    Set variable    BranchFullname 05 (for Internet Surveys)
         ${Robot q-ry}=    set variable    RF Questionnaire [Internet]
         set global variable    ${Robot q-ry}
         Set global variable    ${ISurveyName}
@@ -121,7 +121,7 @@ InternetSurvey_02: Shopper submits an Internet survey (check only review statuse
         Set checkbox.AD    //input[@id='field_AutomaticCritApproval']    None
         Click Save/Add/Delete/Cancel button.AD
         Wait until page contains    saved successfully
-        Edit ISurvey.AD    1000000    RF Questionnaire [Internet]    BranchFullname 05 (for Internet Surveys)
+        Edit ISurvey.AD    1000000    RF Questionnaire [Internet]    ${Branch}
         #    go to.AD    https://eu.checker-soft.com/testing/i_survey-fill.php?SurveyID=221
         go to.AD    ${URL}/i_survey-fill.php?SurveyID=${ReviewID}
         Begin scorecard (OPlogic=no).SD    Additional info (${DD.MM.YY}) RF - INTERNET SURVEY    2000    I am free text entered by reviewer - ${DD.MM.YY} RF - INTERNET SURVEY    Internal message added by RF shopper (date: ${DD.MM.YY})    NO

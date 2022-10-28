@@ -37,6 +37,94 @@ Management > add Sample
     Close Browser
     [Teardown]    Close Browser.AD
 
+Management > sample auto import
+    [Tags]    Survey
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        set global variable    ${URL}
+        SET UP
+    #
+        ${RF sample name}    set variable    RF SAMPLE 01
+        set global variable    ${RF sample name}
+    #
+        ftp connect    ${FTP host}    ${FTP user}    ${FTP pass}
+        Log to console    ------------Connecting to FTP repository. Please wait... (${FTP host})
+        Dir
+        Run keyword and ignore error    Mkd    /rf-ftp-sample-auto-import-2022
+        Cwd    /rf-ftp-sample-auto-import-2022
+        Upload File    ${CURDIR}\\Resources\\Extra files\\SAMPLEs\\Valid Sample.xls
+        Dir
+        Ftp Close
+    #
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        Search Client.AD
+    #    Search/add Survey.AD    RF SURVEY [SAMPLE AUTO IMPORT]    RF Questionnaire [SMS]    SMS
+        go to.AD    https://eu.checker-soft.com/testing/survey-workers.php?SurveyID=496    #    ${URL}/survey-workers.php?SurveyID=${SurveyID}
+        Wait until page contains    Sample Auto import profile
+        ${is email visible?}    Run keyword and return status    Page should contain    oksana.soiko@checker-solutions.com
+        Run keyword if    ${is email visible?}    Click element    //a[@class='firstcolLink']
+        ...    ELSE    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr/td/table/tbody/tr/td/button
+        Wait until page contains    quota
+        Check errors on page [-1]
+        Element should contain    //*[@id="tabs"]/ul/li[1]    General
+        Element should contain    //*[@id="tabs"]/ul/li[2]    Delete unused sample rows
+        Element should contain    //*[@id="tabs"]/ul/li[3]    Validate
+        Element should contain    //*[@id="tabs"]/ul/li[4]    FTPServer
+        Element should contain    //*[@id="tabs"]/ul/li[5]    Completed
+    #
+        Input text    //input[@id='field_StartTime']    08:00
+        Click element    //*[@id="tabs"]/ul/li[4]
+        Wait until page contains element    //input[@id='field_FTPServer']
+        Input text    //input[@id='field_FTPServer']    ${FTPServer}
+        Input text    //input[@id='field_FTPUser']    ${FTPUser}
+        Input text    //input[@id='field_FTPPass']    ${FTPPass}
+        Input text    //input[@id='field_FTPPath']    /rf-ftp-sample-auto-import-2022
+        Click element    //*[@id="tabs"]/ul/li[5]
+        Wait until page contains element    //input[@id='field_Email']
+        Input text    //input[@id='field_Email']    oksana.soiko@checker-solutions.com
+        Select dropdown.AD    //*[@id="idFileEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Rename file')]
+        sleep    1
+        Click element    //*[@id="tabs"]/ul/li[1]
+        Click Save/Add/Delete/Cancel button.AD
+        Wait until page contains    Saved successfully
+        Click element    //a[@class='firstcolLink']
+        Validate value (value)    //input[@id='field_StartTime']    08:00
+        Click element    //*[@id="tabs"]/ul/li[4]
+        Validate value (value)    //input[@id='field_FTPServer']    ${FTPServer}
+        Validate value (value)    //input[@id='field_FTPUser']    ${FTPUser}
+        Validate value (value)    //input[@id='field_FTPPath']    /rf-ftp-sample-auto-import-2022
+        Click element    //*[@id="tabs"]/ul/li[5]
+        Wait until page contains element    //input[@id='field_Email']
+        Validate value (value)    //input[@id='field_Email']    oksana.soiko@checker-solutions.com
+        Validate value (text)    //*[@id="idFileEditbox"]/table/tbody/tr/td/span/button    Rename file
+    #
+        go to2.AD    ${URL}/survey-workers-reset-last-runtime.php?WorkerID=30
+        Page should contain    running now
+        Page should contain    Process done
+        Page should contain    Processing automated sample import for survey
+        Page should contain    attepting connection to ftp.drivehq.com
+        Page should contain    Connected to ftp.drivehq.com, for user vishav-ftp
+        Page should contain    RF SURVEY [SAMPLE AUTO IMPORT]
+        Page should contain    Connected using non-SSL connection
+        Page should contain    Files found on FTP
+        Page should contain    Renaming file
+        Page should contain    Valid Sample.xls
+        Page should contain    Valid Sample.xls.done
+    #
+        ftp connect    ${FTP host}    ${FTP user}    ${FTP pass}
+        Log to console    ------------Connecting to FTP repository. Please wait... (${FTP host};
+        Dir
+        Cwd    /rf-ftp-sample-auto-import-2022
+        Run keyword and ignore error    FtpLibrary.Delete    Valid Sample.xls.done
+        Dir
+        Ftp Close
+    #
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
 Management > add Survey (EMAIL)
     [Tags]    Survey
     @{urls}=    String.Split String    ${TestURLs}    ,
@@ -61,7 +149,7 @@ Management > add Survey (EMAIL)
         go to.AD    ${URL}/surveyors.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey-statuses.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey2-quotas.php?SurveyID=${SurveyID}
-    #    Run Keyword If    ${testing?}    go to.AD    ${URL}/survey-weighted-result-setup.php?SurveyID=${SurveyID}
+        #    Run Keyword If    ${testing?}    go to.AD    ${URL}/survey-weighted-result-setup.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey-quotas-status.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/report-samples.php?SurveyID=${SurveyID}&show=1
         go to.AD    ${URL}/phone-survey-management.php?SurveyID=${SurveyID}
@@ -162,8 +250,9 @@ Management > add Survey (PHONE)
         Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[4]    Reviews/Hr
         Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[5]    Duration
         Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[6]    Reviews count
-        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[7]    Stack
-        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[8]    Date of sample addition
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[7]    In progress
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[8]    Stack
+        Element text should be    //*[@id="survey_summary"]/thead/tr[1]/th[9]    Date of sample addition
     #
         go to.AD    ${URL}/phone-survey-management-summary.php
         Wait until page contains    Surveys management summary
@@ -184,18 +273,20 @@ Management > add Survey (PHONE)
         Login as a Shopper
         go to.AD    ${URL}/c_survey-select.php
         Wait until page contains    Please select a survey
-        Page should contain    Surveys selection
-        Element text should be    //*[@id="table_rows"]/tbody/tr/td[1]/a    ${RF survey name}
-        Element text should be    //*[@id="table_rows"]/tbody/tr/td[2]    RF Questionnaire [Surveys]
-        Element text should be    //*[@id="table_rows"]/tbody/tr/td[3]    RF SAMPLE 01
-        Element text should be    //*[@id="table_rows"]/tbody/tr/td[4]/p[1]    RF note for surveyors for ${RF survey name}
-        Page should contain element    //input[@id='request-break']
         Page should contain    Back to main menu
         Page should contain    Log off
         Element text should be    //*[@id="table_rows"]/thead/tr/th[1]    Survey name
         Element text should be    //*[@id="table_rows"]/thead/tr/th[2]    Questionnaire name
         Element text should be    //*[@id="table_rows"]/thead/tr/th[3]    Sample name
         Element text should be    //*[@id="table_rows"]/thead/tr/th[4]    Note for surveyors
+    #
+        Page should contain    Surveys selection
+        Element text should be    //*[@id="table_rows"]/tbody/tr/td[1]/a    ${RF survey name}
+        Element text should be    //*[@id="table_rows"]/tbody/tr/td[2]    RF Questionnaire [Surveys]
+        Element text should be    //*[@id="table_rows"]/tbody/tr/td[3]    RF SAMPLE 01
+        Element text should be    //*[@id="table_rows"]/tbody/tr/td[4]/p[1]    RF note for surveyors for ${RF survey name}
+        Page should contain element    //input[@id='request-break']
+    #
         Click link    default=${RF survey name}
         Check errors on page [-1]
     #    Wait until page contains    No matching records found or survey completed, please contact survey manager.

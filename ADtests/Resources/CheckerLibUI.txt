@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -64,7 +64,7 @@ Enter existing login and password.AD
     Input Text    ${id=login_password}    ${password}
     Click Element    ${id=submit_button}
     Check errors on page [-1]
-    #Switch language.AD    ${UILangauageID}
+    Switch language.AD    ${UILangauageID}
     #Wait Until Page Contains    Welcome,
 
 Check Log In page.AD
@@ -8815,28 +8815,27 @@ Edit ISurvey.AD
     Set checkbox.AD    //input[@id='field_IsActive']    true
     ##
     Wait until page contains element    //input[@id='field_SurveyName']
-    Input text    //input[@id='field_SurveyName']    ${ISurveyName}
     Select dropdown.AD    //*[@id="idDefaultLanguageEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'English Australia')]
     Validate value (text)    //*[@id="idDefaultLanguageEditbox"]    English Australia
-    Set checkbox.AD    //input[@id='field_IsActive']    true
-    #Select dropdown.AD    //*[@id="idClientLinkEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
+    Select dropdown.AD    //*[@id="idClientLinkEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
     Validate value (text)    //*[@id="idClientLinkEditbox"]/table/tbody/tr/td/span/button    ${RobotTestClient}
-    Run keyword and ignore error    Wait until page contains element    //*[@id="field_BranchLink_div"]/table/tbody/tr/td/span/button
-    Run keyword and ignore error    Click element    //*[@id="field_BranchLink_div"]/table/tbody/tr/td/span/button
-    Run keyword and ignore error    Scroll element into view    xpath=//li[contains(.,'${Branch}')]
-    Run keyword and ignore error    Set focus to element    xpath=//li[contains(.,'${Branch}')]
-    Run keyword and ignore error    Click element    xpath=//li[contains(.,'${Branch}')]
-    Run keyword and ignore error    Validate value (text)    //*[@id="field_BranchLink_div"]/table/tbody/tr/td/span/button    ${Branch}
+    Wait until page contains element    //*[@id="field_BranchLink_div"]/table/tbody/tr/td/span/button
+    Click element    //*[@id="field_BranchLink_div"]/table/tbody/tr/td/span/button
+    Scroll element into view    xpath=//li[contains(.,'${Branch}')]
+    Set focus to element    xpath=//li[contains(.,'${Branch}')]
+    Click element    xpath=//li[contains(.,'${Branch}')]
+    Validate value (text)    //*[@id="field_BranchLink_div"]/table/tbody/tr/td/span/button    ${Branch}
     Input text    //input[@id='field_TargetQuota']    ${TargetQuota}
     Input text    //input[@id='field_RedirectAfter']    5
-    Click Save/Add/Delete/Cancel button.AD
-    go to.AD    ${URL}/internet-surveys.php?page_var_filter_IsActive=&page_var_filter_ClientLink=${found ID}
-    click Link    ${ISurveyName}
-    Wait until page contains element    //*[@id="idSetLinkEditbox"]/table/tbody/tr/td/span/button
-    click element    //*[@id="idSetLinkEditbox"]/table/tbody/tr/td/span/button
+    #    Click Save/Add/Delete/Cancel button.AD
+    #    go to.AD    ${URL}/internet-surveys.php?page_var_filter_IsActive=&page_var_filter_ClientLink=${found ID}
+    #    click Link    ${ISurveyName}
+    Execute JavaScript    window.document.getElementById("field_SurveyName").scrollIntoView(true)
+    Wait until page contains element    //*[@id="idSetLinkEditbox"]/table/tbody/tr/td/div/table/tbody/tr/td/span/button
+    click element    //*[@id="idSetLinkEditbox"]/table/tbody/tr/td/div/table/tbody/tr/td/span/button
     Set focus to element    xpath=//li[contains(.,'${Questionnaire to be used}')]
     click element    xpath=//li[contains(.,'${Questionnaire to be used}')]
-    Validate value (text)    //*[@id="idSetLinkEditbox"]/table/tbody/tr/td/span/button/span[2]    ${Questionnaire to be used}
+    Validate value (text)    //*[@id="idSetLinkEditbox"]/table/tbody/tr/td/div/table/tbody/tr/td/span/button    ${Questionnaire to be used}
     Validate value (value)    //input[@id='field_RedirectAfter']    5
     Log to console    ----------------------------
     #
@@ -8849,7 +8848,6 @@ Edit ISurvey.AD
     Run keyword and ignore error    Enter editor text.AD    tr_QuotaReachedMessage    <p style="text-align:center">&nbsp;</p><p style="text-align:center">&nbsp;</p><p style="text-align:center">Quota reached message: <strong>&quot;sorry, this survey`s quota has been exceeded&quot;</strong></p> <p style="text-align:center"><em><span style="font-size:9px">What is a survey quota?&nbsp;A survey quota is the number of observations needed to meet a specified requirement, such as the number of men and the number of women to complete a survey.&nbsp;</span></em></p>${RF REVN DT}
     Run keyword and ignore error    Enter editor text.AD    tr_ThankYouMessage    <p style="text-align:center">&nbsp;</p> <p style="text-align:center">&nbsp;</p> <p style="text-align:center">Thank you message: <strong>&quot;You have completed the RF survey, thank you for participating&quot;</strong></p> <p style="text-align:center"><span style="font-size:9px"><em>Thank you for taking the time to complete this survey. The fact that you are reading this message indicates that you have completed our survey&nbsp; and that we owe you a debt of thanks. We are very appreciative of the time you have taken to assist in our analysis and commit to utilizing the information gained to contemplate and implement worthwhile improvements.</em></span></p>${RF REVN DT}
     Input text    //input[@id='field_LandingPage']    https://www.checker-soft.com
-    #xpath=//li[contains(.,'BranchFullname 05 (for Internet Surveys)')]
     ${Pageurl} =    Execute Javascript    return window.location.href
     ${ReviewID 1} =    Fetch From Right    ${Pageurl}    &edit=
     ${ReviewID} =    Fetch From Left    ${ReviewID 1}    &page_var_sorting_column
@@ -8876,6 +8874,14 @@ Edit ISurvey.AD
     Element text should be    //td[@class='db-ltr'][5]    Click here to fill in
     Validate value (value)    //*[@id="table_rows"]/tbody/tr/td[8]/input    Share
     Element should contain    //td[@class='db-ltr'][6]    ${URL}/i_survey-fill.php?SurveyID=${ReviewID}
+    #
+    click Link    ${ISurveyName}
+    Wait until page contains element    //input[@id='field_SurveyName']
+    Validate value (text)    //*[@id="idSetLinkEditbox"]/table/tbody/tr/td/span    ${Questionnaire to be used}
+    Validate value (text)    //*[@id="idBranchLinkEditbox"]/table/tbody/tr/td/span/button    ${Branch}
+    Validate value (value)    //input[@id='field_TargetQuota']    ${TargetQuota}
+    Validate value (text)    //*[@id="idClientLinkEditbox"]/table/tbody/tr/td/span/button    ${RobotTestClient}
+    Validate value (text)    //*[@id="idDefaultLanguageEditbox"]    English Australia
 
 Click Save/Add/Delete/Cancel button.AD
     Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
@@ -8885,7 +8891,9 @@ Click Save/Add/Delete/Cancel button.AD
     Run Keyword If    '${status1}'=='True'    Set focus to element    //input[@id='save']
     Run Keyword If    '${status1}'=='True'    Click element    //input[@id='save']
     ${status2}    Run Keyword And return status    Page Should Contain element    //input[@id='addnew']
-    Run Keyword If    '${status2}'=='True'    Click element    //input[@id='addnew']
+    Run keyword and ignore error    Click element    //input[@id='addnew']
+    ${status3}    Run Keyword And return status    Page Should Contain element    //*[@id="addnew"]
+    Run Keyword If    '${status3}'=='True'    Click element    //*[@id="addnew"]
     Log to console    Page has been Saved/Updated (+)
     Check errors on page [-1]
     ${login again visible?}    Run keyword and return status    Page should contain    Login again?
@@ -10875,7 +10883,7 @@ Search/add Survey.AD
     input text    //input[@id='field_SMSSurveyValidityDuration']    1
     input text    //textarea[@id='field_SMSSurveyConditionToSendLink']    1=1
     input text    //input[@id='field_SurveyName']    ${RF survey name}
-    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_117_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_121_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_137_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_61_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Run Keyword If    ${demo?}    Enter editor text.AD    //*[@id="cke_72_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
@@ -10884,10 +10892,10 @@ Search/add Survey.AD
     Click element    //*[@id="toggler"]
     Wait until element is visible    //input[@id='field_EmailSubj']
     input text    //input[@id='field_EmailSubj']    RF Email subject for the invitation
-    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_179_label"]    RF Email body for the invitation
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_183_label"]    RF Email body for the invitation
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_118_label"]    RF Email body for the invitation
     input text    //*[@id="field_EmailLinkText"]    RF Link text in invitation Email
-    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_911_label"]    RF Thank you message, right after filling the survey
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_976_label"]    RF Thank you message, right after filling the survey
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_503_label"]    RF Thank you message, right after filling the survey
     input text    //input[@id='field_LandingPage']    https://www.checker-soft.com/
     input text    //input[@id='field_RedirectAfter']    3
@@ -10931,7 +10939,7 @@ Search/add Survey.AD
     #    Validate value (text)    //*[@id="idBranchLinkEditbox"]/table/tbody/tr/td/span/button    RF Branch 02 [Short name]
     Validate value (text)    //*[@id="idSetNameEditbox"]/table/tbody/tr/td/span/button    ${RF q-ry name}
     Execute JavaScript    window.document.getElementById("idSampleNameTedit").scrollIntoView(true)
-    Page should contain    RF SAMPLE 01
+    Page should contain    RF SAMPLE 0
     #    Page should contain    Sample cannot be changed because the survey has started
     Validate value (value)    //input[@id='field_ExpectedAvgSurveysPerHour']    100.000000
     Validate value (value)    //input[@id='field_ExpectedAvgSurveysDuration']    100
@@ -11301,7 +11309,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/crit-orders-handle.php    YES    YES
     Check footer info.AD    ${URL}/orders-assignment-manual.php    YES    YES
     Check footer info.AD    ${URL}/survey-handleinprogress.php    YES    YES
-    #    Check footer info.AD    ${URL}/checkers-assignation.php    YES    YES    # too slow page speed load
+    Run Keyword If    ${preprod?}    Check footer info.AD    ${URL}/checkers-assignation.php    YES    YES    # too slow page speed load
     Check footer info.AD    ${URL}/checkers-assignments-list.php    YES    YES    # too slow page speed load
     # Import
     Check footer info.AD    ${URL}/import-branches.php    YES    YES
@@ -11312,7 +11320,8 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/import-cities.php    YES    YES
     Check footer info.AD    ${URL}/import-users.php    YES    YES
     Check footer info.AD    ${URL}/import-branch-contacts.php    YES    YES
-    #    Check footer info.AD    ${URL}/import-orders-mass.php    YES    YES    # fails on testing
+    Run Keyword If    ${testing?}    Check footer info.AD    ${URL}/import-sample.php    YES    YES    # too slow page speed load
+    Run Keyword If    ${preprod?}    Check footer info.AD    ${URL}/import-orders-mass.php    YES    YES    # fails on testing
     Check footer info.AD    ${URL}/import-orders-multiple.php    YES    YES
     Check footer info.AD    ${URL}/import-profiles.php    YES    YES
     Check footer info.AD    ${URL}/import-filelist.php    YES    YES
@@ -11361,7 +11370,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/user-role-types.php    YES    YES
     Check footer info.AD    ${URL}/currencies.php    YES    YES
     Check footer info.AD    ${URL}/settings-creditcards.php    YES    YES
-    Check footer info.AD    ${URL}/settings-bank-names.php    YES    YES
+    Run Keyword If    ${preprod?}    Check footer info.AD    ${URL}/settings-bank-names.php    YES    YES
     Check footer info.AD    ${URL}/stage-types.php    YES    YES
     Check footer info.AD    ${URL}/cash-flow-types.php    YES    YES
     Check footer info.AD    ${URL}/settings-creditcard-types.php    YES    YES
@@ -11399,7 +11408,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/crit-show-by-id-anls.php    YES    YES
     Check footer info.AD    ${URL}/report-question-perflevel-gauge.php    YES    YES
     Check footer info.AD    ${URL}/report-question-groups.php    YES    YES
-    #    Check footer info.AD    ${URL}/report-survey-stats.php    YES    YES    # very slow on testing
+    Run Keyword If    ${preprod?}    ${URL}/report-survey-stats.php    YES    YES    # very slow on testing
     # Reports > Product reports
     Check footer info.AD    ${URL}/report-pos-analysis.php    YES    YES    # -1 demo
     Check footer info.AD    ${URL}/report-product-question.php    YES    YES
@@ -11431,7 +11440,7 @@ Check footer on all pages.AD
     # Reports > Surveys
     Check footer info.AD    ${URL}/report-survey-breakdown.php    YES    YES
     Check footer info.AD    ${URL}/export-crits-3.php    YES    YES    # -1
-    #    Check footer info.AD    ${URL}/report-surveyors-status.php    YES    YES    # too slow on testing
+    Run Keyword If    ${preprod?}    ${URL}/report-surveyors-status.php    YES    YES    # too slow on testing
     Check footer info.AD    ${URL}/export-crits2.php    YES    YES    # -1
     # Reports > General
     Check footer info.AD    ${URL}/reports-tabs.php    YES    YES
@@ -13924,23 +13933,24 @@ Open Operational Panel.AD
     #
     Click element    //input[@id='show']
     sleep    2
-    ${found reviews}    Run keyword and return status    Page should contain    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
-    Run keyword if    ${found reviews}    Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
+    ########
+    ${found review}    Run keyword and return status    Page should contain    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+    Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
     ${ReviewID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-    Run Keyword If    ${found reviews}    Set global variable    ${ReviewID}
+    Set global variable    ${ReviewID}
     Check errors on page [-1]
-    # Check if default buttons are present on page    ${found reviews}
-    Run Keyword If    ${found reviews}    Page should contain    Operation panel
-    Run Keyword If    ${found reviews}    Page should contain element    //input[@id='ApproveCrits']
-    Run Keyword If    ${found reviews}    Page should contain element    //input[@id='checkAndSendAlerts']
-    Run Keyword If    ${found reviews}    Page should contain element    //input[@id='DisApproveCrits']
-    Run Keyword If    ${found reviews}    Page should contain element    //input[@id='bundle_name']
-    Run Keyword If    ${found reviews}    Page should contain element    //input[@id='ShowMessageBox']
-    Run Keyword If    ${found reviews}    Page should contain element    ReturnCrits
-    Run Keyword If    ${testing?} and ${found reviews}    Page should contain element    DuplicateOrdersFromCrits
-    Run Keyword If    ${testing?} and ${found reviews}    Page should contain element    ProjectDialog
-    Run Keyword If    ${found reviews}    Page should contain element    bundle_orders    #Package orders
-    Run Keyword If    ${found reviews}    Page should contain element    unbundle_orders    #UnPackage orders
+    # Check if default buttons are present on page
+    Run Keyword If    ${found review}    Page should contain    Operation panel
+    Run Keyword If    ${found review}    Page should contain element    //input[@id='ApproveCrits']
+    Run Keyword If    ${found review}    Page should contain element    //input[@id='checkAndSendAlerts']
+    Run Keyword If    ${found review}    Page should contain element    //input[@id='DisApproveCrits']
+    Run Keyword If    ${found review}    Page should contain element    //input[@id='bundle_name']
+    Run Keyword If    ${found review}    Page should contain element    //input[@id='ShowMessageBox']
+    Run Keyword If    ${found review}    Page should contain element    ReturnCrits
+    Run Keyword If    ${testing?} and ${found review}    Page should contain element    DuplicateOrdersFromCrits
+    Run Keyword If    ${testing?} and ${found review}    Page should contain element    ProjectDialog
+    Run Keyword If    ${found review}    Page should contain element    bundle_orders    #Package orders
+    Run Keyword If    ${found review}    Page should contain element    unbundle_orders    #UnPackage orders
 
 Get project ID.AD
     [Arguments]    ${expected project}
@@ -13969,7 +13979,7 @@ Connect FTP
     Dir
     #Download File    image_0.PNG    ${CURDIR}\\Resources\\Extra files\\FTP files
     Run keyword and ignore error    Mkd    rf-ftp-alerts-2022
-    #Cwd    rf-alerts-2022
+    Cwd    rf-ftp-alerts-2022
     #Upload File    ${CURDIR}\\Resources\\Extra files\\Images\\UsersIcon.png
     Dir
     Download File    ${exp file}    ${CURDIR}\\Extra files\\FTP files
@@ -13978,7 +13988,7 @@ Connect FTP
     Log to console    1. Expected file is downloaded to local target folder at "${CURDIR}\\Extra files\\FTP"
     Log to console    2. Downloaded file is not empty, size > "0"
     Log to console    3. Source file is deleted via/on FTP
-    Log to console    ${\n} - Please wait...checking if attached files are available on FTP: "${any attachment?}" files are attached to review ID: ${Finished review ID}
+    Log to console    ${\n} - Please wait...checking if attached files are available on FTP: "${any attachment?}" files are attached to review ID: ${ReviewID}
     #
     ${i}    Set Variable    1
     FOR    ${i}    IN RANGE    ${any attachment?}
@@ -14003,12 +14013,12 @@ Connect FTP
     File Should Exist    ${CURDIR}\\Extra files\\FTP files\\${exp file}
     File Should Not Be Empty    ${CURDIR}\\Extra files\\FTP files\\${exp file}
     #Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
-    Cwd    rf-ftp-alerts-2022
+    #Cwd    rf-ftp-alerts-2022
     Dir
     Get All Ftp Connections
     Get Welcome
-    ftp close
     Log to console    ------------------------------------------------------------------------
+    Ftp Close
 
 Add branch contact.AD
     [Arguments]    ${exp name}    ${exp status}
@@ -14145,7 +14155,7 @@ Manage sample fields.AD
     Run keyword if    ${preprod?}    Validate value (value)    //input[@id='SMSPhoneNumberField[Cellular]']    1
     Page should contain    Manage sample fields
     Page should contain    Survey name: ${RF survey name}
-    Page should contain    Sample name: RF SAMPLE 01
+    Page should contain    Sample name: RF SAMPLE 0
     Page should contain    Back to surveys
     Page should contain    Fields to hide
     Page should contain    Editable fields
