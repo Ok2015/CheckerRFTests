@@ -90,9 +90,12 @@ TC_0003. Check creation of SP user (test role and its permissions)
         Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form/table/tbody/tr[1]/td[3]/table/tbody/tr/td/span/button/span[2]    xpath=//li[contains(.,'${RobotTestClient}')]
         Click element    //input[@id='show']
         ${Review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        click element    //table[@id='menu_top_level']/tbody/tr/td[@class='top_menu'][9]/a
+        Wait until page contains element    //input[@id='do_login']
     #
         Run keyword if    ${testing?}    Log To Console    Let`s log in using credentials of a SP user
-        Run keyword if    ${testing?}    Enter existing login and password.AD    ${RobotSPUser 01}    ${RobotSPUser 01}
+        Run keyword if    ${testing?}    Enter existing login and password 2.AD    ${RobotSPUser 01}    ${RobotSPUser 01}
+        Run keyword if    ${testing?}    Go to2.AD    ${URL}/main-menu.php
         Run keyword if    ${testing?}    Page should contain    Welcome, ${RobotSPUser 01}!
         Run keyword if    ${testing?}    Page should contain    Message to RF ROLE goes here
         Run keyword if    ${testing?}    Page should contain element    //a[@id='set-language']/span[@class='ui-button-text']

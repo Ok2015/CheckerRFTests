@@ -99,7 +99,7 @@ Not successful login (wrong credentials).SD
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
         SET UP
-        Go to    ${URL}/c_login.php
+        go to.AD    ${URL}/c_login.php
         Log to console    Let`s try to log in as a shopper with not registered credentials...
         Enter login and password.SD    Robot test shopper [01]    12
         Page should not contain    Orders

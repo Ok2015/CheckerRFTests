@@ -159,10 +159,18 @@ Shopper is registered and autoapproved. FU
         Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[55]    Allowed to apply for orders
         Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[56]    Allowed IP addresses
         Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[57]    CSSFileName
-        Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[58]    Phone for VOIP calls
-        Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[59]    Daily regions limit
-        Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[60]    Daily cities limit
-        Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[61]    Shopper balance
+    #
+        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[58]    Bank Name
+        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[59]    BankBranchName
+        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[60]    Phone for VOIP calls
+        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[61]    Daily regions limit
+        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[62]    Daily cities limit
+        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[63]    Shopper balance
+    #
+        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[58]    Phone for VOIP calls
+        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[59]    Daily regions limit
+        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[60]    Daily cities limit
+        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[61]    Shopper balance
     #
         Run Keyword If    ${preprod?}    Element text should be    //td[@class='db-ltr'][1]    RF-${random string} RF-${random string}
         Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][1]    RF-${random string}
@@ -215,9 +223,12 @@ Shopper is registered and autoapproved. FU
         Element text should be    //td[@class='db-ltr'][53]    Yes
         Element text should be    //td[@class='db-ltr'][54]    Yes
         Element text should be    //td[@class='db-ltr'][56]    Default
-        Element text should be    //td[@class='db-ltr'][58]    1
-        Element text should be    //td[@class='db-ltr'][59]    3
-        Element text should be    //td[@class='db-ltr'][60]    0.00
+        Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][61]    3
+        Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][60]    1
+        Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][62]    0.00
+        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[60]    3
+        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[59]    1
+        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[61]    0.00
         Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[17]    42.105522
         Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[17]    43.299431
         Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[18]    -75.923286

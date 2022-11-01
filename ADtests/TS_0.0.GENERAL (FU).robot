@@ -28,8 +28,8 @@ Update TRANSLATION
         SET UP
         ${userpass}=    set variable    n4i5ne9dfh3
         Run keyword if    '${URLIndex}'=='TESTING'    Change password
-        Open update translation page    oksana    ${userpass}    # n4i5ne9dfh3    # oksana123456
-    #    Run keyword and ignore error    Check translation version.AD    24
+        Upload translation file    oksana    ${userpass}    # n4i5ne9dfh3    # oksana123456
+        Run Keyword If    ${testing?} or ${preprod?}    Check translation version.AD    21    31
     END
     Close Browser
     [Teardown]    Close Browser.AD

@@ -38,7 +38,6 @@ Management > add Sample
     [Teardown]    Close Browser.AD
 
 Management > sample auto import
-    [Tags]    Survey
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -60,7 +59,7 @@ Management > sample auto import
     #
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Search Client.AD
-    #    Search/add Survey.AD    RF SURVEY [SAMPLE AUTO IMPORT]    RF Questionnaire [SMS]    SMS
+        #    Search/add Survey.AD    RF SURVEY [SAMPLE AUTO IMPORT]    RF Questionnaire [SMS]    SMS
         go to.AD    https://eu.checker-soft.com/testing/survey-workers.php?SurveyID=496    #    ${URL}/survey-workers.php?SurveyID=${SurveyID}
         Wait until page contains    Sample Auto import profile
         ${is email visible?}    Run keyword and return status    Page should contain    oksana.soiko@checker-solutions.com
@@ -283,7 +282,7 @@ Management > add Survey (PHONE)
         Page should contain    Surveys selection
         Element text should be    //*[@id="table_rows"]/tbody/tr/td[1]/a    ${RF survey name}
         Element text should be    //*[@id="table_rows"]/tbody/tr/td[2]    RF Questionnaire [Surveys]
-        Element text should be    //*[@id="table_rows"]/tbody/tr/td[3]    RF SAMPLE 01
+        Element should contain    //*[@id="table_rows"]/tbody/tr/td[3]    RF SAMPLE 0
         Element text should be    //*[@id="table_rows"]/tbody/tr/td[4]/p[1]    RF note for surveyors for ${RF survey name}
         Page should contain element    //input[@id='request-break']
     #

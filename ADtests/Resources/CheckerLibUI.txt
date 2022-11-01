@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -64,7 +64,8 @@ Enter existing login and password.AD
     Input Text    ${id=login_password}    ${password}
     Click Element    ${id=submit_button}
     Check errors on page [-1]
-    Switch language.AD    ${UILangauageID}
+    ${welcome is visible?}    Run keyword and return status    Page should contain    Welcome
+    Run keyword if    ${welcome is visible?}    Switch language.AD    ${UILangauageID}
     #Wait Until Page Contains    Welcome,
 
 Check Log In page.AD
@@ -1848,9 +1849,9 @@ Assign order (via orders-management.php).AD
     Select dropdown.AD    //*[@id="pleaseFilter"]    //*[@id="pleaseFilter"]/option[2]
     Wait until page contains element    //form/input[@id='show']
     Click Element    //input[@id='show']
-    Wait until page contains element    //*[@id="tabs"]/ul
-    Element text should be    //*[@id="tabs"]/ul/li[2]/a    Map
-    Element text should be    //*[@id="tabs"]/ul/li[1]/a    List
+    Run Keyword If    ${testing?}    Wait until page contains element    //*[@id="tabs"]/ul
+    Run Keyword If    ${testing?}    Element text should be    //*[@id="tabs"]/ul/li[2]/a    Map
+    Run Keyword If    ${testing?}    Element text should be    //*[@id="tabs"]/ul/li[1]/a    List
     Page should contain element    //input[@id='cancel_assignment']
     Page should contain element    //input[@id='scm']
     Element text should be    //th[@class='report-firstcol']    Order?
@@ -3972,7 +3973,7 @@ Import file (branches)
     Select dropdown.AD    id=DontSkipDuplicates    //*[@id="DontSkipDuplicates"]/option[3]
     Click element    //input[@id='upload']
 
-Open update translation page
+Upload translation file
     [Arguments]    ${username}    ${userpass}
     go to.AD    ${URL}/m_login.php
     log to console    Loop №${1}: Starting updating translation file. Please wait...
@@ -3986,8 +3987,63 @@ Open update translation page
     Log to console    ${CURDIR}
     Choose File    //body/form/div[1]/input    ${CURDIR}\\Extra files\\translations.xls
     Click element    //body/form/div[2]/button
-    Run keyword and ignore error    Wait until page contains    Update translations
-    Run keyword and ignore error    Wait until page contains    Languages created:
+    Wait until page contains    Update translations    25
+    Wait until page contains    Languages created:
+    Wait until page contains    il_HE
+    Wait until page contains    il_HEBAK
+    Wait until page contains    il_HES
+    Wait until page contains    en_US
+    Wait until page contains    en_AU
+    Wait until page contains    en_UK
+    Wait until page contains    en_invision
+    Wait until page contains    de_DE
+    Wait until page contains    es_SP
+    Wait until page contains    es_SA
+    Wait until page contains    pt_BR
+    Wait until page contains    ua_RU
+    Wait until page contains    fr_FR
+    Wait until page contains    fr_BE
+    Wait until page contains    en_v2
+    Wait until page contains    lt_LTU
+    Wait until page contains    ro_RO
+    Wait until page contains    tu_TUR
+    Wait until page contains    zh_SC
+    Wait until page contains    et_ET
+    Wait until page contains    hu_HU
+    Wait until page contains    bg_BG
+    Wait until page contains    ru_v2
+    Wait until page contains    ua_UA
+    Wait until page contains    pl_PL
+    Wait until page contains    hr_CR
+    Wait until page contains    sk_SK
+    Wait until page contains    jp_JP
+    Wait until page contains    ar_EG
+    Wait until page contains    mk_MK
+    Wait until page contains    cs_CZ
+    Wait until page contains    bs_BA
+    Wait until page contains    ar_AE
+    Wait until page contains    sr_SR
+    Wait until page contains    nl_NL
+    Wait until page contains    sl_SI
+    Wait until page contains    zh_CM
+    Wait until page contains    th_TH
+    Wait until page contains    es_CA
+    Wait until page contains    ar_SA
+    Wait until page contains    nl_BE
+    Wait until page contains    it_IT
+    Wait until page contains    pt_PT
+    Wait until page contains    en_SRV
+    Wait until page contains    en_SRT
+    Wait until page contains    ka_GE
+    Wait until page contains    nn_NO
+    Wait until page contains    ru_Romir_Toyota
+    Wait until page contains    lv_Latvian
+    Wait until page contains    il_evaluations
+    Wait until page contains    da_DA
+    Wait until page contains    vi-VN
+    Wait until page contains    el_GR
+    Wait until page contains    de_CH
+    Wait until page contains    fi_FI
     Wait until page contains    Translation update performed successfully    25
     Check errors on page [-1]
     log to console    Client system №${1}. ${\n}Status: Done. Translation update performed successfully for "${URL}" (+)
@@ -9668,12 +9724,70 @@ Check brif.SD
     Run keyword and ignore error    Unselect Frame
 
 Check translation version.AD
-    [Arguments]    ${file version}
-    Enter existing login and password.AD    checker    C43tgpcz
-    Switch language.AD    21
+    [Arguments]    ${UI_id}    ${file version}
+    Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+    Switch language.AD    ${UI_id}
     go to.AD    ${URL}/main-menu.php
-    Page should contain    Ласкаво просимо,
+    Page should contain    Ласкаво просимо, ${ManagerUsername}! (v.${file version})
     Page should contain    (v.${file version})
+    ${text}    Get Selected List Value     user_lang_id
+    ${text}    Get Selected List Label     user_lang_id
+    Log to console    UI language list: "${text}"
+    List Selection Should Be    user_lang_id    ${UI_id}
+    Page should contain    Не вибрано
+    Page should contain    Арабська (Єгипет)
+    Page should contain    Арабська (Саудівська Аравія)
+    Page should contain    Арабська (ОАЕ)
+    Page should contain    Боснійська
+    Page should contain    Болгарська
+    Page should contain    Хорватська
+    Page should contain    Чеська
+    Page should contain    Да́нська
+    Page should contain    Німецька
+    Page should contain    Німецька (Swiss)
+    Page should contain    Голландська
+    Page should contain    Англійська (Австралія)
+    Page should contain    Англійська (Великобританія)
+    Page should contain    Англійська (США)
+    Page should contain    Англійська (2й варіант)
+    Page should contain    Англійська (Retail surveys)
+    Page should contain    Англійська (опитування)
+    Page should contain    Іспанська (Catalan)
+    Page should contain    Іспанська (Іспанія)
+    Page should contain    Іспанська Південна Америка
+    Page should contain    Естонська
+    Page should contain    Голландська (Фламандська)
+    Page should contain    Французька
+    Page should contain    Французька (Бельгія)
+    Page should contain    Угорська
+    Page should contain    Японська
+    Page should contain    Іврит
+    Page should contain    Іврит (відгуки)
+    Page should contain    Іврит (опитування)
+    Page should contain    Іврит (evaluations)
+    Page should contain    Італійська
+    Page should contain    Литовська
+    Page should contain    Македонська
+    Page should contain    Польська
+    Page should contain    Португальська
+    Page should contain    Португальська (Португалія)
+    Page should contain    Румунська
+    Page should contain    Сербська
+    Page should contain    Словацька
+    Page should contain    Словенська
+    Page should contain    Тайська мова
+    Page should contain    Турецька
+    Page should contain    Російська
+    Page should contain    Російська v2
+    Page should contain    Українська
+    Page should contain    Китайська
+    Page should contain    Китайська (Mandarin)
+    Page should contain    Грузинська
+    Page should contain    Норвезька
+    Page should contain    Лати́ська
+    Page should contain    В'єтнамська
+    Page should contain    Грецька мова
+    Page should contain    Finnish
     Log to console    Status: Done. System upadated up to "v.${file version}" version
 
 Shopper comments visible.AD
@@ -10322,7 +10436,6 @@ Go to.AD
     Run Keyword If    "${a}"=="False"    Go to    ${exp url}
     Log to console    ${\n}--- Go to: "${exp url}"
     Check errors on page [-1]
-    #
     ${login again visible?}    Run keyword and return status    Page should contain    Login again?
     Run Keyword If    ${login again visible?}    Click link    default=Login again?
     Run Keyword If    ${login again visible?}    Wait Until Page Contains Element    ${id=login_email}
@@ -11285,7 +11398,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/criticisms-purge-attached-files.php    YES    YES
     Check footer info.AD    ${URL}/crit-do-order.php    YES    YES
     Check footer info.AD    ${URL}/crits-handling.php    YES    YES
-    #    Check footer info.AD    ${URL}/checkers-assignation.php    YES    YES    # very slow on testing
+    Run Keyword If    ${preprod?}    Check footer info.AD    ${URL}/checkers-assignation.php    YES    YES    # very slow on testing
     Check footer info.AD    ${URL}/criticisms-purge-binary-data.php    YES    YES
     Check footer info.AD    ${URL}/crits-remove-data.php    YES    YES
     Check footer info.AD    ${URL}/criticisms-cancellation.php    YES    YES
@@ -11320,7 +11433,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/import-cities.php    YES    YES
     Check footer info.AD    ${URL}/import-users.php    YES    YES
     Check footer info.AD    ${URL}/import-branch-contacts.php    YES    YES
-    Run Keyword If    ${testing?}    Check footer info.AD    ${URL}/import-sample.php    YES    YES    # too slow page speed load
+    Run Keyword If    ${preprod?}    Check footer info.AD    ${URL}/import-sample.php    YES    YES    # too slow page speed load
     Run Keyword If    ${preprod?}    Check footer info.AD    ${URL}/import-orders-mass.php    YES    YES    # fails on testing
     Check footer info.AD    ${URL}/import-orders-multiple.php    YES    YES
     Check footer info.AD    ${URL}/import-profiles.php    YES    YES
@@ -11408,7 +11521,7 @@ Check footer on all pages.AD
     Check footer info.AD    ${URL}/crit-show-by-id-anls.php    YES    YES
     Check footer info.AD    ${URL}/report-question-perflevel-gauge.php    YES    YES
     Check footer info.AD    ${URL}/report-question-groups.php    YES    YES
-    Run Keyword If    ${preprod?}    ${URL}/report-survey-stats.php    YES    YES    # very slow on testing
+    Run Keyword If    ${preprod?}    Check footer info.AD    ${URL}/report-survey-stats.php    YES    YES    # very slow on testing
     # Reports > Product reports
     Check footer info.AD    ${URL}/report-pos-analysis.php    YES    YES    # -1 demo
     Check footer info.AD    ${URL}/report-product-question.php    YES    YES
@@ -14334,3 +14447,13 @@ Add survey status.AD
     Validate value (value)    //input[@id='field_Name']    ${exp name}
     Check errors on page [-1]
     Log to console    Survey status: "${exp name}" added/updated (+)
+
+Enter existing login and password 2.AD
+    [Arguments]    ${username}    ${password}
+    go to    ${URL}/login.php
+    Log To Console    Login into a system using next credentials: username = "${username}" pass ="${password}"
+    Wait Until Page Contains Element    ${id=login_email}
+    Input Text    ${id=login_email}    ${username}
+    Input Text    ${id=login_password}    ${password}
+    Click Element    ${id=submit_button}
+    Check errors on page [-1]
