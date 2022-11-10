@@ -29,7 +29,14 @@ Update TRANSLATION
         ${userpass}=    set variable    n4i5ne9dfh3
         Run keyword if    '${URLIndex}'=='TESTING'    Change password
         Upload translation file    oksana    ${userpass}    # n4i5ne9dfh3    # oksana123456
-        Run Keyword If    ${testing?} or ${preprod?}    Check translation version.AD    21    31
+        Run Keyword If    ${testing?} or ${preprod?} or ${demo?}    Check translation version.AD    21    32
+        Run Keyword If    ${testing?} or ${preprod?} or ${demo?}    go to    ${URL}/c_login.php
+        Run Keyword If    ${testing?} or ${preprod?} or ${demo?}    Wait Until Page Contains Element    name=username
+        Run Keyword If    ${testing?} or ${preprod?} or ${demo?}    Input Text    name=username    ${RobotTestShopper 02}
+        Run Keyword If    ${testing?} or ${preprod?} or ${demo?}    Input Text    name=password    ${RobotTestShopper 02}
+        Run Keyword If    ${testing?} or ${preprod?} or ${demo?}    Click button    ${id=submit_button}
+        Run Keyword If    ${testing?} or ${preprod?} or ${demo?}    Switch language.SD    21
+        Run Keyword If    ${testing?} or ${preprod?} or ${demo?}    Check UI language box    21    32
     END
     Close Browser
     [Teardown]    Close Browser.AD

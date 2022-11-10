@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -32,28 +32,27 @@ ${FTP pass}       ftp@2020
 Login as a Manager
     [Arguments]    ${ManagerUsername}    ${ManagerPassword}
     Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}    #${ManagerUsername}    ${ManagerPassword}
-    Switch language.AD    ${UILangauageID}
+    Switch language.AD    ${UILanguageID}
 
 Login as a Shopper
     Enter login and password.SD    ${RobotTestShopper 02}    ${RobotTestShopper 02}
     Enable agreements.SD
-    Switch language.SD    ${UILangauageID}
     Check Shoppers Main Page page
 
 Enter login and password.SD
     [Arguments]    ${username}    ${password}
-    go to.AD    ${URL}/c_login.php
+    go to    ${URL}/c_login.php
     Log To Console    ${\n}Login to account: name: "${username}"/pass:"${password}"
     Wait Until Page Contains Element    name=username
     Input Text    name=username    ${username}
     Input Text    name=password    ${password}
-    Click Element    ${id=submit_button}
+    Click button    ${id=submit_button}
     Log to console    Please wait...
-    reload page
-    go to.AD    ${URL}/c_ordered-crits.php
+    go to    ${URL}/c_ordered-crits.php
     Run keyword and ignore error    Enable agreements.SD
-    #Run keyword and ignore error    Switch language.SD    ${UILangauageID}
+    Switch language.SD    ${UILanguageID}
     Log to console    Shopper is logged in (+)
+    # go to.AD
 
 Enter existing login and password.AD
     [Arguments]    ${username}    ${password}
@@ -65,7 +64,7 @@ Enter existing login and password.AD
     Click Element    ${id=submit_button}
     Check errors on page [-1]
     ${welcome is visible?}    Run keyword and return status    Page should contain    Welcome
-    Run keyword if    ${welcome is visible?}    Switch language.AD    ${UILangauageID}
+    Switch language.AD    4
     #Wait Until Page Contains    Welcome,
 
 Check Log In page.AD
@@ -1346,6 +1345,7 @@ Search test client
     Page should not contain    notice
 
 SET UP
+    #Set Selenium speed    0.5
     Log to console    ${\n}==============SET UP TEST SETTINGS (GENERAL)==============
     ${MM.DD.YY}=    Get Current Date    result_format=%m.%d.%Y
     ${HH:MM:SS}=    Get Current Date    result_format=%H:%M:%S
@@ -1648,13 +1648,13 @@ Create new questionnaire
 
 Get ID
     [Arguments]    ${table id}    ${name}    ${ID column index}    ${NAME column index}
-    Log to console    --- Searching "${name}" element ID:
+    Log to console    --- Searching "${name}" element ID...Please wait
     ${id}=    Set variable    0
-    ${index}=    Set Variable    1
+    ${index}    Set Variable    1
     ${Rows} =    Get Element Count    //*[@${table id}]/tbody/tr    #how many (columns) do we have    //*[@${table id}]/thead/tr[1]/th
     FOR    ${rowindex}    IN RANGE    ${Rows}
         ${act name}=    get text    //*[@${table id}]/tbody/tr[${index}]/td[${NAME column index}]
-        #Exit For Loop If    ${is element visible}==False
+        Log to console    - Row №${index} Actual: "${act name}" vs Expected: "${name}"
         Run keyword if    "${act name}"=="${name}"    Exit for loop
         ${id}=    Evaluate    ${id}+1
         ${index}=    Evaluate    ${index}+1
@@ -2065,8 +2065,7 @@ Cancel order assignment
 
 Switch language.SD
     [Arguments]    ${lang_ID}
-    #go to    ${URL}/c_ordered-crits.php
-    Check errors on page [-1]
+    go to.AD    ${URL}/c_ordered-crits.php
     Wait Until Page Contains Element    id=set-language
     ${lang}=    Set variable    //*[@id="user_lang_id"]/option[${lang_ID}]
     Click element    id=set-language
@@ -2089,7 +2088,7 @@ Switch language.SD
     #${lang3}=    Get Value    //*[@id="user_lang_id"]/option[${lang_ID}]
     Check errors on page [-1]
     SeleniumLibrary.Capture Page Screenshot
-    Log to console    The selected language is --> language with index=${lang_ID}.
+    Log to console    The selected language is --> language with index= "${lang_ID}"
     Run Keyword If    '${lang_ID}'=='11'    Set Global Variable    ${lang_ID}    ${XLS Column: en_UK}
     Run Keyword If    '${lang_ID}'=='42'    Set Global Variable    ${lang_ID}    ${XLS Column: ua_UA}
     Run Keyword If    '${lang_ID}'=='1'    Set Global Variable    ${lang_ID}    ${XLS Column: ar_EG}
@@ -2623,7 +2622,7 @@ Open Job Board and apply order.SD
     sleep    1
     Click element    id=Filter
     ${index}    Set Variable    1
-    #Page should contain    ${test order description}
+    Page should contain    ${test order description}
     Job board and get columns ID by title
     ${Rows} =    Get Element Count    //*[@id="orders_list"]/tbody/tr
     Set global variable    ${index}
@@ -2637,9 +2636,10 @@ Open Job Board and apply order.SD
         Log to console    ${index}. AR --> "${AD description}" VS ER --> "${test order description}"
         Log to console    Order ID="${Order ID}" VS ЕR --> "${found order ID}"
         Scroll Element Into View    //*[@id="orders_list"]/tbody/tr[${index}]/td[${Description ID}]
-        Run Keyword If    '${AD description}'=='${test order description}' and '${Order ID}'=='${found order ID}'    Click element    //table[2]/tbody/tr/td/table/tbody/tr[${index}]/td[${Status ID}]/input
+        Run Keyword If    '${AD description}'=='${test order description}' and '${Order ID}'=='${found order ID}'    Click element    //*[@id="orders_list"]/tbody/tr[${index}]/td[${Status ID}]
+        Run Keyword If    1==2    Click element    //table[2]/tbody/tr/td/table/tbody/tr[${index}]/td[${Status ID}]/input
         #Run Keyword If    '${AD description}'=='${test order description}' and '${Order ID}'=='${found order ID}'    Click element    //*[@id="orders_list"]/tbody/tr[${index}]/td[15]
-        Run Keyword If    '${AD description}'=='${test order description}' and '${Order ID}'=='${found order ID}'    Log to console    Found. Pressing Apply button...
+        Run Keyword If    '${AD description}'=='${test order description}' and '${Order ID}'=='${found order ID}'    Log to console    Order found (+). Pressing "Apply" button...
         Run Keyword If    '${AD description}'=='${test order description}' and '${Order ID}'=='${found order ID}'    exit for loop
         ${index}=    Evaluate    ${index}+1
         Log to console    -----------------------------------------
@@ -2674,8 +2674,8 @@ Check errors on page [-1]
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    notice -
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    Fatal error:
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    Database error
-    #    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    myErrorHandler
-    #    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    reportErrorOrWarning
+    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    myErrorHandler
+    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    reportErrorOrWarning
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    Deprecated:
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    warning:
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    File not found
@@ -9032,7 +9032,6 @@ Search currency.AD
     [Arguments]    ${QAQ name}
     go to.AD    ${URL}/currencies.php
     Wait until page contains element    //button[@class='btn-input']
-    Check errors on page [-1]
     ${element visible?}=    Run keyword and return status    Page should contain    ${QAQ name}
     Run Keyword If    ${element visible?}    Click link    default=${QAQ name}
     Run Keyword If    "${element visible?}"=="False"    Click element    //button[@class='btn-input']
@@ -9056,11 +9055,11 @@ Add record.AD
     Wait until page contains element    //button[@class='btn-input']
     ${element visible?}=    Run keyword and return status    Page should contain    ${name}
     Run Keyword If    "${element visible?}"=="True"    Click link    default=${name}
-    Run Keyword If    "${element visible?}"=="False"    Click element    //button[@class='btn-input']
+    Run Keyword If    "${element visible?}"=="False"    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
     ${status1}    Run Keyword And return status    Page Should Contain element    //input[@id='field_CreditName']
     Run Keyword If    '${status1}'=='True'    Input text    //input[@id='field_CreditName']    ${name}
     ${status2}    Run Keyword And return status    Page Should Contain element    //input[@id='field_BankName']
-    Run Keyword If    '${status2}'=='True'    Input text    //input[@id='field_BankName']    ${name}
+    Run Keyword If    ${status2}    Input text    //input[@id='field_BankName']    ${name}
     ${status3}    Run Keyword And return status    Page Should Contain element    //input[@id='field_TransactName']
     Run Keyword If    '${status3}'=='True'    Input text    //input[@id='field_TransactName']    ${name}
     ${status4}    Run Keyword And return status    Page Should Contain element    //input[@id='field_UseVAT']
@@ -9078,7 +9077,7 @@ Add record.AD
     Wait Until Page Contains    successfully
     go to.AD    ${URL}${page URL}
     Wait until page contains element    //button[@class='btn-input']
-    Run keyword and ignore error    Click link    default=${name}
+    Click link    default=${name}
     ${Pageurl} =    Execute Javascript    return window.location.href
     ${ReviewID 1} =    Fetch From Right    ${Pageurl}    &edit=
     ${ID}=    Fetch From Left    ${ReviewID 1}    &page_var_sorting_column
@@ -9724,71 +9723,19 @@ Check brif.SD
     Run keyword and ignore error    Unselect Frame
 
 Check translation version.AD
-    [Arguments]    ${UI_id}    ${file version}
+    [Arguments]    ${UILanguageID}    ${file version}
     Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-    Switch language.AD    ${UI_id}
+    Switch language.AD    ${UILanguageID}
     go to.AD    ${URL}/main-menu.php
     Page should contain    Ласкаво просимо, ${ManagerUsername}! (v.${file version})
     Page should contain    (v.${file version})
-    ${text}    Get Selected List Value     user_lang_id
-    ${text}    Get Selected List Label     user_lang_id
+    set global variable    ${UILanguageID}
+    set global variable    ${file version}
+    Check UI language box    ${UILanguageID}    ${file version}
+    ${text}    Get Selected List Value    user_lang_id
+    ${text}    Get Selected List Label    user_lang_id
     Log to console    UI language list: "${text}"
-    List Selection Should Be    user_lang_id    ${UI_id}
-    Page should contain    Не вибрано
-    Page should contain    Арабська (Єгипет)
-    Page should contain    Арабська (Саудівська Аравія)
-    Page should contain    Арабська (ОАЕ)
-    Page should contain    Боснійська
-    Page should contain    Болгарська
-    Page should contain    Хорватська
-    Page should contain    Чеська
-    Page should contain    Да́нська
-    Page should contain    Німецька
-    Page should contain    Німецька (Swiss)
-    Page should contain    Голландська
-    Page should contain    Англійська (Австралія)
-    Page should contain    Англійська (Великобританія)
-    Page should contain    Англійська (США)
-    Page should contain    Англійська (2й варіант)
-    Page should contain    Англійська (Retail surveys)
-    Page should contain    Англійська (опитування)
-    Page should contain    Іспанська (Catalan)
-    Page should contain    Іспанська (Іспанія)
-    Page should contain    Іспанська Південна Америка
-    Page should contain    Естонська
-    Page should contain    Голландська (Фламандська)
-    Page should contain    Французька
-    Page should contain    Французька (Бельгія)
-    Page should contain    Угорська
-    Page should contain    Японська
-    Page should contain    Іврит
-    Page should contain    Іврит (відгуки)
-    Page should contain    Іврит (опитування)
-    Page should contain    Іврит (evaluations)
-    Page should contain    Італійська
-    Page should contain    Литовська
-    Page should contain    Македонська
-    Page should contain    Польська
-    Page should contain    Португальська
-    Page should contain    Португальська (Португалія)
-    Page should contain    Румунська
-    Page should contain    Сербська
-    Page should contain    Словацька
-    Page should contain    Словенська
-    Page should contain    Тайська мова
-    Page should contain    Турецька
-    Page should contain    Російська
-    Page should contain    Російська v2
-    Page should contain    Українська
-    Page should contain    Китайська
-    Page should contain    Китайська (Mandarin)
-    Page should contain    Грузинська
-    Page should contain    Норвезька
-    Page should contain    Лати́ська
-    Page should contain    В'єтнамська
-    Page should contain    Грецька мова
-    Page should contain    Finnish
-    Log to console    Status: Done. System upadated up to "v.${file version}" version
+    List Selection Should Be    user_lang_id    ${UILanguageID}
 
 Shopper comments visible.AD
     Element text should be    //td[1]/fieldset[1]/span[@class='critInfoItemTitle'][16]    Shopper comments
@@ -11553,7 +11500,7 @@ Check footer on all pages.AD
     # Reports > Surveys
     Check footer info.AD    ${URL}/report-survey-breakdown.php    YES    YES
     Check footer info.AD    ${URL}/export-crits-3.php    YES    YES    # -1
-    Run Keyword If    ${preprod?}    ${URL}/report-surveyors-status.php    YES    YES    # too slow on testing
+    Run Keyword If    ${preprod?}    Check footer info.AD    ${URL}/report-surveyors-status.php    YES    YES    # too slow on testing
     Check footer info.AD    ${URL}/export-crits2.php    YES    YES    # -1
     # Reports > General
     Check footer info.AD    ${URL}/reports-tabs.php    YES    YES
@@ -13110,15 +13057,15 @@ Manage passed certificates.AD
         ${expected name?}    Run keyword and return status    Should be equal    ${exp name}    ${element}
         Return from keyword if    "${element}"=="${empty}"
     END
-    log to console    Removing the access for "${RobotTestShopper 02}"...
-    Click element    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[3]/select/option
+    Run keyword if    '${element}'=='${exp name}'    log to console    Removing the access for "${RobotTestShopper 02}"...
+    Run keyword if    '${element}'=='${exp name}'    Click element    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[3]/select/option
     Check errors on page [-1]
     #Click element    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[1]
-    Scroll element into view    //*[contains(text(), '${RobotTestShopper 02}')]
-    select from list by label    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[3]/select    ${exp name}
+    Run keyword if    '${element}'=='${exp name}'    Scroll element into view    //*[contains(text(), '${RobotTestShopper 02}')]
+    Run keyword if    '${element}'=='${exp name}'    select from list by label    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[3]/select    ${exp name}
     sleep    1
-    Click element    //table[@id='side_menu']/tbody/tr/td[@class='middle-right']/center/form/table/tbody/tr/td[2]/input[1]
-    Click Save/Add/Delete/Cancel button.AD
+    Run keyword if    '${element}'=='${exp name}'    Click element    //table[@id='side_menu']/tbody/tr/td[@class='middle-right']/center/form/table/tbody/tr/td[2]/input[1]
+    Run keyword if    '${element}'=='${exp name}'    Click Save/Add/Delete/Cancel button.AD
     ${actual value}    Get text    //*[@id="side_menu"]/tbody/tr/td[3]/center/form/table/tbody/tr/td[1]/select
     Should contain    ${actual value}    ${exp name}
     Log to console    Access for "${RobotTestShopper 02}" has been removed (+)
@@ -14457,3 +14404,140 @@ Enter existing login and password 2.AD
     Input Text    ${id=login_password}    ${password}
     Click Element    ${id=submit_button}
     Check errors on page [-1]
+
+Check UI language box
+    [Arguments]    ${UI_id}    ${file version}
+    Page should contain    Не вибрано
+    Page should contain    Арабська (Єгипет)
+    Page should contain    Арабська (Саудівська Аравія)
+    Page should contain    Арабська (ОАЕ)
+    Page should contain    Боснійська
+    Page should contain    Болгарська
+    Page should contain    Хорватська
+    Page should contain    Чеська
+    Page should contain    Да́нська
+    Page should contain    Німецька
+    Page should contain    Німецька (Swiss)
+    Page should contain    Голландська
+    Page should contain    Англійська (Австралія)
+    Page should contain    Англійська (Великобританія)
+    Page should contain    Англійська (США)
+    Page should contain    Англійська (2й варіант)
+    Page should contain    Англійська (Retail surveys)
+    Page should contain    Англійська (опитування)
+    Page should contain    Іспанська (Catalan)
+    Page should contain    Іспанська (Іспанія)
+    Page should contain    Іспанська Південна Америка
+    Page should contain    Естонська
+    Page should contain    Голландська (Фламандська)
+    Page should contain    Французька
+    Page should contain    Французька (Бельгія)
+    Page should contain    Угорська
+    Page should contain    Японська
+    Page should contain    Іврит
+    Page should contain    Іврит (відгуки)
+    Page should contain    Іврит (опитування)
+    Page should contain    Іврит (evaluations)
+    Page should contain    Італійська
+    Page should contain    Литовська
+    Page should contain    Македонська
+    Page should contain    Польська
+    Page should contain    Португальська
+    Page should contain    Португальська (Португалія)
+    Page should contain    Румунська
+    Page should contain    Сербська
+    Page should contain    Словацька
+    Page should contain    Словенська
+    Page should contain    Тайська мова
+    Page should contain    Турецька
+    Page should contain    Російська
+    Page should contain    Російська v2
+    Page should contain    Українська
+    Page should contain    Китайська
+    Page should contain    Китайська (Mandarin)
+    Page should contain    Грузинська
+    Page should contain    Норвезька
+    Page should contain    Лати́ська
+    Page should contain    В'єтнамська
+    Page should contain    Грецька мова
+    Page should contain    Фінська
+    Log to console    Status: Done. System upadated up to "v.${file version}" version
+
+Add bank.AD
+    [Arguments]    ${name}    ${page URL}    ${delete record?}
+    go to.AD    ${URL}${page URL}
+    Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
+    Wait until page contains    Add bulk records
+    Wait until page contains element    //table[@id='page_division_wrapping_table']/tbody/tr/td[1]/input[1]
+    Wait until page contains element    //table[@id='page_division_wrapping_table']/tbody/tr/td[1]/input[2]
+    Wait until page contains element    //input[@class='btn-input'][1]
+    Wait until page contains element    //input[@class='btn-input'][2]
+    Wait until page contains element    //input[@class='btn-input'][3]
+    Wait until page contains element    xpath=(//a[contains(text(),'Back to main menu')])
+    FOR    ${i}    IN RANGE    2
+        ${element visible?}=    Run keyword and return status    Page should contain    ${name}
+        Run Keyword If    "${element visible?}"=="True"    Get ID    id="table_rows"    ${name}    1    2
+        Run Keyword If    "${element visible?}"=="True"    Click link    default=${found ID}
+        Run Keyword If    "${element visible?}"=="False"    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
+        Wait until page contains element    //input[@id='field_BankCode']
+        Input text    //input[@id='field_BankCode']    RFBC-1
+        Input text    //input[@id='field_BankName']    ${name}
+        Input text    //input[@id='field_Description']    ${name} description
+        Wait Until Page Contains    Branch Update
+        Run Keyword If    ${i}==1    Page should contain element    //input[@id='delete']
+        Validate value (value)    //input[@id='field_BankCode']    RFBC-1
+        Validate value (value)    //input[@id='field_BankName']    ${name}
+        Validate value (value)    //input[@id='field_Description']    ${name} description
+        Click Save/Add/Delete/Cancel button.AD
+        Wait Until Page Contains    successfully
+    END
+    Log to console    "${name}" bank has been added/updated (BCODE="${found ID}")
+    Check errors on page [-1]
+    Click link    default=${found ID}
+    ${Pageurl} =    Execute Javascript    return window.location.href
+    ${ReviewID 1} =    Fetch From Right    ${Pageurl}    &edit=
+    ${ID}=    Fetch From Left    ${ReviewID 1}    &BankTypeID
+    go to.AD    ${URL}/settings-branch-names.php?BankTypeID=${ID}
+    Wait until page contains element    xpath=(//a[contains(text(),'Back to list of banks')])
+    Wait until page contains element    xpath=(//a[contains(text(),'Back to main menu')])
+    Wait until page contains    Add bulk records
+    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
+    Wait until page contains element    //input[@id='field_BranchCode']
+    Input text    //input[@id='field_BranchCode']    RFBrCode-1
+    Input text    //input[@id='field_BranchName']    RF Branch - 1
+    Input text    //input[@id='field_Description']    RF Branch - 1 description
+    Validate value (value)    //input[@id='field_BranchCode']    RFBrCode-1
+    Validate value (value)    //input[@id='field_BranchName']    RF Branch - 1
+    Validate value (value)    //input[@id='field_Description']    RF Branch - 1 description
+    Click Save/Add/Delete/Cancel button.AD
+    go to.AD    ${URL}/settings-branch-names.php?BankTypeID=${ID}
+    Wait until page contains    RFBrCode-1
+    Click link    default=Add bulk records
+    sleep    1
+    Input text    //div[@id='quickcreateip']/form[@id='quick_add']/textarea    RFBrCode-2,RF Branch - 2,RF Branch - 2 description (bulk)
+    Click element    //input[@id='quick_save']
+    Wait until page contains    Adding RFBrCode-2
+    Check errors on page [-1]
+    #
+    Click link    default=Add bulk records
+    sleep    1
+    Input text    //div[@id='quickcreateip']/form[@id='quick_add']/textarea    RFBrCode-2,RF Branch Bulk - 3,RF Branch - 2 description (added in bulk)
+    Click element    //input[@id='quick_save']
+    Wait until page contains    Updating RFBrCode-2
+    Check errors on page [-1]
+    Return from keyword if    ${delete record?}==0
+    go to.AD    ${URL}/settings-bank-names.php?&edit=${ID}
+    Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
+    Click link    default=${found ID}
+    Wait until page contains element    //input[@id='delete']
+    Click element    //input[@id='delete']
+    Wait until page contains element    //input[@id='sure_delete']
+    Click element    //input[@id='sure_delete']
+    Wait until page contains    Bank RFBC-1 deleted succssfully
+    Log to console    Bank RFBC-1 deleted successfully
+    go to.AD    ${URL}/settings-bank-names.php
+    Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
+    Page should not contain    RFBC-1
+    Page should not contain    ${name}
+    Page should not contain    ${name} description
+    # TO DO - Case 1: remove branch one by one; Case 2: assign Bank BR to a shopper; Case 3: assigned Bank+BR can not be deleted

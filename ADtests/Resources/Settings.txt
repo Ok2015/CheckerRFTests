@@ -23,7 +23,6 @@ ${Short auto branch name 01}    RF Branch 01 [Short name]
 ${Short auto branch name 02}    RF Branch 02 (short name)
 ${Full auto branch name 01}    RF Branch 01 [Full name]
 ${Full auto branch name 02}    RF Branch 02 (full name)
-${UILangauageID}    4
 ${test order description 01}    order 01 that will be accepted by shopper (for Robot test)
 ${test order description 02}    order 02 that will be rejected by a shopper (for Robot test)
 ${test order description 03}    order 03 that can not be submitted by a shopper due to date/time range (for Robot test)
@@ -194,3 +193,4 @@ ${MY MTS}         +380951232658
 ${FTPServer}      ftp.drivehq.com
 ${FTPUser}        vishav-ftp
 ${FTPPass}        ftp@2020
+${UILanguageID}    4

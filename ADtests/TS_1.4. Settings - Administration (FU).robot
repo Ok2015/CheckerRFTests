@@ -91,11 +91,31 @@ Edit bank names > add RF bank
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
         SET UP
-        ${name}    set variable    Auto Bank [RF]
+        ${name}    set variable    RF BANK - to be deleted
         Set global variable    ${name}
         Log to console    Let`s add "${name}"
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Add record.AD    ${name}    RF Auto Bank - Mod date: ${DD.MM.YY}    /settings-bank-names.php
+        Run Keyword If    ${preprod?}    Add record.AD    ${name}    ${name} description    /settings-bank-names.php
+        Run Keyword If    ${testing?}    Add bank.AD    ${name}    /settings-bank-names.php    1
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
+Edit bank names > add RF bank and branch
+    [Setup]
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    #Set Selenium speed    0.5
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        ${name}    set variable    RF BANK 1
+        Set global variable    ${name}
+        Log to console    Let`s add "${name}"
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Run Keyword If    ${preprod?}    Add record.AD    ${name}    ${name} description    /settings-bank-names.php
+        Run Keyword If    ${testing?}    Add bank.AD    ${name}    /settings-bank-names.php    0
     END
     Close Browser
     [Teardown]    Close Browser.AD

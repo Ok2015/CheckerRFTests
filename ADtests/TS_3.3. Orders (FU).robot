@@ -1172,7 +1172,9 @@ JOB: Autoapproved applications is submitted and autoapproved successfully
         Order page - check order status. AD    Ordered, awaiting assignation
         Login as a Shopper
         Open Job Board and apply order.SD    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
-        #Page should not contain    ${test order description}
+        Page should not contain    ${test order description}
+        Page should contain    Hello, welcome to JOB BOARD
+        Page should contain    (this is a message when the job board is empty)
         log to console    ---------------------------------
         JOB PAGE: get table titles and IDs
         Search job by order description.SD    ${test order description}
