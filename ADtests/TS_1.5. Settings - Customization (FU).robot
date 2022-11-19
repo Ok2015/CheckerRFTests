@@ -78,7 +78,7 @@ Custom fields > Add custom field and edit it (1 item)
     [Teardown]    Close Browser.AD
 
 Custom fields > Add custom field (Shoppers)
-    [Tags]    Critical
+    [Tags]    NotCritical
     [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}

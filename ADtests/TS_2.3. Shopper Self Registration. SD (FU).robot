@@ -161,7 +161,7 @@ Shopper is registered and autoapproved. FU
         Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[57]    CSSFileName
     #
         Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[58]    Bank Name
-        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[59]    BankBranchName
+        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[59]    Bank Branch Name
         Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[60]    Phone for VOIP calls
         Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[61]    Daily regions limit
         Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[62]    Daily cities limit

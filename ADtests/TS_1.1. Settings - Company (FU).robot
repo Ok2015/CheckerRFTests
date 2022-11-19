@@ -86,29 +86,6 @@ Display > check "Date format" option on registration page (DD.MM.YY and MM.DD.YY
     Close Browser
     [Teardown]    Close Browser.AD
 
-Display > valid image(s) for sys design can be added to a system
-    [Tags]    NotCritical
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Add sys image.AD    ${CURDIR}\\Resources\\Extra files\\Images\\RF good.png
-        Add sys image.AD    ${CURDIR}\\Resources\\Extra files\\Images\\RF dislike.png
-        Add sys image.AD    ${CURDIR}\\Resources\\Extra files\\Images\\RF [iOS]AppStore_Icon.png
-        Add sys image.AD    ${CURDIR}\\Resources\\Extra files\\Images\\RF [Android]_PlayStore_Icon.png
-        Add sys image.AD    ${CURDIR}\\Resources\\Extra files\\translations.xls
-        go to.AD    ${URL}/company-css-images.php
-        Log to console    Open ${URL}/company-css-images.php
-        reload page
-        Page should contain    RF [iOS]AppStore_Icon.png
-        Page should contain    RF [Android]_PlayStore_Icon.png
-    END
-    Close Browser
-    [Teardown]    Close Browser.AD
-
 Display > check "Fraction digits" on refund report page
     [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
@@ -137,6 +114,29 @@ Display > uploaded "CSS files" are saved and applied to system design
         Select CSS.AD
     #    Check CSS.AD
     #    Check CSS.SD
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
+Display > valid image(s) for sys design can be added to a system
+    [Tags]    NotCritical
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        Add sys image.AD    ${CURDIR}\\Resources\\Extra files\\Images\\RF good.png
+        Add sys image.AD    ${CURDIR}\\Resources\\Extra files\\Images\\RF dislike.png
+        Add sys image.AD    ${CURDIR}\\Resources\\Extra files\\Images\\RF [iOS]AppStore_Icon.png
+        Add sys image.AD    ${CURDIR}\\Resources\\Extra files\\Images\\RF [Android]_PlayStore_Icon.png
+        Add sys image.AD    ${CURDIR}\\Resources\\Extra files\\translations.xls
+        go to.AD    ${URL}/company-css-images.php
+        Log to console    Open ${URL}/company-css-images.php
+        reload page
+        Page should contain    RF [iOS]AppStore_Icon.png
+        Page should contain    RF [Android]_PlayStore_Icon.png
     END
     Close Browser
     [Teardown]    Close Browser.AD
@@ -431,6 +431,7 @@ Company e-mail settings > send "Company email settings" (Amazon only) and send e
 General information > enter and save "General information"
     [Tags]    Editor    Critical
     [Setup]
+    [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window

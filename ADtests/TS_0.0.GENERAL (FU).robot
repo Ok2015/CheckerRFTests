@@ -52,7 +52,6 @@ Check System Availability
     log TO CONSOLE    ${\n}Total test URL(s) number = "${loop length}"
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
-        #    SET UP
         go to.AD    ${URL}/login.php
         Page should contain element    //input[@id='do_login']
         Log to console    ${URL} admin login form is available (+)

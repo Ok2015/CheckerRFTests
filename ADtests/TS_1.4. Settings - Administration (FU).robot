@@ -13,6 +13,7 @@ Resource          ${CURDIR}/Resources/Settings.txt
 
 *** Test Cases ***
 Roles > create new role and edit access
+    [Tags]    Administration
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -26,6 +27,7 @@ Roles > create new role and edit access
     [Teardown]    Close Browser.AD
 
 Types of QA stages > add QA stage
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -47,6 +49,7 @@ Types of QA stages > add QA stage
     [Teardown]    Close Browser.AD
 
 Currencies > add RF currency
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -65,6 +68,7 @@ Currencies > add RF currency
     [Teardown]    Close Browser.AD
 
 Edit credit card types > add RF credit card type
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -77,12 +81,13 @@ Edit credit card types > add RF credit card type
         Set global variable    ${name}
         Log to console    Let`s add "${name}"
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Add record.AD    ${name}    Credit card for RF tests - Mod date: ${DD.MM.YY}    /settings-creditcard-types.php
+        Add record.AD    ${name}    Credit card for RF tests    /settings-creditcard-types.php
     END
     Close Browser
     [Teardown]    Close Browser.AD
 
-Edit bank names > add RF bank
+Edit bank names > add RF bank and delete it (Manual)
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -91,17 +96,62 @@ Edit bank names > add RF bank
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
         SET UP
-        ${name}    set variable    RF BANK - to be deleted
-        Set global variable    ${name}
-        Log to console    Let`s add "${name}"
+        ${bank_name}    set variable    RF BANK (M)
+        ${bank_code}    set variable    RFBC-02
+        Set global variable    ${bank_name}
+        Set global variable    ${bank_code}
+        ${bank_br_name}    set variable    RF Branch Name
+        ${bank_br_code}    set variable    RFBrCode
+        Set global variable    ${bank_br_name}
+        Set global variable    ${bank_br_code}
+        Log to console    Let`s create "${bank_name}" bank
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Run Keyword If    ${preprod?}    Add record.AD    ${name}    ${name} description    /settings-bank-names.php
-        Run Keyword If    ${testing?}    Add bank.AD    ${name}    /settings-bank-names.php    1
+        Run Keyword If    ${preprod?}    Exit forloop
+        Add/update bank.AD    ${bank_name}    ${bank_code}    /settings-bank-names.php
+        Search profile.AD    ${RobotTestShopper 02}
+        Assign bank.AD    ${RobotTestShopper 02}    ${bank_name}-${bank_code}    ${bank_br_name}-01-${bank_br_code}-01
+        Delete bank.AD    ${bank_name}    ${bank_code}    Cannot delete:
+        Assign bank.AD    ${RobotTestShopper 02}    (SelectBank)    (SelectBank)
+    # CASE 2 [SHOPPER SIDE]
+        Enter login and password.SD    ${RobotTestShopper 02}    ${RobotTestShopper 02}
+        go to.AD    ${URL}/checkers.php?edit=y&auth_mode=2
+        Wait until page contains element    //select[@id='BankLink']
+        Select dropdown.AD    //select[@id='BankLink']    xpath=//option[contains(.,'${bank_name}-${bank_code}')]
+        Validate value (value)    //select[@id='BankLink']    ${Bank ID}
+        Select dropdown.AD    //select[@id='BankBranchLink']    xpath=//option[contains(.,'${bank_br_name}-01-${bank_br_code}-01')]
+        Validate value (value)    //select[@id='BankBranchLink']    ${Bank Branch ID}
+        Click button    //*[@id="save"]
+        go to.AD    ${URL}/checkers.php?edit=y&auth_mode=2
+        Validate value (value)    //select[@id='BankLink']    ${Bank ID}
+        Validate value (value)    //select[@id='BankBranchLink']    ${Bank Branch ID}
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        go to.AD    ${URL}/settings-branch-names.php?BankTypeID=${found ID}
+        Click link    default=${bank_br_code}-01
+        Wait until page contains element    //input[@id='delete']
+        Click element    //input[@id='delete']
+        Wait until page contains    Cannot delete:
+        Wait until page contains    The characteristic is associated with the following shoppers:
+        Wait until page contains    ${RobotTestShopper 02}
+        Delete bank.AD    ${bank_name}    ${bank_code}    Cannot delete:
+        Log to console    Status: OK - Can not delete assigned bank + bank branch (+)
+    #
+        Enter login and password.SD    ${RobotTestShopper 02}    ${RobotTestShopper 02}
+        go to.AD    ${URL}/checkers.php?edit=y&auth_mode=2
+        Wait until page contains element    //select[@id='BankLink']
+        Select dropdown.AD    //select[@id='BankLink']    xpath=//option[contains(.,'(SelectBank)')]
+        Validate value (value)    //select[@id='BankLink']    ${empty}
+        Select dropdown.AD    //select[@id='BankBranchLink']    xpath=//option[contains(.,'(SelectBank)')]
+        Validate value (value)    //select[@id='BankBranchLink']    ${empty}
+        Click button    //*[@id="save"]
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Delete bank.AD    ${bank_name}    ${bank_code}    deleted succssfully
+        Log to console    Status: OK - Deleted not assigned bank + bank branch (+)
     END
     Close Browser
     [Teardown]    Close Browser.AD
 
-Edit bank names > add RF bank and branch
+Edit bank names > add RF bank and branch, assign, delete (in a Bulk)
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -110,17 +160,19 @@ Edit bank names > add RF bank and branch
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
         SET UP
-        ${name}    set variable    RF BANK 1
-        Set global variable    ${name}
-        Log to console    Let`s add "${name}"
+        ${bank_name}    set variable    RF BANK (Bulk)
+        ${bank_code}    set variable    RFBC-03
+        Log to console    Let`s add "${bank_name}" bank via bulk box
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Run Keyword If    ${preprod?}    Add record.AD    ${name}    ${name} description    /settings-bank-names.php
-        Run Keyword If    ${testing?}    Add bank.AD    ${name}    /settings-bank-names.php    0
+        Run Keyword If    ${preprod?}    Exit forloop
+        Add bank+branches (in a bulk).AD    ${bank_name}    ${bank_code}
+        Delete bank.AD    ${bank_name}    ${bank_code}    deleted succssfully
     END
     Close Browser
     [Teardown]    Close Browser.AD
 
 Edit cash flow types > add cash flow types
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -133,12 +185,13 @@ Edit cash flow types > add cash flow types
         Set global variable    ${name}
         Log to console    Let`s add "${name}"
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Add record.AD    ${name}    ${name} - Mod date: ${DD.MM.YY}    /cash-flow-types.php
+        Add record.AD    ${name}    ${name}    /cash-flow-types.php
     END
     Close Browser
     [Teardown]    Close Browser.AD
 
 Client cash flow types > add client cash flow types
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -157,6 +210,7 @@ Client cash flow types > add client cash flow types
     [Teardown]    Close Browser.AD
 
 Edit credit cards > add credit card
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -168,12 +222,20 @@ Edit credit cards > add credit card
         ${name}    set variable    00112233445566
         Set global variable    ${name}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Add record.AD    ${name}    Credit Card for Robot tests - Mod date: ${DD.MM.YY}    /settings-creditcards.php
+        ${bank_name}    set variable    RF BANK
+        ${bank_code}    set variable    RFBC-01
+        Log to console    Let`s add "${bank_name}" bank via bulk box
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Run Keyword If    ${preprod?}    Add record.AD    ${bank_name}    ${bank_name} description    /settings-bank-names.php
+        Run Keyword If    ${testing?}    Add/update bank.AD    ${bank_name}    ${bank_code}    /settings-bank-names.php
+    #
+        Add record.AD    ${name}    Credit Card for RF    /settings-creditcards.php
     END
     Close Browser
     [Teardown]    Close Browser.AD
 
 Special days definitions > add special day
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -192,6 +254,7 @@ Special days definitions > add special day
     [Teardown]    Close Browser.AD
 
 Holidays definitions > add Holiday
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -210,6 +273,7 @@ Holidays definitions > add Holiday
     [Teardown]    Close Browser.AD
 
 Alternative languages > add alt language
+    [Tags]    Administration
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}

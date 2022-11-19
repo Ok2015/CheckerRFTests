@@ -495,78 +495,6 @@ FTP Alert - file HTML
     Close Browser
     [Teardown]    Close Browser.AD
 
-Alert. Do not send alert on days
-    [Tags]    Editor    Alert
-    [Timeout]
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        ${AlertName}=    Set variable    RF_ALERT REVIEW - $[203]$ - DO NOT SEND ON DAYS
-        Set global variable    ${AlertName}
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
-        Add/Edit alert.AD    Approved    ${AlertName}    1=1    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    None    None    123    No    None
-        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}
-        Click link    default=${AlertName}
-        Wait until page contains element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
-        Click element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
-        Click element    //div[6]/div/ul/li[2]/a/span[2]
-        ${Sunday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-0']
-        ${Monday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-1']
-        ${Tuesday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-2']
-        ${Wednesday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-3']
-        ${Thursday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-4']
-        ${Friday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-5']
-        ${Saturday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-6']
-        Click element    ${${Tday}}
-        Click Save/Add/Delete/Cancel button.AD
-    #
-        go to.AD    ${URL}/operation-panel.php
-        Log to console    Searching a RF "Finished, awaiting approval" review
-        Wait until page contains element    //input[@id='end_date']
-        #    Input text    //input[@id='end_date']    ${date minus 30 days}
-        Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
-        Validate value (text)    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    AUTO 01 [RF CLIENT]
-        Click element    //input[@id='show']
-        Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
-        ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
-        Set global variable    ${Finished review ID}
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${Finished review ID}
-    #
-    #
-        go to.AD    ${URL}/crit-handling-details.php?CritID=${Finished review ID}
-        Log to console    Clicking button - Send Alert if needed
-        Click element    //input[@id='checkAndSendAlerts']
-        Wait until page contains    Alerts sent
-    #
-        go to.AD    ${URL}/report-failed-email.php
-        Log to console    Checking failed email reports
-        ${text visible?}    Run keyword and return status    Page should contain    Email subject: RF_ALERT REVIEW - ${Finished review ID} - DO NOT SEND ON DAYS
-        Run keyword if    ${text visible?}    Get ID    id="table_rows"    Email subject: RF_ALERT REVIEW - ${Finished review ID} - DO NOT SEND ON DAYS    2    8
-        sleep    1
-        ${Time of creation}    Get text    //*[@id="table_rows"]/tbody/tr[${final index}]/td[4]
-        ${Scheduled to be sent at}    Get text    //*[@id="table_rows"]/tbody/tr[${final index}]/td[5]
-        ${date plus 1 day}    Add Time To Date    ${Ttime}    1 day    result_format=%d.%m.%Y
-        Should contain    ${Time of creation}    ${DD.MM.YY}
-        Should contain    ${Scheduled to be sent at}    ${date plus 1 day} 00:00
-        ${From}    Get text    //*[@id="table_rows"]/tbody/tr[${final index}]/td[6]
-        ${Address}    Get text    //*[@id="table_rows"]/tbody/tr[${final index}]/td[7]
-        Should contain    ${From}    ${empty}
-        Should contain    ${Address}    ${RFShopperEmail}
-        Run keyword if    ${text visible?}    Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[1]/input
-        Run keyword if    ${text visible?}    Click element    //*[@id="side_menu"]/tbody/tr/td/form[1]/input[3]
-        Run keyword if    ${text visible?}    Wait until page contains    Deleted: 1
-        Log to console    Expected schedule to be sent = TODAY DATE + 1 day = ${date plus 1 day}; From=${From}; Address=${Address}
-        Log to console    Scheduled to be sent at = "${Scheduled to be sent at}" (+) Record is deleted
-    #
-        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
-    END
-    Close Browser
-    [Teardown]    Close Browser.AD
-
 Alert. Send alert to special email with PDF +no attachment (positive + negative)
     [Tags]    Editor    Alert
     [Timeout]
@@ -729,58 +657,6 @@ Alert. Send alert email to role
     Close Browser
     [Teardown]    Close Browser.AD
 
-Alert. Send alert email to client users
-    [Tags]    Editor    Alert
-    [Setup]
-    [Timeout]
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        ${AlertName}=    Set variable    RF_ALERT TO CLIENT USER - REVIEW - $[203]$
-        Set global variable    ${AlertName}
-    #
-        Log to console    Case 2: send alert for "2" client`s users (1ne user with branch access and 2nd without access - both will receive system alert email)
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
-        Search user profile.AD    RF user 03 [SP USER]    Special permissions
-        Edit branch access    Add all
-        Search user profile.AD    RF user 02 [SP USER]    Special permissions
-        Edit branch access    Remove all
-    #
-        Get section ID. AD    Section 01 [RF]
-        Get BR property ID. AD    Manager
-        Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    None    None
-        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
-        Click link    default=${AlertName}
-        Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 02 [SP USER] (RF user 02 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
-        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
-        Click link    default=${AlertName}
-        Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 03 [SP USER] (RF user 03 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
-        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
-        Get Review handling details page.AD    ${ReviewID}
-        Simulate alert.AD
-        Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
-    #
-        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user
-        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper
-    #
-        Log to console    Case 2: send alert for "2" client`s users (user with branch access will receive alert and users without branch access - will receive system notice with full review report link)
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    None    true
-        Simulate alert.AD
-        Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
-        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user    # system notice because no bran access
-        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper    # full report
-        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Manager    # system notice because no bran access
-    #
-        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
-    END
-    Close Browser
-    [Teardown]    Close Browser.AD
-
 Alert. Send concentrated alert
     [Tags]    Editor    Alert
     [Setup]
@@ -839,6 +715,130 @@ Alert. Send concentrated alert
         Get Review handling details page.AD    ${2 Finished review ID}
         Check default codes table    ${2 Finished review ID}
         #    #
+        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
+Alert. Send alert email to client users
+    [Tags]    Editor    Alert
+    [Setup]
+    [Timeout]
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        ${AlertName}=    Set variable    RF_ALERT TO CLIENT USER - REVIEW - $[203]$
+        Set global variable    ${AlertName}
+    #
+        Log to console    Case 2: send alert for "2" client`s users (1ne user with branch access and 2nd without access - both will receive system alert email)
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Search client using search bar.AD
+        Search user profile.AD    RF user 03 [SP USER]    Special permissions
+        Edit branch access    Add all
+        Search user profile.AD    RF user 02 [SP USER]    Special permissions
+        Edit branch access    Remove all
+    #
+        Get section ID. AD    Section 01 [RF]
+        Get BR property ID. AD    Manager
+        Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    None    None
+        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
+        Click link    default=${AlertName}
+        Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 02 [SP USER] (RF user 02 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
+        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
+        Click link    default=${AlertName}
+        Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 03 [SP USER] (RF user 03 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
+        Get Review handling details page.AD    ${ReviewID}
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
+    #
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper
+    #
+        Log to console    Case 2: send alert for "2" client`s users (user with branch access will receive alert and users without branch access - will receive system notice with full review report link)
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    None    true
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user    # system notice because no bran access
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper    # full report
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Manager    # system notice because no bran access
+    #
+        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
+Alert. Do not send alert on days
+    [Tags]    Editor    Alert
+    [Timeout]
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        ${AlertName}=    Set variable    RF_ALERT REVIEW - $[203]$ - DO NOT SEND ON DAYS
+        Set global variable    ${AlertName}
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Search client using search bar.AD
+        Add/Edit alert.AD    Approved    ${AlertName}    1=1    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    None    None    123    No    None
+        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}
+        Click link    default=${AlertName}
+        Wait until page contains element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
+        Click element    //*[@id="idNoAlertsWeekdaysEditbox"]/table/tbody/tr/td/span/button
+        Click element    //div[6]/div/ul/li[2]/a/span[2]
+        ${Sunday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-0']
+        ${Monday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-1']
+        ${Tuesday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-2']
+        ${Wednesday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-3']
+        ${Thursday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-4']
+        ${Friday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-5']
+        ${Saturday}    Set variable    //input[@id='ui-multiselect-field_NoAlertsWeekdays-option-6']
+        Click element    ${${Tday}}
+        Click Save/Add/Delete/Cancel button.AD
+    #
+        go to.AD    ${URL}/operation-panel.php
+        Log to console    Searching a RF "Finished, awaiting approval" review
+        Wait until page contains element    //input[@id='end_date']
+        #    Input text    //input[@id='end_date']    ${date minus 30 days}
+        Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
+        Validate value (text)    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    AUTO 01 [RF CLIENT]
+        Click element    //input[@id='show']
+        Wait until page contains element    //*[@id="table_rows"]/tbody/tr[1]/td[3]/a[1]
+        ${Finished review ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[2]/a[1]
+        Set global variable    ${Finished review ID}
+        go to.AD    ${URL}/crit-handling-details.php?CritID=${Finished review ID}
+    #
+    #
+        go to.AD    ${URL}/crit-handling-details.php?CritID=${Finished review ID}
+        Log to console    Clicking button - Send Alert if needed
+        Click element    //input[@id='checkAndSendAlerts']
+        Wait until page contains    Alerts sent
+    #
+        go to.AD    ${URL}/report-failed-email.php
+        Log to console    Checking failed email reports
+        ${text visible?}    Run keyword and return status    Page should contain    Email subject: RF_ALERT REVIEW - ${Finished review ID} - DO NOT SEND ON DAYS
+        Run keyword if    ${text visible?}    Get ID    id="table_rows"    Email subject: RF_ALERT REVIEW - ${Finished review ID} - DO NOT SEND ON DAYS    2    8
+        sleep    1
+        ${Time of creation}    Get text    //*[@id="table_rows"]/tbody/tr[${final index}]/td[4]
+        ${Scheduled to be sent at}    Get text    //*[@id="table_rows"]/tbody/tr[${final index}]/td[5]
+        ${date plus 1 day}    Add Time To Date    ${Ttime}    1 day    result_format=%d.%m.%Y
+        Should contain    ${Time of creation}    ${DD.MM.YY}
+        Should contain    ${Scheduled to be sent at}    ${date plus 1 day} 00:00
+        ${From}    Get text    //*[@id="table_rows"]/tbody/tr[${final index}]/td[6]
+        ${Address}    Get text    //*[@id="table_rows"]/tbody/tr[${final index}]/td[7]
+        Should contain    ${From}    ${empty}
+        Should contain    ${Address}    ${RFShopperEmail}
+        Run keyword if    ${text visible?}    Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[1]/input
+        Run keyword if    ${text visible?}    Click element    //*[@id="side_menu"]/tbody/tr/td/form[1]/input[3]
+        Run keyword if    ${text visible?}    Wait until page contains    Deleted: 1
+        Log to console    Expected schedule to be sent = TODAY DATE + 1 day = ${date plus 1 day}; From=${From}; Address=${Address}
+        Log to console    Scheduled to be sent at = "${Scheduled to be sent at}" (+) Record is deleted
+    #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END
     Close Browser

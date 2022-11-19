@@ -27,7 +27,7 @@ Operational settings > Set Operation settings
     [Teardown]    Close Browser.AD
 
 Operation settings > Edit text messages. FU
-    [Tags]    Editor    Critical
+    [Tags]    Editor    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -108,7 +108,7 @@ Shopper characteristics > create options and delete shopper property
     [Teardown]    Close Browser.AD
 
 Agreements > add agreement (Shoppers)
-    [Tags]    Editor    Critical
+    [Tags]    Editor    NotCritical
     [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -139,7 +139,7 @@ Agreements > add agreement (Shoppers)
     [Teardown]    Close Browser.AD
 
 Agreements > add all types of agreement (optional)
-    [Tags]    Editor    Critical
+    [Tags]    Editor    NotCritical
     [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -189,7 +189,7 @@ Agreements > add all types of agreement (optional)
     [Teardown]    Close Browser.AD
 
 Agreements > add agreement and delete it
-    [Tags]    Critical
+    [Tags]    NotCritical
     [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -215,6 +215,7 @@ Agreements > add agreement and delete it
     [Teardown]    Close Browser.AD
 
 Operation settings > Assessor display settings > Define default options for new assessors
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -224,6 +225,13 @@ Operation settings > Assessor display settings > Define default options for new 
         Log to console    CASE 1--------------------------
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Define default options for new assessors.AD    None
+        go to.AD    ${URL}/company_shopper_reg.php
+        Wait until page contains element    //*[@id="idAvoidDuplicatesFieldsEditbox"]/table/tbody/tr/td/span/button
+        Select dropdown.AD    //*[@id="idPostRegistrationCertificationEditbox"]/table/tbody/tr/td/span/button    //div[3]/ul/li[1]/label
+        Click element    //*[@id="idAvoidDuplicatesFieldsEditbox"]/table/tbody/tr/td/span/button
+        Click element    //body/div[2]/div/ul/li[2]/a/span[2]
+        Click Save/Add/Delete/Cancel button.AD
+    #
         Register random shopper.SD
         Enter login and password.SD    RF-${random string}    RF-${random string}
         Enable agreements.SD
@@ -274,6 +282,7 @@ Operation settings > Assessor display settings > Define default options for new 
     [Teardown]    Close Browser.AD
 
 Operation settings > Assessor display settings > Allow assessor to modify these fields about himself
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -281,7 +290,6 @@ Operation settings > Assessor display settings > Allow assessor to modify these 
         Set global variable    ${URL}
         SET UP
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Switch language.AD    ${UILangauageID}
         Allow assessor to modify these fields about himself.AD    None
         Search shopper by AD    ${RobotTestShopper 02}
         Set shoppers settings.AD    None
@@ -343,6 +351,7 @@ Operation settings > Assessor display settings > Allow assessor to modify these 
     [Teardown]    Close Browser.AD
 
 Operation settings > Assessor display settings > Show columns in the "Scorecard history" screen
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -350,7 +359,6 @@ Operation settings > Assessor display settings > Show columns in the "Scorecard 
         Set global variable    ${URL}
         SET UP
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Switch language.AD    ${UILangauageID}
         Show these columns in the "Scorecard history" screen.AD    None
         Login as a Shopper
         go to.AD    ${URL}/c_crit-history.php
@@ -395,6 +403,7 @@ Operation settings > Assessor display settings > Show columns in the "Scorecard 
     [Teardown]    Close Browser.AD
 
 Operation settings > Enable/Disable "Allow shopper self registration" hides a registration link on log in page. FU
+    [Tags]    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -417,7 +426,7 @@ Operation settings > Enable/Disable "Allow shopper self registration" hides a re
     [Teardown]    Close Browser.AD
 
 Quality assurance questions > add/delete questions and answers
-    [Tags]    Critical
+    [Tags]    Critical    NotCritical
     [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     #Set Selenium speed    0.5
@@ -475,31 +484,72 @@ Quality assurance questions > add/delete questions and answers
     [Teardown]    Close Browser.AD
 
 Shoppers automatic notifications settings > Add notification. FU
-    [Tags]    Editor
+    [Tags]    Editor    NotCritical
+    [Setup]
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
         SET UP
-        ${Message to shopper 1}    set variable    <p>Dear $[202]$: $[212]$</p><p>We remind you that you have the commitment to carry out a mystery shopper evaluation on the day: $[301]$</p> <p>to the establishment: $[200]$ </p> <p>located at the address: $[214]$</p> <p>$[242]<p>${RF REVN DT}</p>
-        ${Message to shopper 2}    set variable    <p>Dear $[202]$</p><p>You have <span style="color:#ff0000">%s orders </span>that are awaiting implementation</p><p><span style="color:#000000">Questionnaire name: <em>$[218]$</em></span></p> <p>$ [242]</p><p>${RF REVN DT}</p>
-        ${Message to shopper 3}    set variable    <p>Dear $[202]$</p> <p>You have <span style="color:#ff0000">%s orders </span>that are in-progress in your login.</p> <p><span style="color:#000000">Questionnaire name: <em>$[218]$</em><p>${RF REVN DT}</p>
+        ${test order description}    Set variable    RF Order: M029 [Check AUTO SHOPPER NOTIFICATION ${DD.MM.YY}]
+        Set global variable    ${test order description}
         ${Message title 1}    set variable    Reviews: assigned, awaiting acceptance [RF]
         ${Message title 2}    set variable    Reviews: accepted, awaiting implementation [RF]
         ${Message title 3}    set variable    Reviews: in progress [RF]
+        ${Message to shopper 1}    set variable    <p>Dear $[202]$ $[212]$,</p> <p>We remind you that You have %s ${Message title 1}</p> <p>Please check it out at your&nbsp;<a href="${URL}/c_login.php"><span style="color:#000000">Personal Panel</span></a></p> <p>${RF REVN DT}</p>
+        ${Message to shopper 2}    set variable    <p>Dear $[202]$ $[212]$,</p> <p>We remind you that You have %s ${Message title 2}</p> <p>Please check it out at your&nbsp;<a href="${URL}/c_login.php"><span style="color:#000000">Personal Panel</span></a></p> <p>${RF REVN DT}</p>
+        ${Message to shopper 3}    set variable    <p>Dear $[202]$ $[212]$,</p> <p>We remind you that You have %s ${Message title 3}</p> <p>Please check it out at your&nbsp;<a href="${URL}/c_login.php"><span style="color:#000000">Personal Panel</span></a></p> <p>${RF REVN DT}</p>
+        Set global variable    ${Message title 1}
+        Set global variable    ${Message title 2}
+        Set global variable    ${Message title 3}
+    #
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Add shopper notification.AD    ${Message title 1}    ${Message to shopper 1}    /company-checker-automatic-notifications.php
         Add shopper notification.AD    ${Message title 2}    ${Message to shopper 2}    /company-checker-automatic-notifications.php
         Add shopper notification.AD    ${Message title 3}    ${Message to shopper 3}    /company-checker-automatic-notifications.php
-        Add shopper notification.AD    to be deleted [RF]    <p><span style="color:#e74c3c">MOD DATE: 18.11.2021,</p>    /company-checker-automatic-notifications.php
-        Delete notification.AD    to be deleted [RF]    /company-checker-automatic-notifications.php
+        Add shopper notification.AD    Notif to be deleted [RF]    <p><span style="color:#e74c3c">MOD DATE: 18.11.2021,</p>    /company-checker-automatic-notifications.php
+    #
+        Create test order (MASS) - BASIC    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
+        Assign order (via orders-management.php).AD    ${test order description}
+        go to.AD    ${URL}/company-checker-automatic-notifications.php
+        Get ID    id="table_rows"    ${Message title 1}    8    1
+        Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[8]/a
+        Wait until page contains    Completed runnnig notification
+        GMAIL: Check EMAIL.SD    ${Message title 1}    RF Shopper
+        Login as a Shopper
+        JOB PAGE: get table titles and IDs
+        Search job by order description.SD    ${test order description}
+        Check job details.SD
+        Accept job
+    #
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        go to.AD    ${URL}/company-checker-automatic-notifications.php
+        Get ID    id="table_rows"    ${Message title 2}    8    1
+        Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[8]/a
+        Wait until page contains    Completed runnnig notification
+        GMAIL: Check EMAIL.SD    ${Message title 2}    RF Shopper
+    #
+        Login as a Shopper
+        go to.AD    ${URL}/c_ordered-crits.php
+        Wait until page contains    ${test order description}
+        Click element    //tr[${index}]/td[${Begin scorecard ID}]/form/input[1]
+        Wait until page contains element    //*[@id="begin"]
+        Click element    //*[@id="begin"]
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        go to.AD    ${URL}/company-checker-automatic-notifications.php
+        Get ID    id="table_rows"    ${Message title 3}    8    1
+        Click element    //*[@id="table_rows"]/tbody/tr[${final index}]/td[8]/a
+        Wait until page contains    Completed runnnig notification
+        GMAIL: Check EMAIL.SD    ${Message title 3}    RF Shopper
+    #
+        Delete notification.AD    Notif to be deleted [RF]    /company-checker-automatic-notifications.php
     END
     Close Browser
     [Teardown]    Close Browser.AD
 
 User automatic notifications settings > Add notification. FU
-    [Tags]    Editor
+    [Tags]    Editor    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -510,7 +560,7 @@ User automatic notifications settings > Add notification. FU
         ${Message to shopper 2}    set variable    <p>${RF REVN DT}</p>
         ${Message to shopper 3}    set variable    <p>${RF REVN DT}</p>
         ${Message to shopper 4}    set variable    <p>${RF REVN DT}</p>
-        ${Message title 1}    set variable    Stages: e-mail [RF]
+        ${Message title 1}    set variable    Stages: E-mail [RF]
         ${Message title 2}    set variable    Stages: SMS [RF]
         ${Message title 3}    set variable    Stages: Approve scorecard [RF]
         ${Message title 4}    set variable    Stages: Disapprove scorecard [RF]
@@ -526,7 +576,7 @@ User automatic notifications settings > Add notification. FU
     [Teardown]    Close Browser.AD
 
 Operation messages > Add message. FU
-    [Tags]    Editor
+    [Tags]    Editor    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -643,8 +693,8 @@ Operation messages > Add message. FU
     Close Browser
     [Teardown]    Close Browser.AD
 
-Files > Add user\shopper folder+file. FU
-    [Tags]    Editor
+Files > Add and delete user\shopper folder+file. FU
+    [Tags]    Editor    NotCritical
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
@@ -652,8 +702,8 @@ Files > Add user\shopper folder+file. FU
         Set global variable    ${URL}
         SET UP
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Search user file.AD    /users-files.php?page_var_divide_recordsPerPage=500    Parent file folder for users [RF]    Directory
-        Search user file.AD    /users-files.php?DirectoryLink=${found ID}    File sub folder for users [RF]    Directory
+        Search user file.AD    /users-files.php?page_var_divide_recordsPerPage=500    Parent folder for users [RF]    Directory
+        Search user file.AD    /users-files.php?DirectoryLink=${found ID}    Sub folder for users [RF]    Directory
         Search user file.AD    /users-files.php?DirectoryLink=${found ID}    File for users [RF]    File
         Search shopper file.AD    /checkers-files-settings.php?page_var_divide_recordsPerPage=500    Parent folder for shoppers [RF]    Directory
         Search shopper file.AD    /checkers-files-settings.php?ContainingFolderLink=${found ID}    Sub folder for shoppers [RF]    Directory
@@ -666,17 +716,44 @@ Files > Add user\shopper folder+file. FU
         Wait until page contains    Files library
         Page should contain    Parent folder for shoppers [RF]
         Page should contain    File for shoppers 01 [RF]
-        Page should contain    For RF shoppers!!!
+        Page should contain    - for RF shoppers!!!
         Page should contain    RF REVN DT
         Click link    default=File for shoppers 01 [RF]
         Page should contain    -RF12.png
         go to.AD    ${URL}/c_file-library.php
         Wait until page contains    Files library
         Click link    default=Parent folder for shoppers [RF]
-        Page should contain    For RF shoppers!!!
+        Page should contain    - for RF shoppers!!!
         Click link    default=Sub folder for shoppers [RF]
         Click link    default=File for shoppers 02 [RF]
         Page should contain    -RF12.png
+    #
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        go to.AD    ${URL}/checkers-files-settings.php?page_var_divide_recordsPerPage=500
+        Click link    default=Parent folder for shoppers [RF]
+        Wait until page contains element    //input[@id='delete']
+        Click element    //input[@id='delete']
+        Wait until page contains    Are you sure you want to erase the record Parent folder for shoppers [RF]?
+        Click element    //input[@id='sure_delete']
+        Wait until page contains    Item Parent folder for shoppers [RF] deleted successfully
+        go to.AD    ${URL}/checkers-files-settings.php?page_var_divide_recordsPerPage=500
+        Page should not contain    Parent folder for shoppers [RF]
+        go to.AD    ${URL}/users-files.php?page_var_divide_recordsPerPage=500
+        Get ID    id="table_rows"    Parent folder for users [RF]    1    2
+        Click link    default=${found ID}
+        Wait until page contains element    //input[@id='delete']
+        Click element    //input[@id='delete']
+        Wait until page contains    Are you sure you want to erase the record ${found ID}?
+        Click element    //input[@id='sure_delete']
+        Wait until page contains    Item ${found ID} deleted successfully
+    #
+        go to.AD    ${URL}/users-files.php?page_var_divide_recordsPerPage=500
+        Page should not contain    Parent folder for users [RF]
+        Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/a
+        Wait until page contains element    //input[@id='delete']
+        Click element    //input[@id='delete']
+        Wait until page contains    You are not authorized to delete this object
+        Log to console    Status: PASS 1. Created folders for shoppers and users were deleted; 2. You are not authorized to delete this object is seen if try delete not allowed item (+)
     END
     Close Browser
     [Teardown]    Close Browser.AD

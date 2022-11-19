@@ -24,6 +24,8 @@ Order: Single and Mass orders with rich descr are created successfully
         ${single order description}    Set variable    (S) RF ORDER №10 ${DD.MM.YY}
         ${mass order description}    Set variable    (M) RF ORDER №10 ${DD.MM.YY}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        go to.AD    https://eu.checker-soft.com/testing/orders-assignment-manual.php
+        Check Search a shopper filters.AD
     #
         Create test order (Single)    ${single rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         Create test order (MASS) - BASIC    ${mass rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
@@ -226,7 +228,7 @@ Order: Manager creates a valid MASS order with N Reviews per branch+assign to ma
         SET UP
         ${test order description}    Set variable    RF Order: M020 [Check manual order assignment using Edit assignment page, ${DD.MM.YY}]
         Set global variable    ${test order description}
-        ${agemax}    Set variable    15
+        ${agemax}    Set variable    23
         ${agemin}    Set variable    4
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Set assignment settings.AD    None
@@ -369,8 +371,8 @@ Order: Manager creates a valid MASS order with N Min & Max gap between reviews (
         Input text    shopper_name_search    robo
         Input text    Email    robotshopperemail@gmail.com
         Input text    Phone    +380670118780
-        Input text    AgeStart    4
-        Input text    AgeEnd    6
+        Input text    AgeStart    20
+        Input text    AgeEnd    22
         Click element    go
         Execute JavaScript    window.document.getElementById("AgeEnd").scrollIntoView(true)
         Wait until page contains element    //*[@id="theChecker"]/option[1]
