@@ -10,7 +10,7 @@ Resource          ${CURDIR}/Resources/Settings.txt
 Library           ImapLibrary
 
 *** Test Cases ***
-Order: Single and Mass orders with rich descr are created successfully
+Order: Single and Mass orders with rich descr and project are created successfully
     [Tags]    Order
     [Template]
     @{urls}=    String.Split String    ${TestURLs}    ,
@@ -19,16 +19,23 @@ Order: Single and Mass orders with rich descr are created successfully
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
         SET UP
-        ${single rich order description}    Set variable    <p style="text-align:center">(S) RF ORDER №10&nbsp;${DD.MM.YY}+<strong><span style="font-size:10px">re</span>ac</strong>h<em><span style="background-color:#f1c40f">de</span></em><u>sc<span style="color:#2980b9">ri</span></u><cite>p<span style="color:#2980b9">tio</span>n</cite></p>
-        ${mass rich order description}    Set variable    <p style="text-align:center">(M) RF ORDER №10&nbsp;${DD.MM.YY}+<strong><span style="font-size:10px">re</span>ac</strong>h<em><span style="background-color:#f1c40f">de</span></em><u>sc<span style="color:#2980b9">ri</span></u><cite>p<span style="color:#2980b9">tio</span>n</cite></p>
-        ${single order description}    Set variable    (S) RF ORDER №10 ${DD.MM.YY}
-        ${mass order description}    Set variable    (M) RF ORDER №10 ${DD.MM.YY}
+        ${single rich order description}    Set variable    <p style="text-align:center">(S) RF ORDER №10 ${DD.MM.YY} (Project is not selected)+<strong><span style="font-size:10px">re</span>ac</strong>h<em><span style="background-color:#f1c40f">de</span></em><u>sc<span style="color:#2980b9">ri</span></u><cite>p<span style="color:#2980b9">tio</span>n</cite></p>
+        ${mass rich order description}    Set variable    <p style="text-align:center">(M) RF ORDER №10 ${DD.MM.YY} (Project is selected)+<strong><span style="font-size:10px">re</span>ac</strong>h<em><span style="background-color:#f1c40f">de</span></em><u>sc<span style="color:#2980b9">ri</span></u><cite>p<span style="color:#2980b9">tio</span>n</cite></p>
+        ${single order description}    Set variable    (S) RF ORDER №10 ${DD.MM.YY} (Project is not selected)+reachdescri
+        ${mass order description}    Set variable    (M) RF ORDER №10 ${DD.MM.YY} (Project is selected)+reachdescri
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Set "City selection style".AD    Select by hierarchy
+    #
+        ${RobotTestClient 02}    Set variable    AUTO 02 [RF CLIENT]
+    #%%    Search client ID.AD     ${RobotTestClient 02}
+    #%%    Search branch.AD
+    #
         go to.AD    https://eu.checker-soft.com/testing/orders-assignment-manual.php
         Check Search a shopper filters.AD
     #
         Create test order (Single)    ${single rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         Create test order (MASS) - BASIC    ${mass rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
+        Create test order (Single)    ${single rich order description}    ${RobotTestClient 02}    ${RobotQ-ry SHOPPERS}
         #    Manage Orders.table export    ${test order description 05}    ${RobotTestClient}
         go to.AD    ${URL}/orders-assignment-manual.php
         Check Search a shopper filters.AD
@@ -42,8 +49,8 @@ Order: Single and Mass orders with rich descr are created successfully
         Click element    id=ClientID
         Click element    xpath=//option[contains(.,'${RobotTestClient}')]
         Click element    //input[@id='update']
-        Element Should Contain    //*[@id="Orders"]/tbody/tr[1]/td[3]/p    ${mass order description}    collapse_spaces=True
-        Element Should Contain    //*[@id="Orders"]/tbody/tr[2]/td[3]/p    ${single order description}    collapse_spaces=True
+        Element Should Contain    //*[@id="Orders"]/tbody/tr[1]/td[3]/p    ${mass order description}    #    collapse_spaces=True
+        Element Should Contain    //*[@id="Orders"]/tbody/tr[2]/td[3]/p    ${single order description}    #    collapse_spaces=True
         Log to console    Manual assignment page: page contains newly created orders titles (+)
     #
         ${date+5days}    Add Time To Date    ${Ttime}    5 days    result_format=%d-%m-%Y
@@ -61,15 +68,65 @@ Order: Single and Mass orders with rich descr are created successfully
         Log to console    Searching a RF review (q-re="RF Questionnaire [Shoppers]")
         Wait until page contains element    //input[@id='end_date']
         Input text    //input[@id='end_date']    ${date+5days}
-        Input text    //input[@id='start_date']    ${date+5days}
+        Input text    //input[@id='start_date']    ${DD-MM-YY}
         Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient}')]
         Validate value (text)    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    AUTO 01 [RF CLIENT]
         Click element    //input[@id='show']
         Wait until page contains element    //*[@id="SetID"]
-        Element Should Contain    //*[@id="table_rows"]/tbody/tr[1]/td[4]/p    ${mass order description}+reachdescri
-        Element Should Contain    //*[@id="table_rows"]/tbody/tr[2]/td[4]/p    ${single order description}+reachdescri
-        Log to console    OPanel: OP contains newly created orders titles with updating dates in status "Ordered, waiting assignment" (+)
+        Element Text Should Be    //*[@id="table_rows"]/tbody/tr[1]/td[4]/p    ${mass order description}
+        Element Text Should Be    //*[@id="table_rows"]/tbody/tr[2]/td[4]/p    ${single order description}
     #
+        Select dropdown.AD    //*[@id="side_menu"]/tbody/tr/td[3]/form[1]/table/tbody/tr[3]/td[1]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${RobotTestClient 02}')]
+        Click element    //input[@id='show']
+        Wait until page contains element    //*[@id="SetID"]
+        Execute JavaScript    window.document.getElementById("publicizeOrders").scrollIntoView(true)
+        Element Text Should Be    //*[@id="table_rows"]/tbody/tr[1]/td[15]    ${empty}
+        Element Text Should Be    //*[@id="table_rows"]/tbody/tr[2]/td[15]    RF ACTIVE project 2022 [PROJECT]
+        Element Text Should Be    //*[@id="table_rows"]/tbody/tr[3]/td[15]    ${empty}
+        Element Text Should Be    //*[@id="table_rows"]/tbody/tr[3]/td[4]    ${single order description}
+    #
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[1]/td[8]    ${RobotTestClient 02}
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[2]/td[8]    ${RobotTestClient}
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[3]/td[8]    ${RobotTestClient}
+    #
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[1]/td[2]    1
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[2]/td[2]    1
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[3]/td[2]    1
+    #
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[1]/td[12]    Assign
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[2]/td[12]    Assign
+        Element Should Contain    //*[@id="table_rows"]/tbody/tr[3]/td[12]    Assign
+        Log to console    OPanel: OP contains newly created orders titles with updating dates in status "Ordered, waiting assignment" (+); selected project is shown properly
+    # Checking default table titles
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[1]    ${empty}
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[2]/a    Order count
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[3]/a    OrderID
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[4]/a    Description
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[5]/a    Date
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[6]/a    Region name
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[7]/a    City
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[8]/a    Client name
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[9]/a    Full name
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[10]/a    Short branch name
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[11]/a    Status
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[12]/a    Shopper name
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[13]/a    Shopper priority
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[14]/a    Questionnaire name
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[15]/a    Project
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[16]/a    Briefing
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[17]/a    Limit for products payment
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[18]/a    Services payment
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[19]/a    Survey payment
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[20]/a    Transportation payment
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[21]/a    Publicized
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[22]/a    Is Duplicate
+        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[23]/a    Package name
+        Click element    //form[@id='frm']/input[1]
+        Input text    //input[@id='datepicker_order_date']    ${DD.MM.YY}
+        Click element    //form[@id='frm']/input[@id='ChangeReviewsDate']
+        Wait until page contains    Saved: 3 Orders
+    #
+    #Canceling orders
         go to.AD    ${URL}/crit-orders-handle.php
         Click element    id=ClientID
         Click element    xpath=//option[contains(.,'${RobotTestClient}')]
@@ -80,9 +137,23 @@ Order: Single and Mass orders with rich descr are created successfully
         Click element    //span/select[@id='ClientID']
         Element should not contain    //span/select[@id='ClientID']    xpath=//option[contains(.,'${RobotTestClient}')]
         Page should not contain    xpath=//option[contains(.,'${RobotTestClient}')]
+    #    Page should not contain    ${single order description}
+        Page should not contain    ${mass order description}
+        Check errors on page [-1]
+    #
+        Click element    id=ClientID
+        Click element    xpath=//option[contains(.,'${RobotTestClient 02}')]
+        Click element    //input[@id='update']
+        Click element    //*[@id="side_menu"]/tbody/tr/td[3]/form[2]/p/table[3]/tbody/tr/td[1]/input
+        Click element    id=cancelOrders
+        sleep    1
+        Click element    //span/select[@id='ClientID']
+        Element should not contain    //span/select[@id='ClientID']    xpath=//li[contains(.,'${RobotTestClient 02}')]
+        Page should not contain    xpath=//li[contains(.,'${RobotTestClient 02}')]
         Page should not contain    ${single order description}
         Page should not contain    ${mass order description}
         Check errors on page [-1]
+    #
         Log to console    Select filter="unassigned", select all orders, press Cancel and confirm
         Log to console    Dropbox "Client name" does not contan "${RobotTestClient}"
         Log to console    Page does not contain text: "${RobotTestClient}"

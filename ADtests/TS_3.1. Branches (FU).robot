@@ -10,6 +10,25 @@ Resource          ${CURDIR}/Resources/Settings.txt
 Library           OpenPyxlLibrary
 
 *** Test Cases ***
+Client. Add/Update branch
+    [Tags]    Critical
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+    #
+        Set "City selection style".AD    Instant search box
+    #
+        Search Client.AD
+        Search branch.AD
+        Add/edit new branch.AD    ${Short auto branch name 01}    ${Full auto branch name 01}
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
 Client. Add branch characteristic (Optional+Mandatory)
     @{urls}=    String.Split String    ${TestURLs}    ,
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
@@ -45,28 +64,6 @@ Client. Add branch characteristic (Optional+Mandatory)
         go to.AD    ${URL}/branches.php?page_var_filter_IsActive&edit=${found ID}&client=${client ID}
         Validate value (value)    //*[@id="prop${Dictionary2}[${Bproperty 01}]"]    ${Dictionary2}[${Bproperty 01} 1]
         Validate value (value)    //*[@id="prop${Dictionary2}[${Bproperty 02}]"]    ${Dictionary2}[${Bproperty 02} 1]
-    END
-    Close Browser
-    [Teardown]    Close Browser.AD
-
-Client. Add/Update branch
-    [Tags]    Critical
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-    #
-        go to.AD    ${URL}/company-display.php
-        Select dropdown.AD    //*[@id="idCitySelectionStyleEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Instant search box')]
-        Click Save/Add/Delete/Cancel button.AD
-        Wait until page contains    Display settings saved successfully
-    #
-        Search Client.AD
-        Search branch.AD
-        Add/edit new branch.AD    ${Short auto branch name 01}    ${Full auto branch name 01}
     END
     Close Browser
     [Teardown]    Close Browser.AD
