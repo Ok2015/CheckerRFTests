@@ -1,4 +1,4 @@
-(Rev date: 10-08-2022 12:38)
+(Rev date: 10-12-2022 00:38)
 
 #  Robot Framework
 ### _Robot Framework is a generic test automation framework for acceptance testing and acceptance test-driven development (ATDD)._
@@ -240,6 +240,10 @@ pabot --processes 4 --outputdir Results --include Critical --exclude (FIX?) ADte
 
 JENKINS
 ---------
+
+run via CMD: services.msc - to see services list
+
+
 RUN at http://localhost:8080/script
 
 To stop:

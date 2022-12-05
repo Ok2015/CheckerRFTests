@@ -152,6 +152,9 @@ Questions bank > Section + qn(s) are created successfully
     ###
         Add QD section.AD    ${RF section 1}
         Add QB subsection.AD    ${RF sub section 1}    6aae0e    1    Custom
+    #    Run keyword if    ${testing?}    go to.AD    ${URL}/questions.php?subchapter=7398
+    #    Run keyword if    ${testing?}    Should Contain X Times    During this hospital stay, were you admitted to this hospital through the Emergency Room?    1
+    #    Run keyword if    ${testing?}    Should Contain X Times    43120    1
     #    ###Dispaly types:    Radio buttons    Slider    Drop-down    Basic selection (choose with CTRL)    Basic selection (choose with CTRL)    Check boxes    Ranking check boxes    Rating-stars
     #    Delete QB q-n.AD
     END
@@ -215,7 +218,7 @@ New questionnaire is created successfully + grant access (Shopper)
         Check questionnaire access
         Validate and Import questions.AD    RF QRY [TESTING].xlsx    RF QRY [PREPRODUCTION].xlsx    RF QRY [DEMO].xlsx
         Set q-ry brief.AD
-    #    Get question ID
+        #    Get question ID
         go to.AD    ${URL}/setedit-order-logic.php?SetID=${found ID}
     END
     Close Browser

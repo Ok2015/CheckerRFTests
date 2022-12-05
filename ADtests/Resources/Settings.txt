@@ -186,9 +186,9 @@ ${Q-re type charac-s}    RF.AutoTests 5 min [Q-re type charac-s]
 @{List of all CF}    RFCF01.Number [Branches]    RFCF02.Text line [Branches]    RFCF03.Text block [Branches]    RFCF04.Date [Branches]    RFCF05.Time [Branches]    RFCF06.Phone [Branches]    RFCF07.Checkbox [Branches]    RFCF08.Fileupload [Branches]    RFCF01.Number [Users]    RFCF02.Text line [Users]    RFCF03.Text block [Users]    RFCF04.Date [Users]    RFCF05.Time [Users]    RFCF06.Phone [Users]    RFCF07.Checkbox [Users]    RFCF08.Fileupload [Users]    RFCF01.Number [Clients]
 ...               RFCF02.Text line [Clients]    RFCF03.Text block [Clients]    RFCF04.Date [Clients]    RFCF05.Time [Clients]    RFCF06.Phone [Clients]    RFCF07.Checkbox [Clients]    RFCF08.Fileupload [Clients]    RFCF01.Number [Shoppers]    RFCF02.Text line [Shoppers]    RFCF03.Text block [Shoppers]    RFCF04.Date [Shoppers]    RFCF05.Time [Shoppers]    RFCF06.Phone [Shoppers]    RFCF07.Checkbox [Shoppers]    RFCF08.Fileupload [Shoppers]
 ${RF visit template}    RF template 01
-${shopper email app password}    yqlkegdczklxmski
+${shopper email app password}    qtomgixhdcsyoqlx
 ${SP user email address}    robotspuser@gmail.com
-${SP user email pass}    vuzwonwfmswmungp
+${SP user email pass}    bpunyjdutodnffsc
 ${MY MTS}         +380951232658
 ${FTPServer}      ftp.drivehq.com
 ${FTPUser}        vishav-ftp

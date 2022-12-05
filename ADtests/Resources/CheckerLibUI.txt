@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -63,7 +63,8 @@ Enter existing login and password.AD
     Click Element    ${id=submit_button}
     Check errors on page [-1]
     ${welcome is visible?}    Run keyword and return status    Page should contain    Welcome
-    run keyword if    ${welcome is visible?}    Switch language.AD    4
+    ${welcome is visible2?}    Run keyword and return status    Page should contain    Ласкаво
+    run keyword if    ${welcome is visible?} or ${welcome is visible2?}    Switch language.AD    4
 
 Check Log In page.AD
     #Wait Until Page Contains Element    //*[@id="FiltersArea"]/div/form
@@ -14320,7 +14321,7 @@ Add sample row.AD
     Run keyword and ignore error    Input text    //input[@id='field_Sample_row_ID']    ${ID}
     Run keyword and ignore error    Input text    //input[@id='field_EmailForSurveying']    ${SP user email address}
     Click element    //input[@id='addnew']
-    Wait until page contains    Row 0 added successfully
+    Wait until page contains    added successfully
     Log to console    Added new row ID "${ID}" for sample (Sample ID: ${Sample ID})
 
 GMAIL: Survey email.AD
