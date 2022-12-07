@@ -183,7 +183,7 @@ PhoneSurvey_03: Shopper submits a Phone survey (check saved answers)
         #    Search/add Survey.AD    ${RF survey name}    RF Questionnaire [Surveys]
         #    Check Authorized surveyors.AD    /surveyors.php?SurveyID=${ReviewID}    ${RobotTestShopper 02}
         Search/create Sample.AD
-        Add sample row.AD
+        Add sample row.AD    ${ID}    ${mobile}    ${SP user email address}
     #
         Login as a Shopper
         go to.AD    ${URL}/c_survey-select.php

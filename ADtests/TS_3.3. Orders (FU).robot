@@ -27,11 +27,11 @@ Order: Single and Mass orders with rich descr and project are created successful
         Set "City selection style".AD    Select by hierarchy
     #
         ${RobotTestClient 02}    Set variable    AUTO 02 [RF CLIENT]
-    #%%    Search client ID.AD     ${RobotTestClient 02}
-    #%%    Search branch.AD
+        Search client ID.AD    ${RobotTestClient 02}
+        Search branch.AD
     #
-        go to.AD    https://eu.checker-soft.com/testing/orders-assignment-manual.php
-        Check Search a shopper filters.AD
+    ##    go to.AD    ${URL}/orders-assignment-manual.php
+    ##    Check Search a shopper filters.AD
     #
         Create test order (Single)    ${single rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         Create test order (MASS) - BASIC    ${mass rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
@@ -119,8 +119,10 @@ Order: Single and Mass orders with rich descr and project are created successful
         Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[19]/a    Survey payment
         Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[20]/a    Transportation payment
         Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[21]/a    Publicized
-        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[22]/a    Is Duplicate
-        Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[23]/a    Package name
+        Run keyword if    ${testing?}    Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[22]/a    Is Duplicate
+        ...    ELSE    Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[22]/a    Package name
+        Run keyword if    ${testing?}    Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[23]/a    Package name
+        ...    ELSE    Element Should Contain    //*[@id="table_rows"]/thead/tr[1]/th[23]/a    Additional description
         Click element    //form[@id='frm']/input[1]
         Input text    //input[@id='datepicker_order_date']    ${DD.MM.YY}
         Click element    //form[@id='frm']/input[@id='ChangeReviewsDate']
@@ -137,7 +139,7 @@ Order: Single and Mass orders with rich descr and project are created successful
         Click element    //span/select[@id='ClientID']
         Element should not contain    //span/select[@id='ClientID']    xpath=//option[contains(.,'${RobotTestClient}')]
         Page should not contain    xpath=//option[contains(.,'${RobotTestClient}')]
-    #    Page should not contain    ${single order description}
+        #    Page should not contain    ${single order description}
         Page should not contain    ${mass order description}
         Check errors on page [-1]
     #

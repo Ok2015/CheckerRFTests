@@ -107,6 +107,58 @@ Shopper characteristics > create options and delete shopper property
     Close Browser
     [Teardown]    Close Browser.AD
 
+Operation settings > Assessor display settings > Show columns in the "Scorecard history" screen
+    [Tags]    NotCritical
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        Show these columns in the "Scorecard history" screen.AD    None
+        Login as a Shopper
+        go to.AD    ${URL}/c_crit-history.php
+        Wait until page contains element    //*[@id="show"]
+        click element    //*[@id="show"]
+        Page should not contain    Review number
+        Page should not contain    Finish time
+        Page should not contain    Scorecard filling time
+        Page should not contain    Client name
+        Page should not contain    Short branch name
+        Page should not contain    Questionnaire name
+        #Page should not contain    Status
+        Page should not contain    Score
+        Page should not contain    Quality assurance grade, adjusted
+        Page should not contain    Quality assurance done by user
+        Page should not contain    Quality assurance note
+        Page should not contain    Linked money sum
+        Page should contain link    default=Main menu
+        Log to console    ${URL}/c_crit-history.php does not contain disabled columns
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        Show these columns in the "Scorecard history" screen.AD    true    # true - to enable, None - to disable
+        Login as a Shopper
+        go to.AD    ${URL}/c_crit-history.php
+        Wait until page contains element    //*[@id="show"]
+        click element    //*[@id="show"]
+        Page should contain    Review number
+        Page should contain    Finish time
+        Page should contain    Review filling time
+        Page should contain    Client name
+        Page should contain    Short branch name
+        Page should contain    Questionnaire name
+        Page should contain    Result
+        Page should contain    Status
+        Page should contain    Quality assurance grade, adjusted
+        Page should contain    Quality assurance done by user
+        Page should contain    Quality assurance note
+        Page should contain    Linked money sum
+        Log to console    ${URL}/c_crit-history.php does contain enabled columns
+        Page should contain link    default=Main menu
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
 Agreements > add agreement (Shoppers)
     [Tags]    Editor    NotCritical
     [Template]
@@ -210,58 +262,6 @@ Agreements > add agreement and delete it
         go to.AD    ${URL}/company-agreements.php
         Page should not contain    ${Agreement name}
         Log to console    "${Agreement name}" has been deleted
-    END
-    Close Browser
-    [Teardown]    Close Browser.AD
-
-Operation settings > Assessor display settings > Show columns in the "Scorecard history" screen
-    [Tags]    NotCritical
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Show these columns in the "Scorecard history" screen.AD    None
-        Login as a Shopper
-        go to.AD    ${URL}/c_crit-history.php
-        Wait until page contains element    //*[@id="show"]
-        click element    //*[@id="show"]
-        Page should not contain    Review number
-        Page should not contain    Finish time
-        Page should not contain    Scorecard filling time
-        Page should not contain    Client name
-        Page should not contain    Short branch name
-        Page should not contain    Questionnaire name
-        #Page should not contain    Status
-        Page should not contain    Score
-        Page should not contain    Quality assurance grade, adjusted
-        Page should not contain    Quality assurance done by user
-        Page should not contain    Quality assurance note
-        Page should not contain    Linked money sum
-        Page should contain link    default=Main menu
-        Log to console    ${URL}/c_crit-history.php does not contain disabled columns
-        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Show these columns in the "Scorecard history" screen.AD    true    # true - to enable, None - to disable
-        Login as a Shopper
-        go to.AD    ${URL}/c_crit-history.php
-        Wait until page contains element    //*[@id="show"]
-        click element    //*[@id="show"]
-        Page should contain    Review number
-        Page should contain    Finish time
-        Page should contain    Review filling time
-        Page should contain    Client name
-        Page should contain    Short branch name
-        Page should contain    Questionnaire name
-        Page should contain    Result
-        Page should contain    Status
-        Page should contain    Quality assurance grade, adjusted
-        Page should contain    Quality assurance done by user
-        Page should contain    Quality assurance note
-        Page should contain    Linked money sum
-        Log to console    ${URL}/c_crit-history.php does contain enabled columns
-        Page should contain link    default=Main menu
     END
     Close Browser
     [Teardown]    Close Browser.AD

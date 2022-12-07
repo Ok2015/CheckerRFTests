@@ -32,7 +32,7 @@ Management > add Sample
         go to.AD    ${URL}/sample-api.php?SampleID=${Sample ID}
         go to.AD    ${URL}/sample-unification.php?SampleID=${Sample ID}
         go to.AD    ${URL}/sample-data-edit.php?SampleID=${Sample ID}
-        Add sample row.AD
+        Add sample row.AD    ${ID}    ${mobile}    ${SP user email address}
     END
     Close Browser
     [Teardown]    Close Browser.AD
@@ -137,18 +137,22 @@ Management > add Survey (EMAIL)
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         ${Robot q-ry}=    set variable    RF Questionnaire [Email]
         set global variable    ${Robot q-ry}
+        GET alt lang ID.AD    Robot language [RTL]
+        GET alt lang ID.AD    Robot language [LTR]
         Search the Q-ry (via search bar).AD    RF Questionnaire [Email]
         Get question ID
+        Alt Replacement condition update.AD    1=1    -    Remove
+    #
         Search Client.AD
         Search/add Survey.AD    RF SURVEY [EMAIL]    RF Questionnaire [Email]    Email
         Search/create Sample.AD
-        Add sample row.AD
+        Add sample row.AD    ${ID}    ${mobile}    ${SP user email address}
     #
         go to.AD    ${URL}/survey-workers.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/surveyors.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey-statuses.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey2-quotas.php?SurveyID=${SurveyID}
-        #    Run Keyword If    ${testing?}    go to.AD    ${URL}/survey-weighted-result-setup.php?SurveyID=${SurveyID}
+        Run Keyword If    ${testing?}    go to.AD    ${URL}/survey-weighted-result-setup.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey-quotas-status.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/report-samples.php?SurveyID=${SurveyID}&show=1
         go to.AD    ${URL}/phone-survey-management.php?SurveyID=${SurveyID}
@@ -158,8 +162,9 @@ Management > add Survey (EMAIL)
         go to.AD    ${URL}/survey2-priorities.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey2-filter-conditions.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey-send-invitations.php?SurveyID=${SurveyID}
+        #    #    #
+        Log to console    CASE 1 - submitting email survey (default language)
         Send survey invitation.AD
-    #
         GMAIL: Survey email.AD    RF SP user    RF Email subject for the invitation
         Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF - EMAIL SURVEY    2000    I am free text entered by reviewer - ${DD.MM.YY} RF - INTERNET SURVEYEXTRACHARACTERS    Internal message added by RF shopper (date: ${DD.MM.YY})    NO
         click element    //input[@id='finishCrit']
@@ -191,6 +196,46 @@ Management > add Survey (EMAIL)
         Validate element attribute.AD    //select[@id='obj${Q4 ID}']/option[4]    selected    true
         Log to console    [Edit entire review page] Status="Approved" (+)
         Log to console    [Edit entire review page] Answers are saved properly (+)
+        #    GMAIL: Survey email.AD    RF SP user    RF EmailThankYouSubject
+        #    #    #
+        Log to console    CASE 2 - submitting email survey (alt language)
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        Alt Replacement condition update.AD    1=1    xpath=//li[contains(.,'Robot language [LTR]')]    Add
+        Add sample row.AD    ${ID}2022    ${mobile}    ${SP user email address}
+        Send survey invitation.AD
+        GMAIL: Survey email.AD    RF SP user    RF Email subject for the invitation (in Robot language [LTR])
+        Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF - EMAIL SURVEY    2000    I am free text entered by reviewer - ${DD.MM.YY} RF - INTERNET SURVEYEXTRACHARACTERS    Internal message added by RF shopper (date: ${DD.MM.YY})    NO
+        click element    //input[@id='finishCrit']
+        Wait Until Page Contains    RF Thank you message, right after filling the survey
+        Check errors on page [-1]
+        Wait Until Page Contains    REQUEST A FREE DEMO    20
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        go to.AD    ${URL}/crit-handling-details.php?CritID=${Review Number}
+        Wait Until Page Contains    Review handling details
+        Page should contain    ${Review Number} Finished, awaiting approval
+        Log to console    [Edit entire review page] Status="Finished, awaiting approval" (+)
+        Scroll Element Into View    id=approveCrit
+        Click button    id=approveCrit
+        Check errors on page [-1]
+        Wait Until Page Contains    Review approved
+        Page should contain    ${Review Number} Approved
+        Log to console    Review `${Review Number}` has been approved by manager (+)
+        go to.AD    ${URL}/edit-entire-crit.php?CritID=${Review Number}
+        Element text should be    //span[@class='CritInfoItem'][9]    Approved
+        Page should contain    ${Robot q-ry}
+        Page should contain    ${RobotTestClient}
+        Validate value (text)    //textarea[@id='obj${Q1 ID}-mi']    ***
+        Validate value (value)    //textarea[@id='obj${Q2 ID}-mi']    Additional info - ${DD.MM.YY} RF - EMAIL SURVEY
+        Validate value (value)    //input[@id='obj${Q3 ID}-mi']    2000
+        Validate element attribute.AD    //input[@id='obj${Q1 ID}4']    checked    true
+        Validate element attribute.AD    //input[@id='obj${Q2 ID}3']    checked    true
+        Validate element attribute.AD    //input[@id='obj${Q3 ID}4']    checked    true
+        Validate element attribute.AD    //select[@id='obj${Q4 ID}']/option[3]    selected    true
+        Validate element attribute.AD    //select[@id='obj${Q4 ID}']/option[4]    selected    true
+        Log to console    [Edit entire review page] Status="Approved" (+)
+        Log to console    [Edit entire review page] Answers are saved properly (+)
+        Log to console    Email subject, body, link are correct (for default and alt languages)
+    #    GMAIL: Survey email.AD    RF SP user    RF EmailThankYouSubject
     END
     Close Browser
     [Teardown]    Close Browser.AD
@@ -213,7 +258,7 @@ Management > add Survey (SMS)
         Search/add Survey.AD    RF SURVEY [SMS]    RF Questionnaire [SMS]    SMS
         go to.AD    ${URL}/surveyors.php?SurveyID=${SurveyID}
         Manage sample fields.AD
-        Add sample row.AD
+        Add sample row.AD    ${ID}    ${mobile}    ${SP user email address}
         Send survey invitation.AD
     END
     Close Browser
@@ -311,7 +356,7 @@ Management > add Survey (WhatsApp Business)
         Search/add Survey.AD    RF SURVEY [WhatsApp B]    RF Questionnaire [SMS]    SMS
         go to.AD    ${URL}/surveyors.php?SurveyID=${SurveyID}
         Manage sample fields.AD
-        Add sample row.AD
+        Add sample row.AD    ${ID}    ${mobile}    ${SP user email address}
         Send survey invitation.AD
     END
     Close Browser

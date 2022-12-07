@@ -1412,6 +1412,10 @@ SET UP
     Set global variable    ${preprod?}
     Set global variable    ${testing?}
     Log to console    ------------------------------------------TEST START------------------------------------------
+    ${mobile}    Generate Random String    10    [NUMBERS]
+    ${ID}    Generate Random String    5    [NUMBERS]
+    Set global variable    ${mobile}
+    Set global variable    ${ID}
 
 Add new client
     go to.AD    ${URL}/clients.php
@@ -6118,9 +6122,9 @@ Full scorecard report.AD
     Page should contain    file_example_WAV_1MG.wav
     Log to console    [Full review page] status = ${Status} ok (+)
     Page should contain    Download
-    Page should contain    (1.02m)
-    Page should contain    (69.25k)
-    Page should contain    (152.51k)
+    Page should contain    (1.02mb)
+    Page should contain    (69.25kb)
+    Page should contain    (152.51kb)
 
 Assign order (via operation-panel.php).AD
     [Arguments]    ${test order description}
@@ -10396,7 +10400,7 @@ Go to.AD
     #
     ${start} =    Get Current Date
     Go to    ${exp url}
-    ${timeout}    Set variable    10
+    ${timeout}    Set variable    15
     Run keyword if    "${testing}"=="False"    Wait For Condition    return document.readyState=="complete"    ${timeout}
     Run keyword if    "${testing}"=="False"    Wait For Condition    return document.visibilityState=="visible"    ${timeout}
     ${stop} =    Get Current Date
@@ -10977,18 +10981,35 @@ Search/add Survey.AD
     Run Keyword If    ${demo?}    Enter editor text.AD    //*[@id="cke_72_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Page should contain    ${Note for surveyors}
     input text    //input[@id='field_RecordingFileName']    RF Recording File Name
+    #
     Click element    //*[@id="toggler"]
     Wait until element is visible    //input[@id='field_EmailSubj']
+    ${RF email subject}    Set variable    RF Email subject for the invitation
     input text    //input[@id='field_EmailSubj']    RF Email subject for the invitation
+    input text    _SurveysSubjAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]    ${RF email subject} (in Robot language [LTR])
+    input text    _SurveysSubjAltLangs_AltLangID_${Dictionary}[Robot language [RTL]]    ${RF email subject} (in Robot language [RTL])
+    #
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_1037_label"]    RF Message to show when the Email survey is finished
+    Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_558_label"]    RF Message to show when the Email survey is finished
+    #
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_1098_label"]    RF Expired message
+    Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_613_label"]    RF Expired message
+    #
     Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_183_label"]    RF Email body for the invitation
+    #
+    Execute JavaScript    window.document.getElementById("field_EmailLinkText").scrollIntoView(true)
+    #
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_118_label"]    RF Email body for the invitation
+    #
     input text    //*[@id="field_EmailLinkText"]    RF Link text in invitation Email
     Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_976_label"]    RF Thank you message, right after filling the survey
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_503_label"]    RF Thank you message, right after filling the survey
+    input text    _SurveysLinkAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]    RF Link text in invitation Email (in Robot language [LTR])
+    input text    _SurveysLinkAltLangs_AltLangID_${Dictionary}[Robot language [RTL]]    RF Link text in invitation Email (in Robot language [RTL])
     input text    //input[@id='field_LandingPage']    https://www.checker-soft.com/
     input text    //input[@id='field_RedirectAfter']    3
     input text    //input[@id='field_FromName']    From RF
-    input text    //input[@id='field_Email']    rf email
+    input text    //input[@id='field_Email']    RF email
     input text    //input[@id='field_EmailThankYouSubject']    RF EmailThankYouSubject
     input text    //textarea[@id='field_EmailThankYouMessage']    RF EmailThankYou
     #SMS Surveys
@@ -10997,6 +11018,9 @@ Search/add Survey.AD
     input text    //input[@id='field_SmsSenderName']    RFSMSsender
     input text    //textarea[@id='field_SenderNameCondition']    1=1
     input text    //textarea[@id='field_SmsLinkText']    ClickHereRFSmsLink
+    input text    _SurveysSMSLinkAltLangs_AltLangID_${Dictionary}[Robot language [RTL]]    RFSmsLinkRTL
+    input text    _SurveysSMSLinkAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]    RFSmsLinkLTR
+    input text    //textarea[@id='field_SmsThankYouMessage']    RF Thank you message to be sent by SMS
     input text    //input[@id='field_SMSSurveyExpectedResponseRate']    0
     input text    //input[@id='field_SMSSurveyValidityDuration']    3
     input text    //textarea[@id='field_SMSSurveyConditionToSendLink']    1=1
@@ -11058,6 +11082,30 @@ Search/add Survey.AD
     Checkbox should not be selected    //input[@id='field_SendAlsoSMS']
     Checkbox should not be selected    //input[@id='field_AllowMultiSurvey']
     #
+    Wait until page contains element    //a[@id='toggler']
+    Click element    //a[@id='toggler']
+    Wait until page contains element    cke__SurveysBodyAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]
+    Click element    cke__SurveysBodyAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]
+    Wait until page contains element    css:[class="cke_off cke_button_source"]    10
+    Click element    css:[class="cke_off cke_button_source"]
+    Wait until page contains element    css:[class="cke_contents"]
+    Sleep    1
+    select frame    //*[@id="cke_contents__SurveysBodyAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]"]/iframe
+    Input text    //body    RF Email body for the invitation (in Robot language [LTR])
+    Unselect frame
+    Sleep    1
+    #
+    Wait until page contains element    cke__SurveysBodyAltLangs_AltLangID_${Dictionary}[Robot language [RTL]]
+    Click element    cke__SurveysBodyAltLangs_AltLangID_${Dictionary}[Robot language [RTL]]
+    Wait until page contains element    css:[class="cke_off cke_button_source"]
+    Click element    css:[class="cke_off cke_button_source"]
+    Wait until page contains element    css:[class="cke_contents"]
+    Sleep    1
+    select frame    //*[@id="cke_contents__SurveysBodyAltLangs_AltLangID_${Dictionary}[Robot language [RTL]]"]/iframe
+    Input text    //body    RF Email body for the invitation (in Robot language [RTL])
+    Unselect frame
+    Sleep    1
+    Click Save/Add/Delete/Cancel button.AD
 
 Validate style.AD
     [Arguments]    ${element}    ${expected color}
@@ -14309,17 +14357,16 @@ Check Search a shopper filters.AD
     Run keyword and ignore error    Unselect frame
 
 Add sample row.AD
+    [Arguments]    ${ID}    ${mobile}    ${user email address}
     go to.AD    ${URL}/sample-edit.php?SampleID=${Sample ID}&addnew=yup
     #    Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
     #    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
     Wait until page contains    New row
-    ${mobile}=    Generate Random String    10    [NUMBERS]
-    ${ID}    Generate Random String    5    [NUMBERS]
-    Run keyword and ignore error    Input text    //input[@id='field_CellNumber']    ${MY MTS}
-    Run keyword and ignore error    Input text    //input[@id='field_Cellular']    ${MY MTS}
-    Run keyword and ignore error    Input text    //input[@id='field_SmpRowID']    ${ID}
-    Run keyword and ignore error    Input text    //input[@id='field_Sample_row_ID']    ${ID}
-    Run keyword and ignore error    Input text    //input[@id='field_EmailForSurveying']    ${SP user email address}
+    #    Input text    //input[@id='field_CellNumber']    ${mobile}
+    Input text    //input[@id='field_Cellular']    ${mobile}
+    Input text    //input[@id='field_SmpRowID']    ${ID}
+    Input text    //input[@id='field_Sample_row_ID']    ${ID}
+    Input text    //input[@id='field_EmailForSurveying']    ${user email address}
     Click element    //input[@id='addnew']
     Wait until page contains    added successfully
     Log to console    Added new row ID "${ID}" for sample (Sample ID: ${Sample ID})
@@ -14362,11 +14409,13 @@ GMAIL: Survey email.AD
     Set global variable    ${HTML}
     Log    Email content: ${HTML}
     #
-    #    Should Contain    ${HTML}    RF Email body for the invitation
-    #
+    Run Keyword If    "${email subject}"=="RF Email subject for the invitation"    Should Contain    ${HTML}    RF Email body for the invitation
+    Run Keyword If    "${email subject}"=="RF Email subject for the invitation"    Should Contain    ${HTML}    RF Link text in invitation Email
+    Run Keyword If    "${email subject}"=="RF Email subject for the invitation (in Robot language [LTR])"    Should Contain    ${HTML}    RF Email body for the invitation (in Robot language [LTR])
+    Run Keyword If    "${email subject}"=="RF Email subject for the invitation (in Robot language [LTR])"    Should Contain    ${HTML}    RF Link text in invitation Email (in Robot language [LTR])
     ${ALL_LINKS}    Get Links from Email    ${LATEST}
-    Log to console    Go to --> ${ALL_LINKS}[0] (URL from alert email)
-    Go To    ${ALL_LINKS}[0]
+    Run Keyword If    "${email subject}"=="RF Email subject for the invitation"    Log to console    Go to --> ${ALL_LINKS}[0] (URL from email)
+    Run Keyword If    "${email subject}"=="RF Email subject for the invitation" or "${email subject}"=="RF Email subject for the invitation (in Robot language [LTR])"    Go To    ${ALL_LINKS}[0]
     #
     #
     Mark All Emails As Read
@@ -14755,9 +14804,10 @@ Search client ID.AD
     [Arguments]    ${expected client name}
     go to.AD    ${URL}/main-menu.php
     ${index}    Set Variable    1
+    Set global variable    ${expected client name}
     FOR    ${i}    IN RANGE    2
         Search Element.AD    ${expected client name}    id=clients_table
-        Run Keyword If    ${ItemIsNotVisible}    Add new client    ${expected client name}
+        Run Keyword If    ${ItemIsNotVisible}    Add new client
         ...    ELSE    Log to console    "${expected client name}" client is found in a system.
         Run Keyword If    ${ItemIsVisible}    Get ID    id="clients_table"    ${expected client name}    1    2
         Run Keyword If    ${ItemIsVisible}    Exit for loop
@@ -14766,3 +14816,26 @@ Search client ID.AD
     END
     ${client ID}    set variable    ${found ID}
     Set global variable    ${client ID}
+
+Alt Replacement condition update.AD
+    [Arguments]    ${Replacement condition}    ${alt lang name}    ${exp action}
+    Go to2.AD    ${URL}/set-alt-lang-conditions.php?SetID=${Qre ID}
+    Wait until page contains    Alternative languages conditions
+    ${is element visible?}    Run keyword and return status    Page should contain    ${Replacement condition}
+    Run keyword if    ${is element visible?}    Click link    default=${Replacement condition}
+    Run keyword if    "${exp action}"=="Add" and "${is element visible?}"=="False"    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr/td/table/tbody/tr/td/button
+    Run keyword if    "${exp action}"=="Add"    Wait until page contains    Alternative language name
+    Run keyword if    "${exp action}"=="Add"    Input text    //input[@id='field_AltLangCondition']    ${Replacement condition}
+    sleep    1
+    Run keyword if    "${exp action}"=="Add"    Click element    //*[@id="idAltLangLinkEditbox"]/table/tbody/tr/td/span/button
+    Run keyword if    "${exp action}"=="Add"    Scroll Element Into View    ${alt lang name}
+    Run keyword if    "${exp action}"=="Add"    Click element    ${alt lang name}
+    Run keyword if    "${exp action}"=="Add"    Click Save/Add/Delete/Cancel button.AD
+    Run keyword if    "${exp action}"=="Add"    Wait until page contains    successfully
+    Run keyword if    "${exp action}"=="Add"    Log to console    "${Replacement condition}" is added/updated
+    #
+    Run keyword if    "${exp action}"=="Remove" and ${is element visible?}    Click element    //input[@id='delete']
+    Run keyword if    "${exp action}"=="Remove" and ${is element visible?}    Wait until page contains element    //input[@id='sure_delete']
+    Run keyword if    "${exp action}"=="Remove" and ${is element visible?}    Click element    //input[@id='sure_delete']
+    Run keyword if    "${exp action}"=="Remove" and ${is element visible?}    Wait until page contains    deleted successfully
+    Run keyword if    "${exp action}"=="Remove" and ${is element visible?}    Log to console    "${Replacement condition}" is deleted
