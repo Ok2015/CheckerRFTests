@@ -286,11 +286,11 @@ Alternative languages > add alt language
         Set global variable    ${name1}
         Set global variable    ${name2}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        go to.AD    ${URL}//alt-langs.php?page_var_filter_IsActive=&page_var_sorting_column=AltLangName&page_var_sorting_order=up&page_var_divide_recordsPerPage=500&page_var_divide_curPage=1
+        go to.AD    ${URL}/alt-langs.php?page_var_filter_IsActive=&page_var_sorting_column=AltLangName&page_var_sorting_order=up&page_var_divide_recordsPerPage=500&page_var_divide_curPage=1
         Wait until page contains element    //button[@class='btn-input']
         ${element visible?}=    Run keyword and return status    Page should contain    ${name1}
         Run Keyword If    "${element visible?}"=="True"    Click link    default=${name1}
-        Run Keyword If    "${element visible?}"=="False"    Click element    //button[@class='btn-input']
+        Run Keyword If    "${element visible?}"=="False"    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
         Wait Until Page Contains element    //input[@id='field_AltLangName']
         Input text    //input[@id='field_AltLangName']    ${name1}
         Select dropdown.AD    //*[@id="idAltLangDirectionEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Right to left')]
@@ -298,11 +298,11 @@ Alternative languages > add alt language
         Select dropdown.AD    //*[@id="idInterfaceLanguageEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'English Australia')]
         Click Save/Add/Delete/Cancel button.AD
         Wait Until Page Contains    successfully
-        go to.AD    ${URL}//alt-langs.php?page_var_filter_IsActive=&page_var_sorting_column=AltLangName&page_var_sorting_order=up&page_var_divide_recordsPerPage=500&page_var_divide_curPage=1
+        go to.AD    ${URL}/alt-langs.php?page_var_filter_IsActive=&page_var_sorting_column=AltLangName&page_var_sorting_order=up&page_var_divide_recordsPerPage=500&page_var_divide_curPage=1
         Wait until page contains element    //button[@class='btn-input']
         ${element visible?}=    Run keyword and return status    Page should contain    ${name2}
         Run Keyword If    "${element visible?}"=="True"    Click link    default=${name2}
-        Run Keyword If    "${element visible?}"=="False"    Click element    //button[@class='btn-input']
+        Run Keyword If    "${element visible?}"=="False"    Click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
         Wait Until Page Contains element    //input[@id='field_AltLangName']
         Input text    //input[@id='field_AltLangName']    ${name2}
         Select dropdown.AD    //*[@id="idAltLangDirectionEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Left to right')]

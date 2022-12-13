@@ -44,20 +44,33 @@ Update TRANSLATION
 Check System Availability
     [Tags]    Skip    Availability
     [Timeout]    10 minutes    #timeout=10 minutes
-    ${1}=    set variable    1
+    ${i}    set variable    1
     @{urls}=    String.Split String    ${TestUrls-UpTime}    ,    #    ${TestURLs}    ${TestURLs ALL systems}
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    ${loop length}=    Get length    ${urls}
-    log TO CONSOLE    ${\n}Total test URL(s) number = "${loop length}"
+    ${MM.DD.YY.Kyiv+Israel}    Get Current Date    result_format=%m.%d.%Y %H:%M
+    ${MM.DD.YY.UTC}    Get Current Date    UTC    result_format=%H:%M
+    ${MM.DD.YY.Japan}    Get Current Date    UTC    +9 hours    result_format=%H:%M
+    ${MM.DD.YY.India}    Get Current Date    UTC    +5 hours 30 minutes    result_format=%H:%M
+    ${start} =    Get Current Date
+    log to console    ${\n} ${MM.DD.YY.Kyiv+Israel} (Kyiv+Israel) ${MM.DD.YY.UTC} (UTC) ${MM.DD.YY.Japan} (Japan) ${MM.DD.YY.India} (India)
+    ${loop length}    Get length    ${urls}
+    log to console    ${\n} Checking client systems, please wait...
+    log to console    ${\n} In Total ${loop length} URLs: ${TestUrls-UpTime}
+    log    ---------------------------------------------------
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
-        go to.AD    ${URL}/login.php
-        Page should contain element    //input[@id='do_login']
-        Log to console    ${URL} admin login form is available (+)
+        go to    ${URL}/login.php
+        ${do login}    Set variable    //input[@id='do_login']
+        ${is element visible}    Run keyword and return status    Page should contain element    ${do login}
+        Set To Dictionary    ${Dictionary}    key=${URL}    value=${is element visible}
+        Log    ${URL} admin login form is available (+)
         #    go to.AD    ${URL}/c_login.php
         #    Page should contain element    //input[@id='do_login']
         #    Log to console    ${URL} shopper login form is available (+)
+        Run Keyword And Continue On Failure    Page should contain element    ${do login}
+        Run keyword if    ${is element visible}    Log    ${1}. ${URL}/login.php --> Status: OK (+)
+        Run keyword if    ${is element visible}==False    Log to console    ${\n} ${1}. ${URL}/login.php --> Status: FAIL (pls, check this system, it may be not reachable(!!!))
         ${1}=    evaluate    ${1}+1
     END
     Close Browser
@@ -71,19 +84,19 @@ Check System Uptime
     SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
     Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
     ${loop length}=    Get length    ${urls}
-    log TO CONSOLE    ${\n}Total test URL(s) number = "${loop length}"
+    log TO CONSOLE    ${\n}Total test URL(s) = "${loop length}"
     ${MM.DD.YY.Kyiv+Israel}    Get Current Date    result_format=%m.%d.%Y %H:%M
     ${MM.DD.YY.UTC}    Get Current Date    UTC    result_format=%H:%M
     ${MM.DD.YY.Japan}    Get Current Date    UTC    +9 hours    result_format=%H:%M
     ${MM.DD.YY.India}    Get Current Date    UTC    +5 hours 30 minutes    result_format=%H:%M
     ${start} =    Get Current Date
-    log to console    ${MM.DD.YY.Kyiv+Israel} (Kyiv+Israel) ${MM.DD.YY.UTC} (UTC) ${MM.DD.YY.Japan} (Japan) ${MM.DD.YY.India} (India)
+    log to console    ${\n}${MM.DD.YY.Kyiv+Israel} (Kyiv+Israel) ${MM.DD.YY.UTC} (UTC) ${MM.DD.YY.Japan} (Japan) ${MM.DD.YY.India} (India)
     FOR    ${URL}    IN    @{urls}
         Set global variable    ${URL}
         #    SET UP
-        log to console    --- System №${1}: ${URL}
-        Check System UP-Time    /login.php    SystemUPTime (08.2022).xlsx    ${1}    1    # № of sheet
-        Check System UP-Time    /c_login.php    SystemUPTime (08.2022).xlsx    ${1}    2    # № of sheet
+        log to console    ${\n} \ --- System №${1}: ${URL}
+        Check System UP-Time    /login.php    SystemUPTime (2022).xlsx    ${1}    1    # № of sheet
+        Check System UP-Time    /c_login.php    SystemUPTime (2022).xlsx    ${1}    2    # № of sheet
         ${1}=    evaluate    ${1}+1
         Log    UpTime: "${Dictionary}"
     END

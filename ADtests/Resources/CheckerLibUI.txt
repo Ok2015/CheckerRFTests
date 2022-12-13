@@ -21,7 +21,7 @@ ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
 ${Max brows win?}    YES    # YES or NO
 ${BROWSER}        Chrome    # Chrome, Firefox, Opera (Internet Explorer - to recheck! \ Microsoft Edge is not supported!!!)
-${TestUrls-UpTime}    https://online.r-m.co.il,https://system.serveandcheck.com,https://eu.checker-soft.com/gfk-ukraine,https://ipsos-russia.com,https://tyaonline.com,https://marketest.checker.co.il,https://ms-online.co.il,https://www.misonline.co.il,https://tovanot.checker.co.il,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/profpoint-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing
+${TestUrls-UpTime}    https://online.r-m.co.il,https://system.serveandcheck.com,https://eu.checker-soft.com/gfk-ukraine,https://tyaonline.com,https://marketest.checker.co.il,https://ms-online.co.il,https://www.misonline.co.il,https://tovanot.checker.co.il,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/profpoint-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing    #https://online.r-m.co.il,https://system.serveandcheck.com,https://eu.checker-soft.com/gfk-ukraine,https://ipsos-russia.com,https://tyaonline.com,https://marketest.checker.co.il,https://ms-online.co.il,https://www.misonline.co.il,https://tovanot.checker.co.il,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/profpoint-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing
 ${RFShopperEmail}    robotshopperemail@gmail.com
 ${RFManagerEmail}    robotmailbox01@gmail.com
 ${FTP host}       ftp.drivehq.com
@@ -2676,7 +2676,7 @@ Check errors on page [-1]
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    warning -
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    502 Bad Gateway
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    notice:
-    Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    notice -
+    #Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    notice -
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    Fatal error:
     Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    Database error
     #Run Keyword If    '${FAIL ON EXTRA NOTICE?}'=='YES'    Page should not contain    myErrorHandler
@@ -10975,7 +10975,7 @@ Search/add Survey.AD
     input text    //input[@id='field_SMSSurveyValidityDuration']    1
     input text    //textarea[@id='field_SMSSurveyConditionToSendLink']    1=1
     input text    //input[@id='field_SurveyName']    ${RF survey name}
-    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_121_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_113_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Run keyword and ignore error    Enter editor text.AD    //*[@id="cke_137_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_61_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
     Run Keyword If    ${demo?}    Enter editor text.AD    //*[@id="cke_72_label"]    ${Note for surveyors} for ${RF survey name}${RF REVN DT}
@@ -10989,20 +10989,20 @@ Search/add Survey.AD
     input text    _SurveysSubjAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]    ${RF email subject} (in Robot language [LTR])
     input text    _SurveysSubjAltLangs_AltLangID_${Dictionary}[Robot language [RTL]]    ${RF email subject} (in Robot language [RTL])
     #
-    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_1037_label"]    RF Message to show when the Email survey is finished
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_907_label"]    RF Message to show when the Email survey is finished
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_558_label"]    RF Message to show when the Email survey is finished
     #
-    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_1098_label"]    RF Expired message
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_968_label"]    RF Expired message
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_613_label"]    RF Expired message
     #
-    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_183_label"]    RF Email body for the invitation
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_175_label"]    RF Email body for the invitation
     #
     Execute JavaScript    window.document.getElementById("field_EmailLinkText").scrollIntoView(true)
     #
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_118_label"]    RF Email body for the invitation
     #
     input text    //*[@id="field_EmailLinkText"]    RF Link text in invitation Email
-    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_976_label"]    RF Thank you message, right after filling the survey
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_846_label"]    RF Thank you message, right after filling the survey
     Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_503_label"]    RF Thank you message, right after filling the survey
     input text    _SurveysLinkAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]    RF Link text in invitation Email (in Robot language [LTR])
     input text    _SurveysLinkAltLangs_AltLangID_${Dictionary}[Robot language [RTL]]    RF Link text in invitation Email (in Robot language [RTL])
@@ -11086,11 +11086,20 @@ Search/add Survey.AD
     Click element    //a[@id='toggler']
     Wait until page contains element    cke__SurveysBodyAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]
     Click element    cke__SurveysBodyAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]
-    Wait until page contains element    css:[class="cke_off cke_button_source"]    10
-    Click element    css:[class="cke_off cke_button_source"]
+    Run Keyword If    ${testing?}    Click element    cke__SurveysBodyAltLangs_AltLangID_66
+    Run Keyword If    ${testing?}    Wait until page contains element    //*[@id="cke_12_contents"]/iframe
+    Run Keyword If    ${testing?}    Select frame    //*[@id="cke_12_contents"]/iframe
+    Run Keyword If    ${testing?}    Input text    //body    RF Email body for the invitation (in Robot language [LTR])
+    Run Keyword If    ${testing?}    Unselect frame
+    #
+    Run Keyword If    ${testing?}    Click Save/Add/Delete/Cancel button.AD
+    Run Keyword If    ${testing?}    Wait until page contains    successfully
+    Run Keyword If    ${testing?}    Return from keyword
+    Run keyword and ignore error    Wait until page contains element    css:[class="cke_off cke_button_source"]    10
+    Run keyword and ignore error    Click element    css:[class="cke_off cke_button_source"]
     Wait until page contains element    css:[class="cke_contents"]
     Sleep    1
-    select frame    //*[@id="cke_contents__SurveysBodyAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]"]/iframe
+    Run keyword and ignore error    select frame    //*[@id="cke_contents__SurveysBodyAltLangs_AltLangID_${Dictionary}[Robot language [LTR]]"]/iframe
     Input text    //body    RF Email body for the invitation (in Robot language [LTR])
     Unselect frame
     Sleep    1
@@ -13162,8 +13171,12 @@ Check System UP-Time
     ${stop} =    Get Current Date
     ${duration}=    Subtract Date From Date    ${stop}    ${start}
     #    Run Keyword And Warn On Failure
-    Log to console    Uptime = "${duration}" ("sec.ms") [${URL}${page}]
-    Should Be True    ${duration} < ${25}    # will fail if Up-time > 25 s
+    Log to console    Actual Uptime = "${duration}" ("sec.ms") [${URL}${page}]
+    ${25}    Set variable    25
+    ${duration ok?}    Run keyword and return status    Should be true    ${duration} < ${25}
+    Run Keyword And Continue On Failure    Should be true    ${duration} < ${25}    # will fail if Up-time > 25 s
+    Run keyword if    ${duration ok?}    Log to console    Actual System Uptime is < "${25} sec". Status: OK (+)
+    Run keyword if    ${duration ok?}==False    Log to console    Actual System Uptime is > "${25} sec". Status: NOT OK (+)
     ${files}=    List files in directory    ${CURDIR}\\Extra files\\RF LOAD RESULTS\\
     log    List of files in cur dir = "${files}"
     ${file exists?}=    Run Keyword And Return Status    Should contain    ${files}    ${CURDIR}\\Extra files\\RF LOAD RESULTS\\${file name}

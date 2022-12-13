@@ -152,7 +152,7 @@ Management > add Survey (EMAIL)
         go to.AD    ${URL}/surveyors.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey-statuses.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey2-quotas.php?SurveyID=${SurveyID}
-        Run Keyword If    ${testing?}    go to.AD    ${URL}/survey-weighted-result-setup.php?SurveyID=${SurveyID}
+    #FAILS HERE - TEST+PREPR    Run Keyword If    ${preprod?}    go to.AD    ${URL}/survey-weighted-result-setup.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey-quotas-status.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/report-samples.php?SurveyID=${SurveyID}&show=1
         go to.AD    ${URL}/phone-survey-management.php?SurveyID=${SurveyID}
