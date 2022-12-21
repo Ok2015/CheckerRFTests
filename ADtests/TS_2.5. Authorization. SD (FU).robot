@@ -147,6 +147,7 @@ Deactivated shopper can not login.SD
         Input Text    name=password    ${RobotTestShopper 01}
         Click Element    ${id=submit_button}
         Enable agreements.SD
+        go to.AD    ${URL}/c_main.php
         Wait Until Page Contains    Welcome,
     END
     Close Browser
@@ -326,7 +327,7 @@ Shopper can recover UserID.SD
         Fill in the recover form.SD    RFChecker01Emailimported@gmail.com    01-01-10    1234567890
         Wait until page contains    System has duplicate accounts with the details that you entered. Contact Checker Software Systems LTD [${URLIndex} system] Email: info-${URL1index}-system@checker-soft.com, Phone: +972 4 622 81 49 to deactivate duplicate accounts.
         Log to console    Response: "System has duplicate accounts with the details that you entered. Contact Checker Software Systems LTD [TESTING system] Email: info-${URL1index}-system@checker-soft.com, Phone: +972 4 622 81 49 to deactivate duplicate accounts." (+)
-        Fill in the recover form.SD    ${RFShopperEmail}    ${Shopper birthdate}    +380670118780
+        Fill in the recover form.SD    ${RFShopperEmail}    01-02-2000    +380670118780
         Wait until page contains    User detail sent to email: ${RFShopperEmail}
         Log to console    Response: "User detail sent to email: ${RFShopperEmail}" (+)
         GMAIL: Recover UserID.SD

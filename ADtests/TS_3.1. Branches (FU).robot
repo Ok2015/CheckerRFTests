@@ -20,9 +20,12 @@ Client. Add/Update branch
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
     #
-        Set "City selection style".AD    Instant search box
+        Set "City selection style".AD    Instant search box    Do not allow adding items
     #
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
+        Search branch.AD
+        Add/edit new branch.AD    ${Short auto branch name 01}    ${Full auto branch name 01}
+        Set "City selection style".AD    Select by hierarchy    Do not allow adding items
         Search branch.AD
         Add/edit new branch.AD    ${Short auto branch name 01}    ${Full auto branch name 01}
     END
@@ -41,7 +44,7 @@ Client. Add branch characteristic (Optional+Mandatory)
         ${Bproperty 02}    Set variable    Model
         Set global variable    ${Bproperty 01}
         Set global variable    ${Bproperty 02}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Add branch characteristic    ${Client ID}    ${Bproperty 01}    Mandatory=0
         Add branch characteristic value    ${found branch characteristic ID}    ${Bproperty 01} 1    78a805    1    1.000000
         Add branch characteristic value    ${found branch characteristic ID}    ${Bproperty 01} 2    05a871    2    2.000000
@@ -80,7 +83,7 @@ Client. Add branch contact
         ${Bcontact 01}    Set variable    Branch contact RF 01
         ${Bcontact 02}    Set variable    Branch contact RF 02
     #
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Search branch.AD
     #
         Add branch contact.AD    ${Bcontact 01}    true
@@ -98,7 +101,7 @@ Client. Branch characteristic value is deleted successfully
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         ${Name}    Set variable    A - will be deleted
         Add branch characteristic    ${found ID}    ${Name}    Mandatory=1
         Add branch characteristic value    ${found branch characteristic ID}    B - value will be deleted by RF    15d589    1    1.000000
@@ -120,7 +123,7 @@ Client. Branch import throws error in case wrong file format
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Search Element.AD    ${RobotTestClient}    id=clients_table
         Check import page (dafault state)
         go to.AD    ${URL}/import-branches.php
@@ -146,7 +149,7 @@ Client. Branch import updates mandat+opt fields
         SET UP
         Excel: process file.AD    ${CURDIR}\\Resources\\Extra files\\Import\\import template [branches].xlsx    Checker Report    2
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Search Element.AD    ${RobotTestClient}    id=clients_table
         Check import page (dafault state)
         go to.AD    ${URL}/import-branches.php

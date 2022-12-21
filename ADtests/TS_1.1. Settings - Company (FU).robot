@@ -70,12 +70,12 @@ Display > check "Date format" option on registration page (DD.MM.YY and MM.DD.YY
         Input text    //input[@id='field_BirthDatey']    2222
         Wait until page contains element    //*[@id="addnew"]
         Set focus to element    //*[@id="addnew"]
-        Click element    //input[@id='field_BirthDatem']
+        Click element    //*[@id="addnew"]
         Run Keyword And Ignore Error    Click element    //*[@id="addnew"]
         Wait until page contains    * Maximum value is 2015
         Input text    //input[@id='field_BirthDatey']    1
         Wait until page contains element    //*[@id="addnew"]    3
-        Click element    //input[@id='field_BirthDatem']
+        Click element    //*[@id="addnew"]
         Execute JavaScript    window.document.getElementById("addnew").scrollIntoView(true)
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
         Run Keyword And Ignore Error    Click element    //*[@id="addnew"]

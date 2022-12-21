@@ -459,7 +459,7 @@ Custom fields > Add custom field (Users)
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
     #Search CF 1
         Search CF via table    ${Test Custom Field1}    Users    Number
         Edit CF.AD    None    None    None    None

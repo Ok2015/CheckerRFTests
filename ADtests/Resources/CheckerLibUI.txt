@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -1350,6 +1350,7 @@ SET UP
     ${HH:MM:SS}=    Get Current Date    result_format=%H:%M:%S
     ${DD.MM.YY}=    Get Current Date    result_format=%d.%m.%Y    #set date format
     ${DD-MM-YY}=    Get Current Date    result_format=%d-%m-%Y
+    ${current year}    Get Current Date    result_format=%Y
     ${Tday}=    Get Current Date    result_format=%A
     ${HH:MM}=    Get Current Date    result_format=%H:%M
     ${Ttime}=    Get Current Date    result_format=datetime
@@ -1371,6 +1372,7 @@ SET UP
     Set global variable    ${date plus 4 days}
     Set global variable    ${date minus 1 day}
     Set global variable    ${date-minus-7-days}
+    Set global variable    ${current year}
     ###
     ${Pageurl} =    Execute Javascript    return window.location.href    #get short test URL
     ${URL1index}=    Fetch From Right    ${URL}    /
@@ -2952,13 +2954,15 @@ Add 2 branches.AD
     END
 
 Search client using search bar.AD
+    [Arguments]    ${expected client name}
     Log to console    -------
     ${index}    Set Variable    1
     Set global variable    ${index}
+    Set global variable    ${expected client name}
     FOR    ${i}    IN RANGE    2
-        Search Element.AD    ${RobotTestClient}    id=clients_table
+        Search Element.AD    ${expected client name}    id=clients_table
         Run Keyword If    ${ItemIsNotVisible}    Add new client
-        ...    ELSE    Get ID    id="clients_table"    ${RobotTestClient}    1    2
+        ...    ELSE    Get ID    id="clients_table"    ${expected client name}    1    2
         Run Keyword If    ${ItemIsVisible}    exit forloop
         ${index}=    Evaluate    ${index}+1
         Log    try ${index}.
@@ -2966,17 +2970,19 @@ Search client using search bar.AD
     END
     ${Client ID}    Set variable    ${found ID}
     Set global variable    ${Client ID}
-    Set To Dictionary    ${Dictionary}    ${RobotTestClient}=${found ID}
+    Set To Dictionary    ${Dictionary}    ${expected client name}=${found ID}
     Log to console    -------
 
 Search Client.AD
+    [Arguments]    ${expected client name}
+    Set global variable    ${expected client name}
     go to.AD    ${URL}/main-menu.php
     ${index}    Set Variable    1
     FOR    ${i}    IN RANGE    2
-        Search Element.AD    ${RobotTestClient}    id=clients_table
+        Search Element.AD    ${expected client name}    id=clients_table
         Run Keyword If    ${ItemIsNotVisible}    Add new client
-        ...    ELSE    Log to console    "${RobotTestClient}" client is found in a system.
-        Run Keyword If    ${ItemIsVisible}    Get ID    id="clients_table"    ${RobotTestClient}    1    2
+        ...    ELSE    Log to console    "${expected client name}" client is found in a system.
+        Run Keyword If    ${ItemIsVisible}    Get ID    id="clients_table"    ${expected client name}    1    2
         Run Keyword If    ${ItemIsVisible}    Exit for loop
         ${index}=    Evaluate    ${index}+1
         Log    try ${index}.
@@ -4546,6 +4552,7 @@ Edit shopper self registration messages
     log to console    4. Editing "Complete registration message"
     Run Keyword If    ${check env?}    Enter editor text.AD    //*[@id="cke_188_label"]    ${Message after the completion of the registration}${RF REVN DT}
     Run Keyword If    '${check env?}'=='False'    Enter editor text.AD    //*[@id="cke_165_label"]    ${Message after the completion of the registration}${RF REVN DT}
+    Input text    //input[@id='field_DefaultAvailabilityRadious']    33
     Page should contain element    //tr[@id='tr_AvoidDuplicatesFields']
     Page should contain element    //input[@id='field_AutoApproveSelfReg']
     Page should contain element    //td[@id='idPostRegistrationCertificationEditbox']
@@ -5144,6 +5151,7 @@ Set assessors self registration options
     Page should contain element    xpath=//a[@href="checkers.php?page_var_filter_IsActive=0&page_var_filter_IsSelfRegistered=1"]
     ####
     Click element    //*[@id="idAvoidDuplicatesFieldsEditbox"]/table/tbody/tr/td/span/button
+    sleep    2
     Click element    //body[@class='page-company_shopper_reg']/div[@class='ui-multiselect-menu ui-widget ui-widget-content ui-corner-all']/div[@class='ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix ui-multiselect-hasfilter']/ul[@class='ui-helper-reset']/li[1]/a[@class='ui-multiselect-all']/span[2]
     ####
     log to console    Saving the changes${\n}
@@ -5171,7 +5179,7 @@ Self register of new shopper.SD
     Input Text    //input[@id='field_password2']    ${RobotTestShopper}
     log to console    Enter "${RobotTestShopper}" as password (+same value as a confirm password)
     log to console    Selecting Country as "${Robot country}"; address="NY"; ZIP="00067", mobile="${mobile}" Email="${Email}"
-    Select dropdown.AD    //*[@id="idTimeZoneEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Europe/Kiev')]
+    Run keyword and ignore error    Select dropdown.AD    //*[@id="idTimeZoneEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Europe/Kiev')]
     Input Text    //input[@id='field_Address']    NY
     Input Text    //input[@id='field_Zipcode']    860001
     Input Text    //input[@id='field_Phone']    ${mobile}
@@ -5354,7 +5362,7 @@ Edit q-ry [Certificate]
 Search Certificate
     [Arguments]    ${Robot Certificate}
     ${index}=    set variable    1
-    go to.AD    ${URL}/certificates.php?page_var_divide_recordsPerPage=300&page_var_divide_curPage=${index}&page_var_sorting_column=CertificateName&page_var_sorting_order=up&page_var_filter_IsActive=&Update=Please+wait
+    go to.AD    ${URL}/certificates.php?page_var_divide_recordsPerPage=500&page_var_divide_curPage=${index}&page_var_sorting_column=CertificateName&page_var_sorting_order=up&page_var_filter_IsActive=&Update=Please+wait
     FOR    ${row}    IN RANGE    1
         Log to console    Searching "${Robot Certificate}". Please wait!
         ${element present?}=    Run Keyword And Return Status    Page should contain    ${Robot Certificate}
@@ -5363,6 +5371,7 @@ Search Certificate
         ${index}=    Evaluate    ${index}+1
         Run Keyword If    '${element present?}'=='False'    click element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
     END
+    Set global variable    ${index}
     Create/Update Certificate.AD    ${Robot Certificate}    ${Robot Description Certificate} ${RF REVN DT}
     go to.AD    ${URL}/set-auto-allow-access.php?CertificateID=${found ID}
     ${CertID}    Set variable    ${found ID}
@@ -5406,7 +5415,7 @@ Create/Update Certificate.AD
     Run keyword and ignore error    Enter editor text.AD    id=cke_57_label    ${Robot Description Certificate}
     Click Save/Add/Delete/Cancel button.AD
     wait until page contains    successfully
-    go to.AD    ${URL}/certificates.php
+    go to.AD    ${URL}/certificates.php?page_var_divide_recordsPerPage=500&page_var_divide_curPage=${index}&page_var_sorting_column=CertificateName&page_var_sorting_order=up&page_var_filter_IsActive=&Update=Please+wait
     click link    default=${Robot Certificate}
     Get ID from ad bar.AD    &edit=    &page_var_sorting_column
     Log to console    "${Robot Certificate}" has been created/updated (ID:"${found ID}")
@@ -5505,6 +5514,7 @@ Set assessor display settings.AD
     Check errors on page [-1]
     Click element    //input[@id='save']
     Wait until page contains    display settings saved successfully
+    Check errors on page [-1]
 
 Set Records per page
     [Arguments]    ${expected records on page}
@@ -5620,7 +5630,7 @@ Set "General information".AD
     Input text    //input[@id='field_Phone']    ${GENERAL INFO: company phone}
     Input text    //input[@id='field_SmsSourcePhone']    888
     Input text    //input[@id='field_DefaultExitAddress']    ${URL}/login.php
-    Input text    //input[@id='field_Address']    ${GENERAL INFO: company address} | RF REVN DT: ${DD.MM.YY} - ${HH:MM} | © 2005-2022
+    Input text    //input[@id='field_Address']    ${GENERAL INFO: company address} | RF REVN DT: ${DD.MM.YY} - ${HH:MM} | © 2005-${current year}
     Input text    //input[@id='field_Fax']    ${GENERAL INFO: company phone} (fax)
     Input text    //input[@id='field_InternationalCallingCode']    +9
     Input text    //input[@id='field_CaptchaCode']    6Ldb7FMUAAAAAPd33_famKMEkmSNjqcqg7UNwYv-
@@ -5650,7 +5660,7 @@ Set "General information".AD
     ${exit act result}=    Get Element Attribute    //*[@id="field_DefaultExitAddress"]    value
     Should Be Equal    ${exit act result}    ${URL}/login.php
     ${address act result}=    Get Element Attribute    //*[@id="field_Address"]    value
-    Should Be Equal    ${address act result}    ${GENERAL INFO: company address} | RF REVN DT: ${DD.MM.YY} - ${HH:MM} | © 2005-2022
+    Should Be Equal    ${address act result}    ${GENERAL INFO: company address} | RF REVN DT: ${DD.MM.YY} - ${HH:MM} | © 2005-${current year}
     ${code act result}=    Get Element Attribute    //input[@id='field_InternationalCallingCode']    value
     Should Be Equal    ${code act result}    +9
     ${captcha code act result}=    Get Element Attribute    //input[@id='field_CaptchaCode']    value
@@ -7084,7 +7094,7 @@ Define default options for new assessors.AD
     Check errors on page [-1]
     Click element    //input[@id='save']
     Wait until page contains    display settings saved successfully
-    Set "City selection style".AD    Instant search box
+    Set "City selection style".AD    Instant search box    Do not allow adding items
 
 Check records in tables.AD
     [Arguments]    ${expected records on page}
@@ -8108,8 +8118,8 @@ Set Job board settings.AD
     Wait until page contains element    //input[@id='field_AhrUpdateAboutAssignments']
     ##
     Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-    Run Keyword If    ${check env?}    Enter editor text.AD    //*[@id="cke_57_label"]    ${Message to display when the job board is empty}${RF REVN DT}
-    Run Keyword If    '${check env?}'=='False'    Enter editor text.AD    //*[@id="cke_51_label"]    ${Message to display when the job board is empty}${RF REVN DT}
+    Run Keyword If    ${testing?}    Enter editor text.AD    //*[@id="cke_57_label"]    ${Message to display when the job board is empty}${RF REVN DT}
+    Run Keyword If    ${preprod?}    Enter editor text.AD    //*[@id="cke_51_label"]    ${Message to display when the job board is empty}${RF REVN DT}
     Log to console    Editing "Message to display when the job board is empty"
     Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
     Set checkbox.AD    //input[@id='field_AhrUpdateAboutAssignments']    ${exp status}
@@ -10194,12 +10204,9 @@ Select country/region/city.AD
     sleep    1
     Run Keyword If    ${element present?}    click element    //body/ul/li
     sleep    1
-    #    ${actual value}    Get value    //input[@id='field_CityName']
-    #    Run Keyword If    ${element present?}    Should be equal    ${actual value}    Robot country 01 -- Robot region 01 -- Robot city 01
-    #    Run Keyword If    ${element present?}    Validate value (value)    ${actual value}    Robot country 01
-    #    Run Keyword If    ${element present?}    Should Contain    ${actual value}    Robot region 01
-    #    Run Keyword If    ${element present?}    Should Contain    ${actual value}    Robot city 01
-    Run Keyword If    ${element present?}    log to console    Selected city = Robot region 01 -- Robot city 01
+    Run Keyword If    ${element present?}    Page should contain    Robot country 01 -- Robot region 01 -- Robot city 01
+    Run Keyword If    ${element present?}    log to console    Selected city = Robot country 01 -- Robot region 01 -- Robot city 01
+    Run Keyword If    ${element present?}    return from keyword
     #########
     #########
     Run Keyword If    '${element present?}'=='False'    Wait until page contains element    id=field_CityName_Cou_DIV
@@ -11753,12 +11760,15 @@ Validate value (number)
     Log to console    VALIDATION: ${locator}="${exp value}" (+)
 
 Set "City selection style".AD
-    [Arguments]    ${exp result}
+    [Arguments]    ${exp result}    ${Allow adding values?}
     go to.AD    ${URL}/company-display.php
     Wait until page contains element    //input[@id='field_RecordsPerPage']
     Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
     Select dropdown.AD    //*[@id="idCitySelectionStyleEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${exp result}')]
     Validate value (text)    //*[@id="idCitySelectionStyleEditbox"]/table/tbody/tr/td/span/button    ${exp result}
+    #
+    Select dropdown.AD    //*[@id="idCitySelectionAllowOtherEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'${Allow adding values?}')]
+    Validate value (text)    //*[@id="idCitySelectionAllowOtherEditbox"]/table/tbody/tr/td/span/button    ${Allow adding values?}
     Click Save/Add/Delete/Cancel button.AD
     Wait until page contains    Display settings saved successfully
     ###
@@ -11798,7 +11808,7 @@ Check Authorized surveyors.AD
 
 Edit text messages. AD
     [Tags]    Critical
-    go to    ${URL}/messages.php
+    go to.AD    ${URL}/messages.php
     log to console    Open ${URL}/messages.php
     Wait Until Element is Visible    //*[@id="save"]
     Wait until page contains    Here you can set the messages which will be shown on the main menu of the clients and the
@@ -12682,6 +12692,7 @@ Validate element attribute.AD
     Log to console    Element (locator="${element locator}") has attribute ${attribute}="${expected result}"
 
 Check filled review (GLOBAL).SD
+    [Arguments]    ${FINAL ACTION}
     Check default qry elements.SD
     Get ID from ad bar.AD    CritID=    &cc
     Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
@@ -13539,6 +13550,18 @@ Set assignment settings.AD
     Set checkbox.AD    //input[@id='field_AsgnConsiderBurnedCheckerBranches']    ${expected status}
     Set checkbox.AD    //input[@id='field_AsgnConsiderCheckerRegions']    ${expected status}
     Set checkbox.AD    //input[@id='field_AsgnConsiderCheckerAvailabilityRadious']    ${expected status}
+    Set checkbox.AD    //input[@id='field_EnforeOrderFillingdates']    ${expected status}
+    #
+    Input text    //input[@id='field_UrgencyAsgnWaitingRange']    2
+    Input text    //input[@id='field_MaxLateGapForCritFilling']    5
+    Input text    //input[@id='field_DefaultDailyCritLimit']    1000
+    Input text    //input[@id='field_DefaultMonthlyCritLimit']    10000
+    Input text    //input[@id='field_DefaultSetTimeExtent']    60
+    Input text    //input[@id='field_DefaultSetMaxCritsPerDay']    10000
+    Input text    //input[@id='field_RegionTransferTime']    100
+    Input text    //input[@id='field_CityTransferTime']    100
+    Input text    //input[@id='field_InCityTransferTime']    100
+    Select dropdown.AD    //*[@id="idAllowShoppersToRejectJobsEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Always')]
     Click Save/Add/Delete/Cancel button.AD
     Wait until page contains    Assignments settings saved successfully
     #    Go to2.AD    ${URL}/company-assignments.php
@@ -14268,7 +14291,7 @@ Get attached files (Review handling details page).AD
     #
     #
 
-Set client autocritapprove.AD
+Set client AutoCritApprove.AD
     [Arguments]    ${exp status?}
     go to.AD    ${URL}/clients.php?_&edit=${Client ID}
     Wait until page contains element    //input[@id='field_AutomaticCritApproval']

@@ -23,7 +23,7 @@ Management > add Sample
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         ${RF sample name}    set variable    RF SAMPLE 01
         set global variable    ${RF sample name}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Search/create Sample.AD
         go to.AD    ${URL}/sample-data-upload.php?SampleID=${Sample ID}
         Choose File    //input[@id='dataFile']    ${CURDIR}\\Resources\\Extra files\\SAMPLEs\\Valid Sample.xls
@@ -58,7 +58,7 @@ Management > sample auto import
         Ftp Close
     #
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         #    Search/add Survey.AD    RF SURVEY [SAMPLE AUTO IMPORT]    RF Questionnaire [SMS]    SMS
         go to.AD    https://eu.checker-soft.com/testing/survey-workers.php?SurveyID=496    #    ${URL}/survey-workers.php?SurveyID=${SurveyID}
         Wait until page contains    Sample Auto import profile
@@ -143,7 +143,7 @@ Management > add Survey (EMAIL)
         Get question ID
         Alt Replacement condition update.AD    1=1    -    Remove
     #
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Search/add Survey.AD    RF SURVEY [EMAIL]    RF Questionnaire [Email]    Email
         Search/create Sample.AD
         Add sample row.AD    ${ID}    ${mobile}    ${SP user email address}
@@ -152,7 +152,7 @@ Management > add Survey (EMAIL)
         go to.AD    ${URL}/surveyors.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey-statuses.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey2-quotas.php?SurveyID=${SurveyID}
-    #FAILS HERE - TEST+PREPR    Run Keyword If    ${preprod?}    go to.AD    ${URL}/survey-weighted-result-setup.php?SurveyID=${SurveyID}
+        #FAILS HERE - TEST+PREPR    Run Keyword If    ${preprod?}    go to.AD    ${URL}/survey-weighted-result-setup.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/survey-quotas-status.php?SurveyID=${SurveyID}
         go to.AD    ${URL}/report-samples.php?SurveyID=${SurveyID}&show=1
         go to.AD    ${URL}/phone-survey-management.php?SurveyID=${SurveyID}
@@ -253,7 +253,7 @@ Management > add Survey (SMS)
         set global variable    ${RF sample name}
     #
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Search/create Sample.AD
         Search/add Survey.AD    RF SURVEY [SMS]    RF Questionnaire [SMS]    SMS
         go to.AD    ${URL}/surveyors.php?SurveyID=${SurveyID}
@@ -275,7 +275,7 @@ Management > add Survey (PHONE)
         ${RF survey name}    set variable    RF SURVEY [PHONE]
         set global variable    ${RF survey name}
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Search/add Survey.AD    ${RF survey name}    RF Questionnaire [Surveys]    Phone
         Manage sample fields.AD
         Check Authorized surveyors.AD    /surveyors.php?SurveyID=${SurveyID}    ${RobotTestShopper 02}
@@ -351,7 +351,7 @@ Management > add Survey (WhatsApp Business)
         set global variable    ${RF sample name}
     #
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Search/create Sample.AD
         Search/add Survey.AD    RF SURVEY [WhatsApp B]    RF Questionnaire [SMS]    SMS
         go to.AD    ${URL}/surveyors.php?SurveyID=${SurveyID}

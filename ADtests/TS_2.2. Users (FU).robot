@@ -18,7 +18,7 @@ TC_0001. Check creation of Manager user (edit profile)
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Search user profile.AD    ${ManagerUsername}    Manager
     #
         go to.AD    ${URL}/users-generate-token.php?UserID=${found ID}
@@ -45,7 +45,7 @@ TC_0002. Check creation of Analyst user (create new + edit profile)
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Search user profile.AD    ${RobotAnalystUser 01}    Analyst
         Edit branch access    Add all
         go to.AD    ${URL}/login.php
@@ -80,7 +80,7 @@ TC_0003. Check creation of SP user (test role and its permissions)
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         ${RF role}    Set variable    RF ROLE 01
         Set global variable    ${RF role}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Create/update role.AD    ${RF role}
         Search user profile.AD    ${RobotSPUser 01}    Special permissions
     #

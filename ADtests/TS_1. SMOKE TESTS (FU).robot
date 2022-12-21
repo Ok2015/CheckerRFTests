@@ -34,8 +34,8 @@ MysteryShopping_01: Shopper submits a review (check only review statuses and sav
         Click Save/Add/Delete/Cancel button.AD
         Wait until page contains    Display settings saved successfully
         Make visible Job columns.AD    true    on
-        Search client using search bar.AD
-        Set client autocritapprove.AD    None
+        Search client using search bar.AD    ${RobotTestClient}
+        Set client AutoCritApprove.AD    None
         Search the Q-ry (via search bar).AD    ${RobotQ-ry SHOPPERS}
         Edit questionnaire.AD    RFQRY-SHO-03    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
         Get question ID
@@ -115,7 +115,7 @@ InternetSurvey_02: Shopper submits an Internet survey (check only review statuse
         Search the Q-ry (via search bar).AD    ${Robot q-ry}
         Edit questionnaire.AD    RFQRY-INT-05    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
         Get question ID
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         go to.AD    ${URL}/clients.php?_&edit=${client ID}
         Wait until page contains element    //input[@id='field_AutomaticCritApproval']
         Set checkbox.AD    //input[@id='field_AutomaticCritApproval']    None
@@ -179,7 +179,7 @@ PhoneSurvey_03: Shopper submits a Phone survey (check saved answers)
         Search the Q-ry (via search bar).AD    RF Questionnaire [Surveys]
         Edit questionnaire.AD    RFQRY-SUR-01    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
         Get question ID
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         #    Search/add Survey.AD    ${RF survey name}    RF Questionnaire [Surveys]
         #    Check Authorized surveyors.AD    /surveyors.php?SurveyID=${ReviewID}    ${RobotTestShopper 02}
         Search/create Sample.AD

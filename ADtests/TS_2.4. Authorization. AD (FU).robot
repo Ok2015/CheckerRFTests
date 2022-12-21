@@ -80,7 +80,7 @@ Not registered manager email tries to reset the password.AD
         ${email}=    Set variable    notregisteredemail@gmail.com
         SET UP
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Remove Captcha.AD
+    #    Remove Captcha.AD
         Go to    ${URL}/login.php
         Log to console    Go to ${URL}/login.php and click reset password link
         Click element    //table[@id='side_menu']/tbody/tr/td[@class='middle-right']/div[@id='FiltersArea']/div/p[5]/a[3]

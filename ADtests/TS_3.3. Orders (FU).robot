@@ -24,14 +24,14 @@ Order: Single and Mass orders with rich descr and project are created successful
         ${single order description}    Set variable    (S) RF ORDER №10 ${DD.MM.YY} (Project is not selected)+reachdescri
         ${mass order description}    Set variable    (M) RF ORDER №10 ${DD.MM.YY} (Project is selected)+reachdescri
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Set "City selection style".AD    Select by hierarchy
+        Set "City selection style".AD    Select by hierarchy    Do not allow adding items
     #
         ${RobotTestClient 02}    Set variable    AUTO 02 [RF CLIENT]
         Search client ID.AD    ${RobotTestClient 02}
         Search branch.AD
     #
-    ##    go to.AD    ${URL}/orders-assignment-manual.php
-    ##    Check Search a shopper filters.AD
+        ##    go to.AD    ${URL}/orders-assignment-manual.php
+        ##    Check Search a shopper filters.AD
     #
         Create test order (Single)    ${single rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         Create test order (MASS) - BASIC    ${mass rich order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
@@ -219,7 +219,7 @@ Order: Single order assignment notification is recieved by shoppper
         Set global variable    ${test order description}
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
         Set Operation messages.AD
@@ -305,7 +305,7 @@ Order: Manager creates a valid MASS order with N Reviews per branch+assign to ma
         ${agemin}    Set variable    4
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Set assignment settings.AD    None
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         #    Search profile.AD    ${RobotTestShopper 02}
         #    Assign property.AD    ${RobotTestShopper 02}
         Create test order (MASS) - ADVANCED    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}    3    1    1    1    1    YES    Enforce WEO-NO    Date Policy-NO
@@ -427,7 +427,7 @@ Order: Manager creates a valid MASS order with N Min & Max gap between reviews (
         ${agemin}    Set variable    4
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Set assignment settings.AD    None
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         #    Search profile.AD    ${RobotTestShopper 02}
         #    Assign property.AD    ${RobotTestShopper 02}
         Create test order (MASS) - ADVANCED    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}    2    2    6    2    2    YES    Enforce WEO-NO    Date Policy-NO
@@ -617,9 +617,9 @@ JOB: Shopper submits a review with attached files (+check reports)
         Edit shopper profile.AD    ${RobotTestShopper 02}
         ${Shopper ID}    set variable    ${found ID}
         Set global variable    ${Shopper ID}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
     #
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Go to2.AD    ${URL}/clients.php?_&edit=${client ID}
         Wait until page contains element    //input[@id='field_AutomaticCritApproval']
         Set checkbox.AD    //input[@id='field_AutomaticCritApproval']    None
@@ -719,7 +719,7 @@ JOB: Manager returns review to shopper (from 2 pages: OP and handling details)
         Set global variable    ${Internal message}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         #    Set Records per page    100
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         ${AlertName}=    Set variable    RF_ALERT - SEND REPEATEDLY
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
@@ -880,8 +880,8 @@ JOB: Alert. Send repeatedly(Off)+Alert condition
         Set global variable    ${Internal message}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Set Records per page    100
-        Search client using search bar.AD
-        Set client autocritapprove.AD    None
+        Search client using search bar.AD    ${RobotTestClient}
+        Set client AutoCritApprove.AD    None
         ${AlertName}=    Set variable    RF_ALERT - SEND REPEATEDLY
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
@@ -1235,7 +1235,7 @@ JOB: Autoapproved applications is submitted and autoapproved successfully
         Set checkbox.AD    //input[@id='field_AutomaticApproval']    true
         Click Save/Add/Delete/Cancel button.AD
     #
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Go to2.AD    ${URL}/clients.php?_&edit=${client ID}
         Wait until page contains element    //input[@id='field_AutomaticCritApproval']
         Set checkbox.AD    //input[@id='field_AutomaticCritApproval']    true
@@ -1342,7 +1342,7 @@ JOB: Finish review - Check Mystery Shopping logic (GLOBAL QRY)
         Set global variable    ${test order description}
         ${Robot q-ry}=    set variable    RF Questionnaire [GLOBAL]
         set global variable    ${Robot q-ry}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         go to.AD    ${URL}/projects.php?ClientID=${client ID}
         Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
         ${Project ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[1]/a
@@ -1387,7 +1387,7 @@ JOB: Save and Exit - Check Mystery Shopping logic (GLOBAL QRY)
         Set global variable    ${test order description}
         ${Robot q-ry}=    set variable    RF Questionnaire [GLOBAL]
         set global variable    ${Robot q-ry}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         go to.AD    ${URL}/projects.php?ClientID=${client ID}
         Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
         ${Project ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[1]/a
@@ -1396,7 +1396,7 @@ JOB: Save and Exit - Check Mystery Shopping logic (GLOBAL QRY)
         #    Make visible Job columns.AD    true    on
         #    Set Records per page    100
         #    Search shopper by AD    ${RobotTestShopper 02}
-        Get BR property ID. AD
+        Get BR property ID. AD    Manager
         Create test order (MASS) - BASIC    ${test order description}    ${RobotTestClient}    ${Robot q-ry}
         Assign order (via orders-management.php).AD    ${test order description}
         #    Order page - check elements. AD    Assigned, awaiting shopper acceptance    ${DD.MM.YY}    ${Tday}    ${order start_time}    ${order end_time}
@@ -1443,7 +1443,7 @@ JOB: Return back to shopper - Check Mystery Shopping logic (GLOBAL QRY)
         Set global variable    ${test order description}
         ${Robot q-ry}=    set variable    RF Questionnaire [GLOBAL]
         set global variable    ${Robot q-ry}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         go to.AD    ${URL}/projects.php?ClientID=${client ID}
         Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
         ${Project ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[1]/a
@@ -1452,7 +1452,7 @@ JOB: Return back to shopper - Check Mystery Shopping logic (GLOBAL QRY)
         #    Make visible Job columns.AD    true    on
         #    Set Records per page    100
         #    Search shopper by AD    ${RobotTestShopper 02}
-        Get BR property ID. AD
+        Get BR property ID. AD    Manager
         Create test order (MASS) - BASIC    ${test order description}    ${RobotTestClient}    ${Robot q-ry}
         Assign order (via orders-management.php).AD    ${test order description}
         #    Order page - check elements. AD    Assigned, awaiting shopper acceptance    ${DD.MM.YY}    ${Tday}    ${order start_time}    ${order end_time}
@@ -1497,7 +1497,7 @@ JOB: Initiate review - Check Mystery Shopping logic (GLOBAL QRY)
         Set global variable    ${test order description}
         ${Robot q-ry}=    set variable    RF Questionnaire [GLOBAL]
         set global variable    ${Robot q-ry}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         go to.AD    ${URL}/projects.php?ClientID=${client ID}
         Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
         ${Project ID}    Get text    //*[@id="table_rows"]/tbody/tr[1]/td[1]/a

@@ -20,7 +20,7 @@ Operation > Failed 105 code shows 0 results on check review condition page
         ${LabelName}=    Set variable    RF Label 03 - will be deleted by manager
         Set global variable    ${LabelName}
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Get BR property ID. AD    Manager
     #
         Go to2.AD    ${URL}/crits-handling.php
@@ -301,7 +301,7 @@ Operation > Internet survey shows a reached quota message
         Set global variable    ${ISurveyName}
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Search the Q-ry (via search bar).AD    RF Questionnaire [Internet]
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Edit ISurvey.AD    0    RF Questionnaire [Internet]    BranchFullname 05 (for Internet Surveys)
         Log to console    Starting the review if quota is reached at ${URL}/i_survey-fill.php?SurveyID=${ReviewID}
         go to.AD    ${URL}/i_survey-fill.php?SurveyID=${ReviewID}
@@ -329,7 +329,7 @@ Operation > Pass Internet survey
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Search the Q-ry (via search bar).AD    RF Questionnaire [Internet]
         Get question ID
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Edit ISurvey.AD    1000000    RF Questionnaire [Internet]    ${Branch}
         go to.AD    ${URL}/i_survey-fill.php?SurveyID=${ReviewID}
         Log to console    Starting the review at ${URL}/i_survey-fill.php?SurveyID=${ReviewID}

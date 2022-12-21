@@ -24,7 +24,7 @@ Shopper is registered and autoapproved. FU
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Define default options for new assessors.AD    true
         Edit shopper self registration messages
-        Set "City selection style".AD    Instant search box
+        Set "City selection style".AD    Select by hierarchy    Do not allow adding items
         Set assessors self registration options
         go to.AD    ${URL}/company_shopper_reg.php
         Wait until page contains element    //input[@id='field_AllowCheckerSelfReg']
@@ -160,22 +160,21 @@ Shopper is registered and autoapproved. FU
         Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[56]    Allowed IP addresses
         Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[57]    CSSFileName
     #
-        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[58]    Bank Name
-        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[59]    Bank Branch Name
-        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[60]    Phone for VOIP calls
-        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[61]    Daily regions limit
-        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[62]    Daily cities limit
-        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[63]    Shopper balance
-    #
-        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[58]    Phone for VOIP calls
-        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[59]    Daily regions limit
-        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[60]    Daily cities limit
-        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[61]    Shopper balance
+        Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[58]    Bank Name
+        Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[59]    Bank Branch Name
+        Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[60]    Phone for VOIP calls
+        Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[61]    Daily regions limit
+        Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[62]    Daily cities limit
+        Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[63]    Shopper balance
+        #    Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[58]    Phone for VOIP calls
+        #    Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[59]    Daily regions limit
+        #    Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[60]    Daily cities limit
+        #    Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/thead/tr[1]/th[61]    Shopper balance
     #
         Run Keyword If    ${preprod?}    Element text should be    //td[@class='db-ltr'][1]    RF-${random string} RF-${random string}
-        Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][1]    RF-${random string}
-        Run Keyword If    ${preprod?}    Element text should be    //td[@class='db-ltr'][2]    ${ShopperID}
+        ...    ELSE    Element text should be    //td[@class='db-ltr'][1]    RF-${random string}
         Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][2]    RF-${random string}
+        Run Keyword If    ${preprod?}    Element text should be    //td[@class='db-ltr'][2]    ${ShopperID}
         Element text should be    //td[@class='db-ltr'][4]    Yes
         Element text should be    //td[@class='db-ltr'][5]    No
         Element text should be    //td[@class='db-ltr'][6]    Login
@@ -187,6 +186,8 @@ Shopper is registered and autoapproved. FU
         Element text should be    //td[@class='db-ltr'][13]    Robot region 01
         Element text should be    //td[@class='db-ltr'][14]    Robot city 01
         Element text should be    //td[@class='db-ltr'][15]    860001
+        Run Keyword If    ${preprod?}    Element text should be    //td[@class='db-ltr'][16]    42.105522
+        Run Keyword If    ${preprod?}    Element text should be    //td[@class='db-ltr'][17]    -75.923286
         Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][16]    43.299431
         Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][17]    -74.217934
         Element text should be    //td[@class='db-ltr'][18]    ${mobile}
@@ -195,8 +196,7 @@ Shopper is registered and autoapproved. FU
         Element text should be    //td[@class='db-ltr'][21]    RF-${random string}@gmail.com
         Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][25]    RF-${random string}
         Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][26]    RF-${random string}
-        Run Keyword If    ${preprod?}    Element text should be    //td[@class='db-ltr'][27]    40
-        Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][27]    0
+        Element text should be    //td[@class='db-ltr'][27]    33
         Element text should be    //td[@class='db-ltr'][28]    240
         Element text should be    //td[@class='db-ltr'][29]    12
         Run keyword and ignore error    Element text should be    //td[@class='db-ltr'][31]    Yes
@@ -223,16 +223,9 @@ Shopper is registered and autoapproved. FU
         Element text should be    //td[@class='db-ltr'][53]    Yes
         Element text should be    //td[@class='db-ltr'][54]    Yes
         Element text should be    //td[@class='db-ltr'][56]    Default
-        Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][61]    3
-        Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][60]    1
-        Run Keyword If    ${testing?}    Element text should be    //td[@class='db-ltr'][62]    0.00
-        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[60]    3
-        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[59]    1
-        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[61]    0.00
-        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[17]    42.105522
-        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[17]    43.299431
-        Run Keyword If    ${preprod?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[18]    -75.923286
-        Run Keyword If    ${testing?}    Element text should be    //*[@id="table_rows"]/tbody/tr/td[18]    -74.217934
+        Element text should be    //td[@class='db-ltr'][61]    3
+        Element text should be    //td[@class='db-ltr'][60]    1
+        Element text should be    //td[@class='db-ltr'][62]    0.00
     END
     close all browsers
     [Teardown]    Close All Browsers

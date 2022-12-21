@@ -51,6 +51,7 @@ Job board settings > Job panel columns are enabled
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Make visible Job columns.AD    true    on
         Set Job board settings.AD    true
+        Set assignment settings.AD    true
     END
     Close Browser
     [Teardown]    Close Browser.AD
@@ -285,7 +286,13 @@ Operation settings > Assessor display settings > Define default options for new 
         Click Save/Add/Delete/Cancel button.AD
     #
         Register random shopper.SD
-        Enter login and password.SD    RF-${random string}    RF-${random string}
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        Search Element.AD    RF-${random string}    ${Checker Table ID}
+        Run Keyword If    ${preprod?}    Get ID    id="checkers_table"    RF-${random string} RF-${random string}    1    3
+        Run Keyword If    ${testing?}    Get ID    id="checkers_table"    RF-${random string}    1    2
+    #
+        Run Keyword If    ${preprod?}    Enter login and password.SD    ${found ID}    RF-${random string}
+        Run Keyword If    ${testing?}    Enter login and password.SD    RF-${random string}    RF-${random string}
         Enable agreements.SD
         go to.AD    ${URL}/c_main.php
         Page should contain    Welcome, RF-${random string}
@@ -310,7 +317,13 @@ Operation settings > Assessor display settings > Define default options for new 
         Define default options for new assessors.AD    true
         Register random shopper.SD
         Run Keyword If    '${check emails?}'=='True'    GMAIL: Assessor self registration.AD
-        Enter login and password.SD    RF-${random string}    RF-${random string}
+        Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
+        Search Element.AD    RF-${random string}    ${Checker Table ID}
+        Run Keyword If    ${preprod?}    Get ID    id="checkers_table"    RF-${random string} RF-${random string}    1    3
+        Run Keyword If    ${testing?}    Get ID    id="checkers_table"    RF-${random string}    1    2
+    #
+        Run Keyword If    ${preprod?}    Enter login and password.SD    ${found ID}    RF-${random string}
+        Run Keyword If    ${testing?}    Enter login and password.SD    RF-${random string}    RF-${random string}
         Enable agreements.SD
         go to.AD    ${URL}/c_main.php
         Page should contain    Welcome, RF-${random string}

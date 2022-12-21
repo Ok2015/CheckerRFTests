@@ -167,7 +167,7 @@ ${Survey payment ID}    ${EMPTY}
 ${Order count ID}    ${EMPTY}
 ${Due date of the visit ID}    ${EMPTY}
 ${Client name ID}    ${EMPTY}
-${order start_time}    06:02
+${order start_time}    01:01
 ${order end_time}    23:59
 ${GENERAL INFO: company phone}    +972 4 622 81 49
 ${GENERAL INFO: company address}    1 Arba Agudot street Hadera, Israel

@@ -20,7 +20,7 @@ Client. Add client and edit
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Edit client.AD
         Run keyword and ignore error    Select client users for alerts
         Login as a Shopper
@@ -39,7 +39,7 @@ Client. Deactivation/Activation
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Deactivate client    ${found ID}
         Search Element.AD    ${RobotTestClient}    id=clients_table
         ${status}    Get text    //*[@id="clients_table"]/tbody/tr/td[7]
@@ -59,7 +59,7 @@ Client. Create graph color groups for client
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Set client report custom text.AD
         Set visit report settings.AD
         Set client report settings.AD
@@ -80,7 +80,7 @@ Client. Create graph color group and delete it
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Check errors on page [-1]
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         ${Level name}=    set variable    Level (to delete)    #max 25 letters in title
         set global variable    ${Level name}
         Validate graph level    ${Level name}    1000    2000    rgb(230, 134, 0)
@@ -130,7 +130,7 @@ Client. Add label, edit and delete
         ${LabelName}=    Set variable    RF AutoLabel - to be deleted
         Set global variable    ${LabelName}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Add/Edit label.AD    ${LabelName}    0    0    None
         go to.AD    ${URL}/client-statuses.php?ClientID=${found ID}
         wait until page contains element    //button[@class='btn-input']
@@ -161,7 +161,7 @@ Client. Add auto label
         ${LabelName 02}=    Set variable    RF Label 02 [Manually change to this label]
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Add/Edit label.AD    ${LabelName 01}    0    0    true
     #
         Add/Edit label.AD    ${LabelName 02}    0    0    None
@@ -177,7 +177,7 @@ Client. Add worker
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         Add client worker.AD    RF Worker 01 [Active]    true    workercode-001
         Add client worker.AD    RF Worker 02 [Not Active]    None    workercode-002
     #
@@ -216,7 +216,7 @@ Client. Add active project
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         go to.AD    ${URL}/projects.php?ClientID=${client ID}
         Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
         ${proj visible?}=    Run Keyword and return status    Page should contain    ${RF Project}
@@ -275,7 +275,7 @@ Client. Add not active project
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         go to.AD    ${URL}/projects.php?ClientID=${client ID}
         Wait until page contains element    //button[@class='btn-input']
         ${RF Project not active}    Set variable    RF NOT ACTIVE project 2022 [PROJECT]
@@ -336,7 +336,7 @@ Client. Add visit template
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         go to.AD    ${URL}/client-visit-reports.php?&ClientID=${client ID}
         Wait until page contains    Client name: ${RobotTestClient}
         Wait until page contains    Visit report templates
@@ -376,7 +376,7 @@ Client. Add alert(s)
         Set global variable    ${AlertName 04}
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Add/Edit alert.AD    Accepted, awaiting implementation    ${AlertName 01}    1=1    xpath=//li[contains(.,'Survey report')]    Attachment    None    true    ${empty}    true    None    This is an alert text "${AlertName 01}" ${Usual Text Codes Table} ${RF REVN DT}    No    None
         Add/Edit alert.AD    Finished, awaiting approval    ${AlertName 02}    1=1    xpath=//li[contains(.,'Survey report-v6')]    Attachment    None    true    ${empty}    true    None    This is an alert text "${AlertName 02}" ${Usual Text Codes Table} ${RF REVN DT}    No    None
         Add/Edit alert.AD    Approved    ${AlertName 03}    1=1    xpath=//li[contains(.,'EmailVisitReport')]    Attachment    None    true    ${empty}    true    None    This is an alert text "${AlertName 03}" ${Usual Text Codes Table} ${RF REVN DT}    No    None
@@ -397,7 +397,7 @@ Alert. Create alert and delete it
         ${AlertName}=    Set variable    RF_ALERT - TO BE DELETED
         Set global variable    ${AlertName}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
     #
         Add/Edit alert.AD    Finished, awaiting approval    ${AlertName}    $[221]$>=0 & $[218]$='RF Questionnaire [Shoppers]'    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${RFShopperEmail}    true    None    Some contetnt goes here    No    None
     #
@@ -431,7 +431,7 @@ FTP Alert - PDF
         Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
         Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-v6')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
         Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
     #
@@ -473,7 +473,7 @@ FTP Alert - file HTML
         Empty Directory    ${CURDIR}\\Resources\\Extra files\\FTP files    # on local system
         Log to console    Target local folder is cleaned before test: ${CURDIR}\\Resources\\Extra files\\FTP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'Survey report-File HTML')]    Attachment    true    true    ${empty}    None    None    This is an alert text "${AlertName}" ${RF REVN DT}    Yes    None
         Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
     #
@@ -507,7 +507,7 @@ Alert. Send alert to special email with PDF +no attachment (positive + negative)
         ${AlertName}=    Set variable    RF_ALERT REVIEW - $[203]$ - NO ATTACHMENTS
         Set global variable    ${AlertName}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
     #
         Log to console    CASE 1: POSITIVE, send alert and check alert body
         go to.AD    ${URL}/client-statuses.php?&ClientID=${found ID}
@@ -568,7 +568,7 @@ Alert. Send alert email with attachments + HTML
         Set global variable    ${AlertName}
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
     #
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
@@ -601,7 +601,7 @@ Alert. Send alert email to all branch contact with attachments + HTML
         Set global variable    ${AlertName}
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
     #
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
@@ -635,7 +635,7 @@ Alert. Send alert email to role
         Set global variable    ${AlertName}
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Create/update role.AD    ${RF role name}
         Search user profile.AD    ${RobotSPUser 01}    Special permissions
         #    Search user profile.AD    RF user 03 [SP USER]    Special permissions
@@ -671,7 +671,7 @@ Alert. Send concentrated alert
         Set global variable    ${AlertName}
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Get section ID. AD    Section 01 [RF]
         Get BR property ID. AD    Manager
         Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
@@ -735,7 +735,7 @@ Alert. Send alert email to client users
     #
         Log to console    Case 2: send alert for "2" client`s users (1ne user with branch access and 2nd without access - both will receive system alert email)
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Search user profile.AD    RF user 03 [SP USER]    Special permissions
         Edit branch access    Add all
         Search user profile.AD    RF user 02 [SP USER]    Special permissions
@@ -784,7 +784,7 @@ Alert. Do not send alert on days
         ${AlertName}=    Set variable    RF_ALERT REVIEW - $[203]$ - DO NOT SEND ON DAYS
         Set global variable    ${AlertName}
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD
+        Search client using search bar.AD    ${RobotTestClient}
         Add/Edit alert.AD    Approved    ${AlertName}    1=1    xpath=//li[contains(.,'Survey report-v6')]    None    true    None    ${RFShopperEmail}    None    None    123    No    None
         go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}
         Click link    default=${AlertName}

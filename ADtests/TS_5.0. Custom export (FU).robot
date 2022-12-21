@@ -29,7 +29,7 @@ Custom export: check header with hidden columns (EXCEL2007)
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search the Q-ry (via search bar).AD    ${RobotQ-ry SHOPPERS}
         Get question ID
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         ${RF custom profile name}    set variable    RF.CustomExport
         set global variable    ${RF custom profile name}
         ${RF export file name}    set variable    RF.CExport_without_2_header_columns[${URLIndex}]
@@ -64,7 +64,7 @@ Custom export: Base of export=Reviews (EXCEL2007) check file only
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         Search the Q-ry (via search bar).AD    ${RobotQ-ry SHOPPERS}
         Get question ID
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         ${RF custom profile name}    set variable
         set global variable    ${RF custom profile name}    RF.CustomExport
         ${RF export file name}    set variable    RF.CustomExport(BaseOfExport=Reviews)[${URLIndex}]
@@ -102,7 +102,7 @@ Custom export: Base of export=Reviews (EXCEL2007) compare data with sys pages
     #
         Search the Q-ry (via search bar).AD    RF Questionnaire [Shoppers]
         Get question ID
-        Search Client.AD
+        Search Client.AD    ${RobotTestClient}
         ${RF custom profile name}    set variable
         set global variable    ${RF custom profile name}    RF.CustomExport
         ${RF export file name}    set variable    RF.CustomExport(BaseOfExport=Reviews)[${URLIndex}]
