@@ -2,7 +2,7 @@
 #Rev date: 07.04.2022 (v.003)
 ${host}           imap.gmail.com
 ${ROBOT MANAGER email address}    robotmailbox01@gmail.com
-${ROBOT MANAGER email password}    ceuqxttxiywrnpio
+${ROBOT MANAGER app password}    hzeootdtbirenkrj
 ${SHOPPER_URL}    /c_login.php
 ${LOCAL_LIB}      ${CURDIR}/CheckerLibUI.txt
 ${ManagerUsername}    ROBOT [MANAGER]    # main Robot manager for all tests

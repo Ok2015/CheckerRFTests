@@ -295,7 +295,7 @@ Alternative languages > add alt language
         Input text    //input[@id='field_AltLangName']    ${name1}
         Select dropdown.AD    //*[@id="idAltLangDirectionEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Right to left')]
         Set checkbox.AD    //input[@id='field_IsActive']    true
-        Select dropdown.AD    //*[@id="idInterfaceLanguageEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'English Australia')]
+        Select dropdown.AD    //*[@id="idInterfaceLanguageEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'English UK')]
         Click Save/Add/Delete/Cancel button.AD
         Wait Until Page Contains    successfully
         go to.AD    ${URL}/alt-langs.php?page_var_filter_IsActive=&page_var_sorting_column=AltLangName&page_var_sorting_order=up&page_var_divide_recordsPerPage=500&page_var_divide_curPage=1
@@ -307,7 +307,7 @@ Alternative languages > add alt language
         Input text    //input[@id='field_AltLangName']    ${name2}
         Select dropdown.AD    //*[@id="idAltLangDirectionEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'Left to right')]
         Set checkbox.AD    //input[@id='field_IsActive']    true
-        Select dropdown.AD    //*[@id="idInterfaceLanguageEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'English Australia')]
+        Select dropdown.AD    //*[@id="idInterfaceLanguageEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'English UK')]
         Click Save/Add/Delete/Cancel button.AD
         Wait Until Page Contains    successfully
         GET alt lang ID.AD    ${name1}

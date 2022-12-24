@@ -720,58 +720,6 @@ Alert. Send concentrated alert
     Close Browser
     [Teardown]    Close Browser.AD
 
-Alert. Send alert email to client users
-    [Tags]    Editor    Alert
-    [Setup]
-    [Timeout]
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        ${AlertName}=    Set variable    RF_ALERT TO CLIENT USER - REVIEW - $[203]$
-        Set global variable    ${AlertName}
-    #
-        Log to console    Case 2: send alert for "2" client`s users (1ne user with branch access and 2nd without access - both will receive system alert email)
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search client using search bar.AD    ${RobotTestClient}
-        Search user profile.AD    RF user 03 [SP USER]    Special permissions
-        Edit branch access    Add all
-        Search user profile.AD    RF user 02 [SP USER]    Special permissions
-        Edit branch access    Remove all
-    #
-        Get section ID. AD    Section 01 [RF]
-        Get BR property ID. AD    Manager
-        Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    None    None
-        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
-        Click link    default=${AlertName}
-        Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 02 [SP USER] (RF user 02 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
-        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
-        Click link    default=${AlertName}
-        Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 03 [SP USER] (RF user 03 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
-        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
-        Get Review handling details page.AD    ${ReviewID}
-        Simulate alert.AD
-        Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
-    #
-        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user
-        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper
-    #
-        Log to console    Case 2: send alert for "2" client`s users (user with branch access will receive alert and users without branch access - will receive system notice with full review report link)
-        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    None    true
-        Simulate alert.AD
-        Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
-        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user    # system notice because no bran access
-        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper    # full report
-        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Manager    # system notice because no bran access
-    #
-        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
-    END
-    Close Browser
-    [Teardown]    Close Browser.AD
-
 Alert. Do not send alert on days
     [Tags]    Editor    Alert
     [Timeout]
@@ -838,6 +786,58 @@ Alert. Do not send alert on days
         Run keyword if    ${text visible?}    Wait until page contains    Deleted: 1
         Log to console    Expected schedule to be sent = TODAY DATE + 1 day = ${date plus 1 day}; From=${From}; Address=${Address}
         Log to console    Scheduled to be sent at = "${Scheduled to be sent at}" (+) Record is deleted
+    #
+        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
+    END
+    Close Browser
+    [Teardown]    Close Browser.AD
+
+Alert. Send alert email to client users
+    [Tags]    Editor    Alert
+    [Setup]
+    [Timeout]
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        ${AlertName}=    Set variable    RF_ALERT TO CLIENT USER - REVIEW - $[203]$
+        Set global variable    ${AlertName}
+    #
+        Log to console    Case 2: send alert for "2" client`s users (1ne user with branch access and 2nd without access - both will receive system alert email)
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Search client using search bar.AD    ${RobotTestClient}
+        Search user profile.AD    RF user 03 [SP USER]    Special permissions
+        Edit branch access    Add all
+        Search user profile.AD    RF user 02 [SP USER]    Special permissions
+        Edit branch access    Remove all
+    #
+        Get section ID. AD    Section 01 [RF]
+        Get BR property ID. AD    Manager
+        Get project ID.AD    RF ACTIVE project 2022 [PROJECT]
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    None    None
+        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
+        Click link    default=${AlertName}
+        Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 02 [SP USER] (RF user 02 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
+        go to.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Dictionary}[${RobotTestClient}]
+        Click link    default=${AlertName}
+        Manage allowed users.AD    //select[@id='SelectedUsers']    RF user 03 [SP USER] (RF user 03 [SP USER])    //select[@id='bla1']    //tbody/tr[28]/td[2]/table/tbody/tr/td[2]/input[@id='moveButton']
+        Open Operational Panel.AD    Approved    xpath=//li[contains(.,'${RobotTestClient}')]
+        Get Review handling details page.AD    ${ReviewID}
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
+    #
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper
+    #
+        Log to console    Case 2: send alert for "2" client`s users (user with branch access will receive alert and users without branch access - will receive system notice with full review report link)
+        Add/Edit alert.AD    Approved    ${AlertName}    $[221]$>=0    xpath=//li[contains(.,'EmailVisitReport')]    List    true    true    ${empty}    true    None    This is an alert text "${AlertName}" ${Usual Text Codes Table} ${Branch property text codes} ${Section text codes} ${RF REVN DT}    None    true
+        Simulate alert.AD
+        Check report-failed-email page.AD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF SP user    # system notice because no bran access
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Shopper    # full report
+        GMAIL: GET ALERT EMAIL.SD    Email subject: RF_ALERT TO CLIENT USER - REVIEW - ${ReviewID}    RF Manager    # system notice because no bran access
     #
         Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END

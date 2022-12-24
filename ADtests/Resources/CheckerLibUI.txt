@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/testing    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}       https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -6005,7 +6005,7 @@ Review in print version page. AD
     Element Text Should Be    //table[2]/tbody/tr/td/center/form/table[1]/tbody/tr[4]/td[1]    Q2. Q2: ${Q2 text}    #2.1.1. Q2: Enter your age    2. 2: ${Q2 text}
     Element Text Should Be    //table[2]/tbody/tr/td/center/form/table[1]/tbody/tr[5]/td[1]    Q3. Q3: ${Q3 text}
     Element Text Should Be    //table[2]/tbody/tr/td/center/form/table[1]/tbody/tr[6]/td[1]    Bonus. Bonus: ${Q4 text}
-    Element should contain    //table[2]/tbody/tr/td/center/form/table[1]/tbody/tr[3]/td[2]    46-55(yellow) (in Robot language [RTL])
+    Element should contain    //table[2]/tbody/tr/td/center/form/table[1]/tbody/tr[3]/td[2]    46-55(yellow)
     Element Text Should Be    //table[2]/tbody/tr/td/center/form/table[1]/tbody/tr[4]/td[2]    green${space}
     Element Should Contain    //table[2]/tbody/tr/td/center/form/table[1]/tbody/tr[5]/td[2]    YES
     Element should contain    //table[2]/tbody/tr/td/center/form/table[1]/tbody/tr[6]/td[2]    Not now
@@ -6098,7 +6098,7 @@ Full scorecard report.AD
     Element Text Should Be    //*[@id="side_menu"]/tbody/tr/td/table/tbody/tr/td/center/form/table[1]/tbody/tr[4]/td[1]    Q2. Q2: ${Q2 text}
     Element Text Should Be    //*[@id="side_menu"]/tbody/tr/td/table/tbody/tr/td/center/form/table[1]/tbody/tr[5]/td[1]    Q3. Q3: ${Q3 text}
     Element Text Should Be    //*[@id="side_menu"]/tbody/tr/td/table/tbody/tr/td/center/form/table[1]/tbody/tr[6]/td[1]    Bonus. Bonus: ${Q4 text}
-    Element should contain    //*[@id="side_menu"]/tbody/tr/td/table/tbody/tr/td/center/form/table[1]/tbody/tr[3]/td[2]    46-55(yellow) (in Robot language [RTL])
+    Element should contain    //*[@id="side_menu"]/tbody/tr/td/table/tbody/tr/td/center/form/table[1]/tbody/tr[3]/td[2]    46-55(yellow)
     Element Text Should Be    //*[@id="side_menu"]/tbody/tr/td/table/tbody/tr/td/center/form/table[1]/tbody/tr[4]/td[2]    green${space}
     Element Text Should Be    //*[@id="side_menu"]/tbody/tr/td/table/tbody/tr/td/center/form/table[1]/tbody/tr[5]/td[2]    YES${space}
     Element should contain    //*[@id="side_menu"]/tbody/tr/td/table/tbody/tr/td/center/form/table[1]/tbody/tr[6]/td[2]    Yes
@@ -13708,7 +13708,7 @@ GMAIL: GET ALERT EMAIL.SD
     Log to console    ${\n}--------------------------Open Mailbox--------------------------${\n}
     Run keyword if    "${whose email box?}"=="RF Shopper"    Open Mailbox    host=${host}    user=${RFShopperEmail}    password=${shopper email app password}
     Run keyword if    "${whose email box?}"=="RF SP user"    Open Mailbox    host=${host}    user=${SP user email address}    password=${SP user email pass}
-    Run keyword if    "${whose email box?}"=="RF Manager"    Open Mailbox    host=${host}    user=${ROBOT MANAGER email address}    password=${ROBOT MANAGER email password}
+    Run keyword if    "${whose email box?}"=="RF Manager"    Open Mailbox    host=${host}    user=${ROBOT MANAGER email address}    password=${ROBOT MANAGER app password}
     Run keyword if    "${whose email box?}"=="RF Shopper"    Log to console    Email = "${RFShopperEmail}"
     Run keyword if    "${whose email box?}"=="RF SP user"    Log to console    Email = "${SP user email address}"
     Run keyword if    "${whose email box?}"=="RF Manager"    Log to console    Email = "${ROBOT MANAGER email address}"
