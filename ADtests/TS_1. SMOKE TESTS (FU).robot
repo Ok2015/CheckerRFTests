@@ -278,16 +278,16 @@ Checkertificate_04: Shopper submits a Checkertificate review (check only review 
         Page should contain    ${Robot Description Certificate}
         Log to console    "${Robot Certificate}" is visible (${Robot Description Certificate})
         Click element    //*[@id="table_rows"]/tbody/tr/td[2]/a
-        Run keyword and ignore error    Handle alert
+        Handle alert
     ##################
-        Run keyword if    ${testing?}    Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF    2000    I am a Free text RF message    I am an Internal RF message    No
-        Run keyword if    ${testing?}    Click element    //*[@id="saveAndExit"]
-        Run keyword if    ${testing?}    Wait until page contains    Data saved
-        Run keyword if    ${testing?}    go to.AD    ${URL}/c_unfinished-crits.php
-        Run keyword if    ${testing?}    Page should not contain    ${Robot Certificate}
-        Run keyword if    ${testing?}    Page should not contain    ${Robot Description Certificate}
-        Run keyword if    ${testing?}    Page should not contain    ${Robot q-ry}
-        Run keyword if    ${testing?}    Log to console    ${URL}/c_unfinished-crits.php does not contain saved certificate job (+)
+        Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF    2000    I am a Free text RF message    I am an Internal RF message    No
+        Click element    //*[@id="saveAndExit"]
+        Wait until page contains    Data saved
+        go to.AD    ${URL}/c_unfinished-crits.php
+        Page should not contain    ${Robot Certificate}
+        Page should not contain    ${Robot Description Certificate}
+        Page should not contain    ${Robot q-ry}
+        Log to console    ${URL}/c_unfinished-crits.php does not contain saved certificate job (+)
     #
         go to.AD    ${URL}/c_certificate-list.php?CerID=${CertID}
         Wait until page contains    CheckerTificate

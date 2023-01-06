@@ -1,5 +1,5 @@
 *** Setting ***
-Documentation     Library for Checker Soft LTD (Rev date: 07.04.2022 17:38 | v.004)
+Documentation     Library for Checker Soft LTD (Rev date: 07.01.2023 17:38 | v.005)
 Library           SeleniumLibrary
 Library           String
 Library           Collections
