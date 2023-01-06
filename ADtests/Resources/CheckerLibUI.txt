@@ -3169,7 +3169,7 @@ Set checkbox.AD
     ...    ELSE    click element    ${element ID}
     ${2 status}    Get Element Attribute    ${element ID}    checked
     Log to console    Element ${element ID} -> status is set to: ${2 status}
-    Scroll element into view    ${element ID}
+    #    Scroll element into view    ${element ID}
 
 Upload CSS.AD
     go to.AD    ${URL}/company-css-editor.php?New=Please+wait
@@ -6553,7 +6553,7 @@ Select dropdown.AD
     set focus to element    ${exp value}
     Click element    ${exp value}
     wait until page contains element    ${element ID}
-    Scroll Element Into View    ${exp value}
+    #    Scroll Element Into View    ${exp value}
     set focus to element    ${exp value}
     ${status}=    Get text    ${element ID}
     log to console    Dropdown set to "${element ID}" --> "${exp value}"
