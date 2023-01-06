@@ -106,7 +106,8 @@ Edit bank names > add RF bank and delete it (Manual)
         Set global variable    ${bank_br_code}
         Log to console    Let`s create "${bank_name}" bank
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Run Keyword If    ${preprod?}    Exit forloop
+        Enable NewShopperInt.AD    None
+        #    Run Keyword If    ${preprod?}    Exit forloop
         Add/update bank.AD    ${bank_name}    ${bank_code}    /settings-bank-names.php
         Search profile.AD    ${RobotTestShopper 02}
         Assign bank.AD    ${RobotTestShopper 02}    ${bank_name}-${bank_code}    ${bank_br_name}-01-${bank_br_code}-01
@@ -144,7 +145,7 @@ Edit bank names > add RF bank and delete it (Manual)
         Validate value (value)    //select[@id='BankBranchLink']    ${empty}
         Click button    //*[@id="save"]
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Delete bank.AD    ${bank_name}    ${bank_code}    deleted succssfully
+        Delete bank.AD    ${bank_name}    ${bank_code}    deleted successfully
         Log to console    Status: OK - Deleted not assigned bank + bank branch (+)
     END
     Close Browser
@@ -164,9 +165,9 @@ Edit bank names > add RF bank and branch, assign, delete (in a Bulk)
         ${bank_code}    set variable    RFBC-03
         Log to console    Let`s add "${bank_name}" bank via bulk box
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Run Keyword If    ${preprod?}    Exit forloop
+        #    Run Keyword If    ${preprod?}    Exit forloop
         Add bank+branches (in a bulk).AD    ${bank_name}    ${bank_code}
-        Delete bank.AD    ${bank_name}    ${bank_code}    deleted succssfully
+        Delete bank.AD    ${bank_name}    ${bank_code}    deleted successfully
     END
     Close Browser
     [Teardown]    Close Browser.AD
@@ -224,10 +225,14 @@ Edit credit cards > add credit card
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
         ${bank_name}    set variable    RF BANK
         ${bank_code}    set variable    RFBC-01
-        Log to console    Let`s add "${bank_name}" bank via bulk box
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Run Keyword If    ${preprod?}    Add record.AD    ${bank_name}    ${bank_name} description    /settings-bank-names.php
-        Run Keyword If    ${testing?}    Add/update bank.AD    ${bank_name}    ${bank_code}    /settings-bank-names.php
+        ${bank_br_name}    set variable    RF Branch Name
+        ${bank_br_code}    set variable    RFBrCode
+        Set global variable    ${bank_br_name}
+        Set global variable    ${bank_br_code}
+        #    Run Keyword If    ${preprod?}    Add record.AD    ${bank_name}    ${bank_name} description    /settings-bank-names.php
+    #
+        Run keyword and ignore error    Delete bank.AD    ${bank_name}    ${bank_code}    deleted successfully
+        Add/update bank.AD    ${bank_name}    ${bank_code}    /settings-bank-names.php
     #
         Add record.AD    ${name}    Credit Card for RF    /settings-creditcards.php
     END

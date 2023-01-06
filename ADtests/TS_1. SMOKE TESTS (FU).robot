@@ -28,11 +28,7 @@ MysteryShopping_01: Shopper submits a review (check only review statuses and sav
         set global variable    ${Robot q-ry}
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        go to.AD    ${URL}/company-display.php
-        Run Keyword If    ${testing?}    Execute JavaScript    window.document.getElementById("field_ShopperNewInterface").scrollIntoView(true)
-        Run Keyword If    ${testing?}    Set checkbox.AD    //*[@id="field_ShopperNewInterface"]    None
-        Click Save/Add/Delete/Cancel button.AD
-        Wait until page contains    Display settings saved successfully
+        Enable NewShopperInt.AD    None
         Make visible Job columns.AD    true    on
         Search client using search bar.AD    ${RobotTestClient}
         Set client AutoCritApprove.AD    None

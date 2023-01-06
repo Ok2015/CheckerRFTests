@@ -14468,6 +14468,9 @@ Send survey invitation.AD
     Click element    //*[@id="filters-static-form"]/div/button[2]
     Page should contain    Send survey invitations by email
     Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
+    Click element    //input[@id='generate_passwords']
+    Sleep    1
+    Click element    //*[@id="table_rows"]/tbody/tr[1]/td[1]/input
     Click element    //input[@id='go']
     Wait until page contains    Sent 1
     Check errors on page [-1]
@@ -14660,7 +14663,7 @@ Add/update bank.AD
 
 Delete bank.AD
     [Arguments]    ${bank_name}    ${bank_code}    ${exp result}
-    go to.AD    ${URL}/settings-bank-names.php
+    go to.AD    ${URL}/settings-bank-names.php?page_var_divide_recordsPerPage=500
     Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
     Wait until page contains    Add bulk records
     Wait until page contains element    //table[@id='page_division_wrapping_table']/tbody/tr/td[1]/input[1]
@@ -14681,19 +14684,19 @@ Delete bank.AD
     Click link    default=${found ID}
     Wait until page contains element    //input[@id='delete']
     Click element    //input[@id='delete']
-    Run keyword if    "${exp result}"=="deleted succssfully"    Wait until page contains element    //input[@id='sure_delete']
-    Run keyword if    "${exp result}"=="deleted succssfully"    Click element    //input[@id='sure_delete']
+    Run keyword if    "${exp result}"=="deleted successfully"    Wait until page contains element    //input[@id='sure_delete']
+    Run keyword if    "${exp result}"=="deleted successfully"    Click element    //input[@id='sure_delete']
     Wait until page contains    ${exp result}
     Run keyword if    "${exp result}"=="Cannot delete:"    Wait until page contains    ${RobotTestShopper 02}
-    Run keyword if    "${exp result}"=="Cannot delete:"    Wait until page contains    The characteristic is associated with the following shoppers:
+    Run keyword if    "${exp result}"=="Cannot delete:"    Wait until page contains    is associated with the following
     Run keyword if    "${exp result}"=="Cannot delete:"    Log to console    ${bank_name} -> Cannot delete (+)
-    Run keyword if    "${exp result}"=="deleted succssfully"    Log to console    ${bank_name} bank (code: ${bank_code}) deleted successfully
-    Run keyword if    "${exp result}"=="deleted succssfully"    go to.AD    ${URL}/settings-bank-names.php
-    Run keyword if    "${exp result}"=="deleted succssfully"    Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
-    Run keyword if    "${exp result}"=="deleted succssfully"    Page should not contain    ${bank_code}
-    Run keyword if    "${exp result}"=="deleted succssfully"    Page should not contain    ${bank_name}
-    Run keyword if    "${exp result}"=="deleted succssfully"    Page should not contain    ${bank_name} description
-    Run keyword if    "${exp result}"=="deleted succssfully"    Log to console    ${bank_name} -> Deleted (+)
+    Run keyword if    "${exp result}"=="deleted successfully"    Log to console    ${bank_name} bank (code: ${bank_code}) deleted successfully
+    Run keyword if    "${exp result}"=="deleted successfully"    go to.AD    ${URL}/settings-bank-names.php
+    Run keyword if    "${exp result}"=="deleted successfully"    Wait until page contains element    //*[@id="big_tedit_wrapping_table"]/tbody/tr[1]/td/table/tbody/tr/td/button
+    Run keyword if    "${exp result}"=="deleted successfully"    Page should not contain    ${bank_code}
+    Run keyword if    "${exp result}"=="deleted successfully"    Page should not contain    ${bank_name}
+    Run keyword if    "${exp result}"=="deleted successfully"    Page should not contain    ${bank_name} description
+    Run keyword if    "${exp result}"=="deleted successfully"    Log to console    ${bank_name} -> Deleted (+)
     # TO DO - Case 1: remove branch one by one; Case 2: assign Bank BR to a shopper; Case 3: assigned Bank+BR can not be deleted
 
 Add bank+branches (in a bulk).AD
@@ -14701,7 +14704,7 @@ Add bank+branches (in a bulk).AD
     go to.AD    ${URL}/settings-bank-names.php
     Log to console    Let`s create "${bank_name}" using Bulk box
     ${element visible?}=    Run keyword and return status    Page should contain    ${bank_name}
-    Run Keyword If    "${element visible?}"=="True"    Delete bank.AD    ${bank_name}    ${bank_code}    deleted succssfully
+    Run Keyword If    "${element visible?}"=="True"    Delete bank.AD    ${bank_name}    ${bank_code}    deleted successfully
     Click link    default=Add bulk records
     sleep    1
     Wait until page contains    Quick adding / updating banks, use pasting from excel at least one column with the Bank code (2nd column is Bank name and third column is the Description) in case Bank code exists, this will update the Bank name and Description.
@@ -14875,3 +14878,11 @@ Alt Replacement condition update.AD
     Run keyword if    "${exp action}"=="Remove" and ${is element visible?}    Click element    //input[@id='sure_delete']
     Run keyword if    "${exp action}"=="Remove" and ${is element visible?}    Wait until page contains    deleted successfully
     Run keyword if    "${exp action}"=="Remove" and ${is element visible?}    Log to console    "${Replacement condition}" is deleted
+
+Enable NewShopperInt.AD
+    [Arguments]    ${exp result}
+    go to.AD    ${URL}/company-display.php
+    Run Keyword If    ${testing?}    Execute JavaScript    window.document.getElementById("field_ShopperNewInterface").scrollIntoView(true)
+    Run Keyword If    ${testing?}    Set checkbox.AD    //*[@id="field_ShopperNewInterface"]    ${exp result}
+    Click Save/Add/Delete/Cancel button.AD
+    Wait until page contains    Display settings saved successfully
