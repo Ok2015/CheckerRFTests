@@ -15,7 +15,7 @@ Library           openpyxl
 Library           FtpLibrary
 
 *** Variables ***
-${TestURLs}       https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
+${TestURLs}        https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction    # https://eu.checker-soft.com/testing,https://eu.checker-soft.com/preproduction,https://eu.checker-soft.com/demo
 ${TestURLs ALL systems}    https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction    # https://sistema.mistero.com.br,https://eu.checker-soft.com/hollowmen-ro,https://eu.checker-soft.com/serveandcheck,https://eu.checker-soft.com/gfk-ukraine,https://gfk-russia.com,https://www.webethere.net,https://marketest.checker.co.il,https://ms-online.co.il,https://misonline.co.il,http://mwi.checker.co.il,https://tovanot.checker.co.il,https://asia.checker-soft.com/coredata,https://csc.ajis-group.co.jp,https://ru.checker-soft.com/sqiman-ru,https://www.imystery.ru,https://eu.checker-soft.com/testing,https://eu.checker-soft.com/demo,https://asia.checker-soft.com/demo,https://latam.checker-soft.com/demo,https://eu.checker-soft.com/preproduction
 ${check emails or no?}    NO    # YES or NO
 ${check reports?}    NO    # YES or NO
@@ -1072,8 +1072,9 @@ Edit shopper profile.AD
     Input Text    //input[@id='field_Phone3']    +972462281493
     Input Text    //input[@id='field_Email_Primary']    ${RFShopperEmail}
     Input Text    //input[@id='field_Email_Secondary']    2-${RFShopperEmail}
-    Click element    //*[@id="tabs"]/ul/li[4]
     Wait until page contains element    //*[@id="save"]
+    Click element    //*[@id="tabs"]/ul/li[4]
+    Sleep    1
     Input Text    //input[@id='field_BirthDated']    01
     Input Text    //input[@id='field_BirthDatem']    02
     Input Text    //input[@id='field_BirthDatey']    2000
@@ -1101,16 +1102,17 @@ Edit shopper profile.AD
     #
     Click element    //*[@id="tabs"]/ul/li[1]
     Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-    ${1}=    Run keyword and return status    Page should contain element    //tbody/tr[38]/td[2]/input[190]
-    ${2}=    Run keyword and return status    Page should contain element    id=shopper_list
-    Run keyword if    "${1}"=="True"    Choose File    //tbody/tr[38]/td[2]/input[1]    ${CURDIR}\\Extra files\\Images\\RF portrait.jpg
-    Run keyword if    "${2}"=="True"    Choose File    //*[@id="shopper_list"]/input[2]    ${CURDIR}\\Extra files\\Images\\RF portrait.jpg
+    Run keyword and ignore error    Choose File    //tbody/tr[38]/td[2]/input[1]    ${CURDIR}\\Extra files\\Images\\RF portrait.jpg
+    Run keyword and ignore error    Choose File    //*[@id="shopper_list"]/input[2]    ${CURDIR}\\Extra files\\Images\\RF portrait.jpg
     log to console    Selecting profile picture
     log to console    Editing password to "${RobotTestShopper}"
     Click element    //*[@id="HideRedundant"]
     Wait until page contains element    //input[@id='field_Password']
     Input text    //input[@id='field_Password']    ${RobotTestShopper}
     Click element    //*[@id="tabs"]/ul/li[5]
+    Sleep    1
+    Select Checkbox    //input[@id='field_CanSeeCritHistory']
+    Select Checkbox    //input[@id='field_CanSeeBranchAddresses']
     Select dropdown.AD    //*[@id="idCSSFileNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'RobotShopperCSS.css')]
     Validate value (text)    //*[@id="idCSSFileNameEditbox"]/table/tbody/tr/td/span/button    RobotShopperCSS.css
     ########################
@@ -6734,6 +6736,8 @@ Set Operation settings.AD
     Run keyword and ignore error    Validate value (text)    //*[@id="idQAUserLinkEditbox"]/table/tbody/tr/td/span/button    ${ManagerUsername}
     Run keyword and ignore error    Validate value (text)    //*[@id="idBcrUserLinkEditbox"]/table/tbody/tr/td/span/button    ${ManagerUsername}
     Click Save/Add/Delete/Cancel button.AD
+    Run keyword and ignore error    set focus to element    //input[@id='save']
+    Run keyword and ignore error    click element    //input[@id='save']
     Wait until page contains    Operation settings saved successfully
     Log to console    Saved text for editor box(es).
     go to.AD    ${URL}/company-operation.php
@@ -8969,6 +8973,8 @@ Click Save/Add/Delete/Cancel button.AD
     Run keyword and ignore error    Click element    //input[@id='addnew']
     ${status3}    Run Keyword And return status    Page Should Contain element    //*[@id="addnew"]
     Run Keyword If    '${status3}'=='True'    Click element    //*[@id="addnew"]
+    Run keyword and ignore error    set focus to element    //input[@id='save']
+    Run keyword and ignore error    click element    //input[@id='save']
     Log to console    Page has been Saved/Updated (+)
     Check errors on page [-1]
     ${login again visible?}    Run keyword and return status    Page should contain    Login again?

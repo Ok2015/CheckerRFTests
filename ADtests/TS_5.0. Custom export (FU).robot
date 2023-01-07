@@ -121,7 +121,7 @@ Custom export: Base of export=Reviews (EXCEL2007) compare data with sys pages
     [Teardown]    Close Browser.AD
 
 draft
-    [Tags]    Export    (FIX?)    SKIP
+    [Tags]    (FIX?)    SKIP
     [Setup]
     ${numeric value}    Get Substring    Numeric review start time: 1658908999    -10
     Should Match Regexp    ${numeric value}    \\d{10}

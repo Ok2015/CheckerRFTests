@@ -209,8 +209,10 @@ If Build Problem 2 occurs: ERROR: Couldn't find any revision to build. Verify th
 4. Office 365 Connector
 5. RobotFramework plugin
 6. HTML Audio Notifier
+7. Notify.Events
 
 
 #### Useful CMD commands
 Run --> systempropertiesadvanced - to see env variables
 Run --> services.msc - to see services list
+Run --> mstsc - to access remote PC
