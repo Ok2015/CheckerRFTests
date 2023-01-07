@@ -78,6 +78,7 @@ pip install jsonlib
 pip install requests
 pip install os-sys
 pip install robotframework-openpyxllib
+pip install screenshot
 
 pip install -U robotframework-pabot==1.13
 pip install robotframework-ride==1.7.4.2

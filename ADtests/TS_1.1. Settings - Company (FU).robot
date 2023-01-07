@@ -235,7 +235,10 @@ Display > "Time format" (24H or AM/PM) is applied properly
         Page should contain    ${Test Custom Field}
         Log to console    Registration page does contain "${Test Custom Field}"
         Scroll element into view    //td[@id='id${found ID}Tedit']
+        Log to console    123
         Input text    //input[@id='field_${found ID}']    23:00
+        Capture Page Screenshot
+        Sleep    1
         Click element    //*[@id="ui-datepicker-div"]/div[3]/button[2]
         ${act time}=    get element attribute    //*[@id="field_${found ID}"]    value
         Should be equal    11:00 pm    11:00 pm
@@ -246,6 +249,12 @@ Display > "Time format" (24H or AM/PM) is applied properly
         Scroll element into view    //td[@id='id${found ID}Tedit']
         Input text    //input[@id='field_${found ID}']    23:00
         Click element    //*[@id="ui-datepicker-div"]/div[3]/button[2]
+        Click element    //input[@id='addnew']
+        Input text    //input[@id='field_password']    123
+        Sleep    1
+        Capture Page Screenshot
+        Execute JavaScript    window.document.getElementById("field_${found ID}").scrollIntoView(true)
+        Click element    //input[@id='addnew']
         ${act time}=    get element attribute    //*[@id="field_${found ID}"]    value
         Should be equal    11:00 pm    ${act time}
         Log to console    Entered time for custom field = "23:00"; it was converted to "11:00 pm" automatically (system format=PM/AM)
@@ -373,6 +382,9 @@ Default Email footers > Edit and send Mass email to check email default footers.
         SET UP
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Edit default footers for outgoing Email messages
+        #
+        Search profile.AD    ${RobotTestShopper 02}
+        Edit shopper profile.AD    ${RobotTestShopper 02}
     #
         Send email via mass page.AD    U
         Check report-failed-email page.AD    Subject: Test Email (${DD.MM.YY})
