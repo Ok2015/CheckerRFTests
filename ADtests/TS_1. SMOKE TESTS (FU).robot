@@ -294,7 +294,8 @@ Checkertificate_04: Shopper submits a Checkertificate review (check only review 
         Page should contain    ${Robot Certificate}
         Page should contain    ${Robot Description Certificate}
         Log to console    "${Robot Certificate}" is visible (${Robot Description Certificate})
-        Click element    //*[@id="table_rows"]/tbody/tr/td[2]/a
+        Click element    //a[@class='begin-certification']
+        Handle alert
     ##################
         Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF    2000    I am a Free text RF message    I am an Internal RF message    No
         Check Review Subm Time    SubmissionTime (2022).xlsx    4    Thank you    # № of sheet

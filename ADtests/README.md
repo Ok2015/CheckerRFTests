@@ -35,7 +35,7 @@ Here are the prerequisites for running this acceptance testing framework
 ##### Step 1: Install Python
 Visit the following website to download Python software: https://www.python.org/downloads/
 
-Download the version for your operating system (eg: Windows). Double-click the Python software to begin the installation. click on ‘Install Now' to install the default package. It comes with pip, IDLE, and documentation. 
+Download the version for your operating system (eg: Windows). Double-click the Python software to begin the installation. click on ï¿½Install Now' to install the default package. It comes with pip, IDLE, and documentation. 
 - Note that pip gets installed along with python by default.
 
 To check if Python and pip are correctly installed, open the command prompt, and run the version cmd command: python --version or pip --version
@@ -50,7 +50,7 @@ Open the command prompt and navigate to the python folder and type the following
 Robot Framework should be successfully installed. You can check it using the version command: robot --version
 
 ##### Step 6: Download and install wxPython
-Open the command prompt and type the following command: Pip install –u wxPython
+Open the command prompt and type the following command: Pip install ï¿½u wxPython
 You can check its version by using the command: pip freeze (wxPython should be available in a list)
 
 ##### Step 7: Install RIDE
@@ -134,14 +134,14 @@ Steps to Install Jenkins on Windows:
 2. Set the Path for the Environmental Variable for JDK - set path=C:\Program Files\Java\jdk1.6.0_23\bin and check it using cmd: java -version
 3. Download and Install Jenkins - https://www.jenkins.io/download/
 
-IMPORTANT: When installing a service to run under a domain user account, the account must have the right to logon as a service. This logon permission applies strictly to the local computer and must be granted in the Local Security Policy. Perform the following to edit the Local Security Policy of the computer you want to define the ‘logon as a service’ permission:
+IMPORTANT: When installing a service to run under a domain user account, the account must have the right to logon as a service. This logon permission applies strictly to the local computer and must be granted in the Local Security Policy. Perform the following to edit the Local Security Policy of the computer you want to define the ï¿½logon as a serviceï¿½ permission:
 Logon to the computer with administrative privileges.
-Open the ‘Administrative Tools’ and open the ‘Local Security Policy’
-Expand ‘Local Policy’ and click on ‘User Rights Assignment’
-In the right pane, right-click ‘Log on as a service’ and select properties.
-Click on the ‘Add User or Group…’ button to add the new user.
-In the ‘Select Users or Groups’ dialogue, find the user you wish to enter and click ‘OK’
-Click ‘OK’ in the ‘Log on as a service Properties’ to save changes.
+Open the ï¿½Administrative Toolsï¿½ and open the ï¿½Local Security Policyï¿½
+Expand ï¿½Local Policyï¿½ and click on ï¿½User Rights Assignmentï¿½
+In the right pane, right-click ï¿½Log on as a serviceï¿½ and select properties.
+Click on the ï¿½Add User or Groupï¿½ï¿½ button to add the new user.
+In the ï¿½Select Users or Groupsï¿½ dialogue, find the user you wish to enter and click ï¿½OKï¿½
+Click ï¿½OKï¿½ in the ï¿½Log on as a service Propertiesï¿½ to save changes.
 Then try again with the added user.
 
 4. Run Jenkins on Localhost 8080 - at http://localhost:8080/script
@@ -178,12 +178,12 @@ item.updateNextBuildNumber(1)
 CRON - https://crontab.guru/
 ********************************************
 
-0 12 * * 1 - “At 12:00 on Monday.”
-H 0 */10 * * - “At 00:00 on every 10th day-of-month.”
-H 12 * * 1-5 - “At every minute past hour 12 on every day-of-week from Monday through Friday.”
-H * 12 * 1 - “At every minute past hour 12 on Monday.”
-H 12 * * 1,3,5 - “At every minute past hour 12 on Monday, Wednesday, and Friday.”
-H */24 * * * - “Once on every 24 hours”
+0 12 * * 1 - ï¿½At 12:00 on Monday.ï¿½
+H 0 */10 * * - ï¿½At 00:00 on every 10th day-of-month.ï¿½
+H 12 * * 1-5 - ï¿½At every minute past hour 12 on every day-of-week from Monday through Friday.ï¿½
+H * 12 * 1 - ï¿½At every minute past hour 12 on Monday.ï¿½
+H 12 * * 1,3,5 - ï¿½At every minute past hour 12 on Monday, Wednesday, and Friday.ï¿½
+H */24 * * * - ï¿½Once on every 24 hoursï¿½
 
 #### Build details
 Set 
@@ -208,6 +208,7 @@ If Build Problem 2 occurs: ERROR: Couldn't find any revision to build. Verify th
 3. Purge Builds History
 4. Office 365 Connector
 5. RobotFramework plugin
+6. HTML Audio Notifier
 
 
 #### Useful CMD commands
