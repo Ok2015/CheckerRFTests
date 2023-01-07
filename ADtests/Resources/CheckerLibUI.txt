@@ -1114,6 +1114,7 @@ Edit shopper profile.AD
     Select Checkbox    //input[@id='field_CanSeeCritHistory']
     Select Checkbox    //input[@id='field_CanSeeBranchAddresses']
     Select Checkbox    //input[@id='field_NotifyByEmail']
+    Select Checkbox    //input[@id='field_ConfirmAssignment']
     Select dropdown.AD    //*[@id="idCSSFileNameEditbox"]/table/tbody/tr/td/span/button    xpath=//li[contains(.,'RobotShopperCSS.css')]
     Validate value (text)    //*[@id="idCSSFileNameEditbox"]/table/tbody/tr/td/span/button    RobotShopperCSS.css
     ########################

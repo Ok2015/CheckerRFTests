@@ -523,6 +523,14 @@ Shoppers automatic notifications settings > Add notification. FU
         Add shopper notification.AD    ${Message title 3}    ${Message to shopper 3}    /company-checker-automatic-notifications.php
         Add shopper notification.AD    Notif to be deleted [RF]    <p><span style="color:#e74c3c">MOD DATE: 18.11.2021,</p>    /company-checker-automatic-notifications.php
     #
+        Search profile.AD    ${RobotTestShopper 02}
+        Edit shopper profile.AD    ${RobotTestShopper 02}
+        go to.AD    ${URL}/checker-assignation.php?CheckerID=${found ID}
+        ${is orders visible?}    Run Keyword And Return Status    Page should contain element    //input[@id='assignmentsArray']
+        Run keyword if    ${is orders visible?}    Click element    //form[@class='inline'][1]/input[1]
+        Run keyword if    ${is orders visible?}    Click element    //input[@id='cancelAssignments']
+        Run keyword if    ${is orders visible?}    Log to console
+    #    \    \    \    Cancelled prev orders
         Create test order (MASS) - BASIC    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         Assign order (via orders-management.php).AD    ${test order description}
         go to.AD    ${URL}/company-checker-automatic-notifications.php
