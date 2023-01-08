@@ -529,7 +529,7 @@ Shoppers automatic notifications settings > Add notification. FU
         ${is orders visible?}    Run Keyword And Return Status    Page should contain element    //input[@id='assignmentsArray']
         Run keyword if    ${is orders visible?}    Click element    //form[@class='inline'][1]/input[1]
         Run keyword if    ${is orders visible?}    Click element    //input[@id='cancelAssignments']
-        Run keyword if    ${is orders visible?}    Log to console
+        Run keyword if    ${is orders visible?}    Log to console    are any assigned orders visible?=${is orders visible?}
         #    Cancelled prev orders
         Create test order (MASS) - BASIC    ${test order description}    ${RobotTestClient}    ${RobotQ-ry SHOPPERS}
         Assign order (via orders-management.php).AD    ${test order description}
@@ -637,14 +637,14 @@ Operation messages > Add message. FU
         Input text    //input[@id='field_Title']    ${Message title 1}
         Wait until page contains element    //*[@id="idRejectedAssignmentsEditbox"]/table/tbody/tr/td/span/button
         click element    //*[@id="idRejectedAssignmentsEditbox"]/table/tbody/tr/td/span/button
-    #    scroll element into view    xpath=//li[contains(.,'e-mail')]
+        #    scroll element into view    xpath=//li[contains(.,'e-mail')]
         click element    xpath=//li[contains(.,'e-mail')]
         Validate value (text)    //*[@id="idRejectedAssignmentsEditbox"]/table/tbody/tr/td/span/button    e-mail
     ###
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
         click element    //*[@id="idQANotificationsEditbox"]/table/tbody/tr/td/span/button
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-    #    scroll element into view    xpath=//li[contains(.,'e-mail')]
+        #    scroll element into view    xpath=//li[contains(.,'e-mail')]
         set focus to element    xpath=//li[contains(.,'e-mail')]
         click element    //div[4]/ul/li[2]/label
         Validate value (text)    //*[@id="idQANotificationsEditbox"]/table/tbody/tr/td/span/button    e-mail
@@ -652,7 +652,7 @@ Operation messages > Add message. FU
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
         click element    //*[@id="idCertificationNotificationsEditbox"]/table/tbody/tr/td/span/button
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-    #    scroll element into view    xpath=//li[contains(.,'e-mail')]
+        #    scroll element into view    xpath=//li[contains(.,'e-mail')]
         set focus to element    xpath=//li[contains(.,'e-mail')]
         click element    //div[6]/ul/li[2]/label/span
         Validate value (text)    //*[@id="idCertificationNotificationsEditbox"]/table/tbody/tr/td/span/button    e-mail
@@ -660,7 +660,7 @@ Operation messages > Add message. FU
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
         click element    //*[@id="idCompletedAssignmentsEditbox"]/table/tbody/tr/td/span/button
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-    #    scroll element into view    xpath=//li[contains(.,'e-mail')]
+        #    scroll element into view    xpath=//li[contains(.,'e-mail')]
         set focus to element    xpath=//li[contains(.,'e-mail')]
         click element    //div[3]/ul/li[2]/label
         Validate value (text)    //*[@id="idCompletedAssignmentsEditbox"]/table/tbody/tr/td/span/button    e-mail
@@ -668,7 +668,7 @@ Operation messages > Add message. FU
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
         click element    //*[@id="idRegistrationNotificationsEditbox"]/table/tbody/tr/td/span/button
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-    #    scroll element into view    xpath=//li[contains(.,'e-mail')]
+        #    scroll element into view    xpath=//li[contains(.,'e-mail')]
         set focus to element    xpath=//li[contains(.,'e-mail')]
         click element    //div[5]/ul/li[2]/label
         Validate value (text)    //*[@id="idRegistrationNotificationsEditbox"]/table/tbody/tr/td/span/button    e-mail
@@ -676,7 +676,7 @@ Operation messages > Add message. FU
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
         click element    //*[@id="idAcceptedOrdersEditbox"]/table/tbody/tr/td/span/button
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-    #    scroll element into view    xpath=//li[contains(.,'e-mail')]
+        #    scroll element into view    xpath=//li[contains(.,'e-mail')]
         set focus to element    xpath=//li[contains(.,'e-mail')]
         click element    //div[7]/ul/li[2]/label
         Validate value (text)    //*[@id="idAcceptedOrdersEditbox"]/table/tbody/tr/td/span/button    e-mail
@@ -684,7 +684,7 @@ Operation messages > Add message. FU
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
         click element    //*[@id="idJobBoardApplicationsEditbox"]/table/tbody/tr/td/span/button
         Execute JavaScript    window.scrollTo(500, document.body.scrollHeight)
-    #    scroll element into view    xpath=//li[contains(.,'e-mail')]
+        #    scroll element into view    xpath=//li[contains(.,'e-mail')]
         set focus to element    xpath=//li[contains(.,'e-mail')]
         click element    //div[8]/ul/li[2]/label
         Validate value (text)    //*[@id="idJobBoardApplicationsEditbox"]/table/tbody/tr/td/span/button    e-mail

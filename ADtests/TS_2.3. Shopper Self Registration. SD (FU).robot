@@ -287,10 +287,15 @@ Reviewer with details that already exist in the system can not be registered. FU
         Page should contain    Incorrect age
         Page should contain    * Maximum value is 31
         Page should contain    * Maximum value is 12
-        Page should contain    * Minimum value is 1902
+        Page should contain    * Minimum value is 1903
+    #
         Input Text    //input[@id='field_BirthDatey']    3333
+        Input Text    //input[@id='field_BirthDated']    31
+        Input Text    //input[@id='field_BirthDatem']    12
+        sleep    1
         click element    //input[@id='field_BirthDated']
-        Page should contain    * Maximum value is 2015
+        click element    //input[@id='addnew']
+        Page should contain    * Maximum value is 2016
         log to console    RESULT: Birthday field="Incorrect age" message can be seen
     END
     close all browsers
@@ -468,7 +473,8 @@ Shopper is registered and autoapproved after passing Certification. FU
         Page should contain    ${Robot Certificate}
         Page should contain    RF Certificate for shopper self registration
         Page should contain    ${Robot q-ry}
-        click element    //*[@id="table_rows"]/tbody/tr/td[2]/a
+        Click element    //a[@class='begin-certification']
+        Handle alert
         Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF    2000    Free text message    Internal message    NO
         Click element    id=finishCrit
         Wait until page contains    Thank you for filling this review    8
