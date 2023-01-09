@@ -230,6 +230,112 @@ Shopper is registered and autoapproved. FU
     close all browsers
     [Teardown]    Close All Browsers
 
+Shopper is registered and autoapproved after passing Certification. FU
+    [Tags]    Selfregis+Auth
+    [Template]
+    @{urls}=    String.Split String    ${TestURLs}    ,
+    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
+    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
+    Set CF variables
+    FOR    ${URL}    IN    @{urls}
+        Set global variable    ${URL}
+        SET UP
+        ${Robot Certificate}=    set variable    RF 001-Shopper Registration [Certificate]
+        ${Robot Description Certificate}=    set variable    RF Certificate for shopper self registration
+        ${Robot q-ry}    set variable    RF Questionnaire [Certificate]
+        set global variable    ${Robot Certificate}
+        set global variable    ${Robot Description Certificate}
+        set global variable    ${Robot q-ry}
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+    ###
+        go to.AD    ${URL}/sets.php?page_var_filter_IsActive=1&page_var_filter_ClientName=&page_var_filter_SetTypeLink=5&page_var_sorting_column=SetName&page_var_sorting_order=up&page_var_divide_recordsPerPage=100&page_var_divide_curPage=1&popup=
+        ${ItemIsVisible}    Run keyword and return status    Page should contain    ${Robot q-ry}
+        Run Keyword If    "${ItemIsVisible}"=="False"    Create new questionnaire    ${Robot q-ry}
+        ...    ELSE    Log to console    "${Robot q-ry}" questionnaire is found in a system
+        go to.AD    ${URL}/sets.php?page_var_filter_IsActive=1&page_var_filter_ClientName=&page_var_filter_SetTypeLink=5&page_var_sorting_column=SetName&page_var_sorting_order=up&page_var_divide_recordsPerPage=100&page_var_divide_curPage=1&popup=
+        Run Keyword If    ${ItemIsVisible}    Click link    default=${Robot q-ry}
+        Get ID from ad bar.AD    edit=    &popup=&page_var_sorting_column=
+        Get question ID
+        Search Certificate    ${Robot Certificate}
+        Set assessors self registration options
+        go to.AD    ${URL}/company_shopper_reg.php
+        Wait until page contains element    //input[@id='field_AllowCheckerSelfReg']
+        ${Auto approve self registered}=    Get Element Attribute    //input[@id='field_AutoApproveSelfReg']    checked
+        Run keyword if    '${Auto approve self registered}'=='None'    Click element    //input[@id='field_AutoApproveSelfReg']
+        ${checked}=    checkbox should be selected    //input[@id='field_AutoApproveSelfReg']
+        click element    //tr[@id='tr_PostRegistrationCertification']/td[@id='idPostRegistrationCertificationEditbox']/table/tbody/tr/td/span
+        set focus to element    xpath=//li[contains(.,'${Robot Certificate}')]
+        click element    xpath=//li[contains(.,'${Robot Certificate}')]
+        Click Save/Add/Delete/Cancel button.AD
+        Wait until page contains    successfully
+    ##
+        #    Search the Q-ry(via table).AD    ${Robot q-ry}    7
+        #    Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
+        #    Set q-ry brief.AD
+        #    Validate and Import questions.AD    RF QRY [TESTING].xlsx    RF QRY [PREPRODUCTION].xlsx    RF QRY [DEMO].xlsx
+    ##
+        Log to console    Let`s create a user
+        Open registration page and check agreement box(es)
+        ${random string}=    Generate Random String    8    [LETTERS]
+        set global variable    ${random string}
+        ${mobile}=    Generate Random String    10    [NUMBERS]
+        set global variable    ${mobile}
+        Self register of new shopper.SD    RF-${random string}    ${Robot country 01}    ${Robot region 01}    ${Robot city 01}    RF-${random string}@gmail.com    ${mobile}
+        Click element    //input[@id='addnew']
+        Wait until page contains    Thank you for registering
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        sleep    1
+        go to.AD    ${URL}/checkers.php?page_var_filter_IsActive=0&page_var_filter_BlackListed=0&page_var_filter_IsSelfRegistered=1&page_var_filter_RegionName=0&page_var_filter_CityName_Cou=&page_var_filter_CityName_Reg=&page_var_filter_CityName=&page_var_filter_Fullname=&page_var_filter_Email=RF-${random string}@gmail.com&update=Please+wait&page_var_sorting_column=Fullname&page_var_sorting_order=up&page_var_divide_recordsPerPage=50&page_var_divide_curPage=1&s=0_2_4_17_21&cc=1
+        Wait until page contains element    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-firstcol']
+        ${ShopperID}    Get text    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]
+        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][5]    RF-${random string}@gmail.com
+        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][2]    No
+        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][4]    ${mobile}
+        Run Keyword If    ${preprod?}    Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]    ${ShopperID}
+        Run Keyword If    ${testing?}    Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]    RF-${random string}
+        Log to console    Self registration is finished
+        Log to console    email: RF-${random string}@gmail.com
+        Log to console    active: No
+        Run Keyword If    ${preprod?}    Enter login and password.SD    ${ShopperID}    RF-${random string}
+        ...    ELSE    Enter login and password.SD    RF-${random string}    RF-${random string}
+        go to.AD    ${URL}/c_main.php
+        Wait until page contains    Welcome, RF-${random string}
+        Page should contain    Note
+        Page should contain    In order to continue registration process
+        click element    //body/div[2]/p/a
+        Page should contain    ${Robot Certificate}
+        Page should contain    RF Certificate for shopper self registration
+        Page should contain    ${Robot q-ry}
+        Click element    //a[@class='begin-certification']
+        Handle alert
+        Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF    2000    Free text message    Internal message    NO
+        Click element    id=finishCrit
+        Wait until page contains    Thank you for filling this review    8
+        Wait until page contains    Certificate passed successfully
+        Enter login and password.SD    RF-${random string}    RF-${random string}
+        Enable agreements.SD
+        go to.AD    ${URL}/c_main.php
+        Wait until page contains    Welcome, RF-${random string}
+        Run Keyword If    '${check emails?}'=='True'    GMAIL: Assessor self registration.AD
+        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Search Element.AD    RF-${random string}    id=uesrs_table
+        go to.AD    ${URL}/checkers.php?page_var_filter_IsActive=1&page_var_filter_BlackListed=0&page_var_filter_IsSelfRegistered=1&page_var_filter_RegionName=0&page_var_filter_CityName_Cou=&page_var_filter_CityName_Reg=&page_var_filter_CityName=&page_var_filter_Fullname=&page_var_filter_Email=RF-${random string}@gmail.com&update=Please+wait&page_var_sorting_column=Fullname&page_var_sorting_order=up&page_var_divide_recordsPerPage=50&page_var_divide_curPage=1&s=0_2_4_17_21&cc=1
+        Wait until page contains element    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-firstcol']
+        ${ShopperID}    Get text    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]
+        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][5]    RF-${random string}@gmail.com
+        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][2]    Yes
+        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][4]    ${mobile}
+        Run Keyword If    ${preprod?}    Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]    ${ShopperID}
+        Run Keyword If    ${testing?}    Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]    RF-${random string}
+    #
+        Log to console    User self registration is finished with next details:
+        Log to console    username: RF-${random string} or ${ShopperID} (preprod only)
+        Log to console    email: RF-${random string}@gmail.com
+        Log to console    active: Yes
+    END
+    close all browsers
+    [Teardown]    Close Browser.AD
+
 Reviewer with details that already exist in the system can not be registered. FU
     [Tags]    Selfregis+Auth
     [Template]
@@ -396,109 +502,3 @@ Shopper is registered in case of mandatory fields added by manager. FU (FIX?)
     END
     close all browsers
     [Teardown]    Deactivate mandatory CFields
-
-Shopper is registered and autoapproved after passing Certification. FU
-    [Tags]    Selfregis+Auth
-    [Template]
-    @{urls}=    String.Split String    ${TestURLs}    ,
-    SeleniumLibrary.Open Browser    ${urls[0]}    browser=${BROWSER}
-    Run keyword if    "${Max brows win?}"=="YES"    Maximize Browser Window
-    Set CF variables
-    FOR    ${URL}    IN    @{urls}
-        Set global variable    ${URL}
-        SET UP
-        ${Robot Certificate}=    set variable    RF 001-Shopper Registration [Certificate]
-        ${Robot Description Certificate}=    set variable    RF Certificate for shopper self registration
-        ${Robot q-ry}    set variable    RF Questionnaire [Certificate]
-        set global variable    ${Robot Certificate}
-        set global variable    ${Robot Description Certificate}
-        set global variable    ${Robot q-ry}
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-    ###
-        go to.AD    ${URL}/sets.php?page_var_filter_IsActive=1&page_var_filter_ClientName=&page_var_filter_SetTypeLink=5&page_var_sorting_column=SetName&page_var_sorting_order=up&page_var_divide_recordsPerPage=100&page_var_divide_curPage=1&popup=
-        ${ItemIsVisible}    Run keyword and return status    Page should contain    ${Robot q-ry}
-        Run Keyword If    "${ItemIsVisible}"=="False"    Create new questionnaire    ${Robot q-ry}
-        ...    ELSE    Log to console    "${Robot q-ry}" questionnaire is found in a system
-        go to.AD    ${URL}/sets.php?page_var_filter_IsActive=1&page_var_filter_ClientName=&page_var_filter_SetTypeLink=5&page_var_sorting_column=SetName&page_var_sorting_order=up&page_var_divide_recordsPerPage=100&page_var_divide_curPage=1&popup=
-        Run Keyword If    ${ItemIsVisible}    Click link    default=${Robot q-ry}
-        Get ID from ad bar.AD    edit=    &popup=&page_var_sorting_column=
-        Get question ID
-        Search Certificate    ${Robot Certificate}
-        Set assessors self registration options
-        go to.AD    ${URL}/company_shopper_reg.php
-        Wait until page contains element    //input[@id='field_AllowCheckerSelfReg']
-        ${Auto approve self registered}=    Get Element Attribute    //input[@id='field_AutoApproveSelfReg']    checked
-        Run keyword if    '${Auto approve self registered}'=='None'    Click element    //input[@id='field_AutoApproveSelfReg']
-        ${checked}=    checkbox should be selected    //input[@id='field_AutoApproveSelfReg']
-        click element    //tr[@id='tr_PostRegistrationCertification']/td[@id='idPostRegistrationCertificationEditbox']/table/tbody/tr/td/span
-        set focus to element    xpath=//li[contains(.,'${Robot Certificate}')]
-        click element    xpath=//li[contains(.,'${Robot Certificate}')]
-        Click Save/Add/Delete/Cancel button.AD
-        Wait until page contains    successfully
-    ##
-        #    Search the Q-ry(via table).AD    ${Robot q-ry}    7
-        #    Edit questionnaire.AD    RFQRY-CER-04    Flat average - questions average only    //div[9]/ul/li[1]/label    do not allow
-        #    Set q-ry brief.AD
-        #    Validate and Import questions.AD    RF QRY [TESTING].xlsx    RF QRY [PREPRODUCTION].xlsx    RF QRY [DEMO].xlsx
-    ##
-        Log to console    Let`s create a user
-        Open registration page and check agreement box(es)
-        ${random string}=    Generate Random String    8    [LETTERS]
-        set global variable    ${random string}
-        ${mobile}=    Generate Random String    10    [NUMBERS]
-        set global variable    ${mobile}
-        Self register of new shopper.SD    RF-${random string}    ${Robot country 01}    ${Robot region 01}    ${Robot city 01}    RF-${random string}@gmail.com    ${mobile}
-        Click element    //input[@id='addnew']
-        Wait until page contains    Thank you for registering
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        sleep    1
-        go to.AD    ${URL}/checkers.php?page_var_filter_IsActive=0&page_var_filter_BlackListed=0&page_var_filter_IsSelfRegistered=1&page_var_filter_RegionName=0&page_var_filter_CityName_Cou=&page_var_filter_CityName_Reg=&page_var_filter_CityName=&page_var_filter_Fullname=&page_var_filter_Email=RF-${random string}@gmail.com&update=Please+wait&page_var_sorting_column=Fullname&page_var_sorting_order=up&page_var_divide_recordsPerPage=50&page_var_divide_curPage=1&s=0_2_4_17_21&cc=1
-        Wait until page contains element    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-firstcol']
-        ${ShopperID}    Get text    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]
-        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][5]    RF-${random string}@gmail.com
-        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][2]    No
-        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][4]    ${mobile}
-        Run Keyword If    ${preprod?}    Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]    ${ShopperID}
-        Run Keyword If    ${testing?}    Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]    RF-${random string}
-        Log to console    Self registration is finished
-        Log to console    email: RF-${random string}@gmail.com
-        Log to console    active: No
-        Run Keyword If    ${preprod?}    Enter login and password.SD    ${ShopperID}    RF-${random string}
-        ...    ELSE    Enter login and password.SD    RF-${random string}    RF-${random string}
-        go to.AD    ${URL}/c_main.php
-        Wait until page contains    Welcome, RF-${random string}
-        Page should contain    Note
-        Page should contain    In order to continue registration process
-        click element    //body/div[2]/p/a
-        Page should contain    ${Robot Certificate}
-        Page should contain    RF Certificate for shopper self registration
-        Page should contain    ${Robot q-ry}
-        Click element    //a[@class='begin-certification']
-        Handle alert
-        Begin scorecard (OPlogic=no).SD    Additional info - ${DD.MM.YY} RF    2000    Free text message    Internal message    NO
-        Click element    id=finishCrit
-        Wait until page contains    Thank you for filling this review    8
-        Wait until page contains    Certificate passed successfully
-        Enter login and password.SD    RF-${random string}    RF-${random string}
-        Enable agreements.SD
-        go to.AD    ${URL}/c_main.php
-        Wait until page contains    Welcome, RF-${random string}
-        Run Keyword If    '${check emails?}'=='True'    GMAIL: Assessor self registration.AD
-        Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Search Element.AD    RF-${random string}    id=uesrs_table
-        go to.AD    ${URL}/checkers.php?page_var_filter_IsActive=1&page_var_filter_BlackListed=0&page_var_filter_IsSelfRegistered=1&page_var_filter_RegionName=0&page_var_filter_CityName_Cou=&page_var_filter_CityName_Reg=&page_var_filter_CityName=&page_var_filter_Fullname=&page_var_filter_Email=RF-${random string}@gmail.com&update=Please+wait&page_var_sorting_column=Fullname&page_var_sorting_order=up&page_var_divide_recordsPerPage=50&page_var_divide_curPage=1&s=0_2_4_17_21&cc=1
-        Wait until page contains element    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-firstcol']
-        ${ShopperID}    Get text    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]
-        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][5]    RF-${random string}@gmail.com
-        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][2]    Yes
-        Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][4]    ${mobile}
-        Run Keyword If    ${preprod?}    Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]    ${ShopperID}
-        Run Keyword If    ${testing?}    Validate value (text)    //table[@id='table_rows']/tbody/tr[@class='db1']/td[@class='db-ltr'][1]    RF-${random string}
-    #
-        Log to console    User self registration is finished with next details:
-        Log to console    username: RF-${random string} or ${ShopperID} (preprod only)
-        Log to console    email: RF-${random string}@gmail.com
-        Log to console    active: Yes
-    END
-    close all browsers
-    [Teardown]    Close Browser.AD
