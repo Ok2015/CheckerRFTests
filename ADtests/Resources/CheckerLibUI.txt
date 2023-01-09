@@ -13356,7 +13356,9 @@ Create test order (MASS) - ADVANCED
     Click element    //form/table/tbody/tr[6]/td[2]/table[@class='doublebox']/tbody/tr/td[1]/select/option[1]
     sleep    2
     Click element    //form/table/tbody/tr[6]/td[2]/table[@class='doublebox']/tbody/tr/td[2]/input[@class='buttons'][2]
-    #
+    Sleep    1
+    ${Selected branch}    Get text    form_data[Branches][Objects][Selected][]
+    Should be equal    ${Selected branch}    RF Branch 01 [Short name]
     sleep    1
     Click element    //table[@id='dates']/tbody/tr[1]/td/table/tbody/tr/td[2]/table/tbody/tr[1]/td/input[${allow holidays}]
     sleep    1

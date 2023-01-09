@@ -444,8 +444,8 @@ Order: Manager creates a valid MASS order with N Min & Max gap between reviews (
         Input text    shopper_name_search    robo
         Input text    Email    robotshopperemail@gmail.com
         Input text    Phone    +380670118780
-        Input text    AgeStart    20
-        Input text    AgeEnd    22
+        Input text    AgeStart    22
+        Input text    AgeEnd    30
         Click element    go
         Execute JavaScript    window.document.getElementById("AgeEnd").scrollIntoView(true)
         Wait until page contains element    //*[@id="theChecker"]/option[1]
