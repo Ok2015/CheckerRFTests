@@ -184,6 +184,7 @@ SD user can remove own profile.SD
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Enable NewShopperInt.AD    None
         Search shopper by AD    ${RobotTestShopper 05}
         Search shopper by AD    ${RobotTestShopper 05}
         Get ID    id="checkers_table"    ${RobotTestShopper 05}    1    2
@@ -217,6 +218,7 @@ SD user can not remove own profile.SD
         Set global variable    ${URL}
         SET UP
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
+        Enable NewShopperInt.AD    None
         Search shopper by AD    ${RobotTestShopper 05}
         go to.AD    ${URL}/company-checker-disp.php
         Set checkbox.AD    //input[@id='field_CheckerSEF_Remove_me']    None
@@ -308,12 +310,12 @@ Shopper can recover UserID.SD
         Enter existing login and password.AD    ${ManagerUsername}    ${ManagerPassword}
         Enable shopper registration
         Go to.AD    ${URL}/c_login.php
-    #    Page should contain    Forgot UserID?
+        #    Page should contain    Forgot UserID?
         Log to console    "Forgot UserID?" link is visible (+)
         Run keyword and ignore error    Click link    default=Forgot UserID?
         Run keyword and ignore error    Click link    default=Forgot your ID?
         Wait until page contains element    //input[@id='submit']
-    #    Wait until page contains    Recover your username
+        #    Wait until page contains    Recover your username
         Click element    //input[@id='submit']
         Element text should be    //form/table/tbody/tr[1]/td[1]    Email*
         Element text should be    //form/table/tbody/tr[2]/td[1]    Birthdate*
