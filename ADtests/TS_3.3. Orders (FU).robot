@@ -948,10 +948,10 @@ JOB: Alert. Send repeatedly(Off)+Alert condition
         Log to console    ---------Status---------: NO ALERT EMAIL IS RECEIVED (+)
     #
         Login as a Manager    ${ManagerUsername}    ${ManagerPassword}
-        Check Review handling details page.AD    Finished, awaiting approval    YES    ${Free text message} TRY№3    ${Internal message} TRY№3    46.40
+        Run Keyword If    ${results} or ${results}==False    Check Review handling details page.AD    Finished, awaiting approval    YES    ${Free text message} TRY№3    ${Internal message} TRY№3    46.40
         Approve review.AD
-        Check Edit review page.AD    Approved    46.40    Yes
-        Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
+        Run Keyword If    ${results} or ${results}==False    Check Edit review page.AD    Approved    46.40    Yes
+        Run Keyword If    ${results} or ${results}==False    Activate/Deactivate item on page.AD    ${URL}/alerts.php?page_var_filter_IsActive=&ClientID=${Client ID}    //*[@id="field_IsActive"]    None
     END
     Close Browser
     [Teardown]    Close Browser.AD
