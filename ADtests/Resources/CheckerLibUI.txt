@@ -2440,6 +2440,7 @@ Create test order (Single)
     sleep    1
     Click element    //select[@id='SetID']
     Scroll Element Into View    //select[@id='SetID']
+    sleep    2
     select from list by label    //select[@id='SetID']    ${Auto Questionnaire}
     Input text    startingTime    ${order start_time}
     Input text    endingTime    ${order end_time}
